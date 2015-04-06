@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowTitle("Crypto-Ticker");
     upper_bound = 10000;
     lower_bound = 0;
     curler.settings("https://www.okcoin.cn/api/ticker.do");
