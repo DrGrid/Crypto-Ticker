@@ -9,10 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    alarm_path= "play ";
     setWindowTitle("Crypto-Ticker");
     upper_bound = 10000;
     lower_bound = 0;
-    alarm_path= "play ";
     curler.settings("https://www.okcoin.cn/api/ticker.do");
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerout()));
@@ -65,7 +65,6 @@ void MainWindow::set_down_input()
 void MainWindow::set_path()
 {
     alarm_path+= ui->linepath->text();
-    ui ->label_path->setText(ui->linepath->text());
     ui->linepath->clear();
 }
 
