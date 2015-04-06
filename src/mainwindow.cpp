@@ -9,6 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->choose_market->addItem("OkCoin");
+    ui->choose_market->addItem("BTCChina");
+    ui->choose_market->addItem("Bitfinex");
+    ui->choose_market->addItem("Bitstamp");
     alarm_path= "play ";
     setWindowTitle("Crypto-Ticker");
     upper_bound = 10000;
@@ -70,7 +74,8 @@ void MainWindow::set_path()
 
 void MainWindow::alarm()
 {
-    system(alarm_path.toStdString().c_str());}
+    system(alarm_path.toStdString().c_str());
+}
 
 void MainWindow::clear_alarm()
 {

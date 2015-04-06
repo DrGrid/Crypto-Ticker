@@ -13,6 +13,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QComboBox>
 #include <QtGui/QFormLayout>
 #include <QtGui/QGridLayout>
 #include <QtGui/QHBoxLayout>
@@ -52,14 +53,16 @@ public:
     QLabel *label_6;
     QSpacerItem *horizontalSpacer;
     QGridLayout *gridLayout;
+    QPushButton *pushButton;
+    QPushButton *setpath;
     QLineEdit *lineup;
     QPushButton *setup;
-    QLabel *label_up;
-    QLineEdit *linedown;
     QPushButton *setdown;
-    QLabel *label_down;
+    QLineEdit *linedown;
     QLineEdit *linepath;
-    QPushButton *setpath;
+    QLabel *label_up;
+    QLabel *label_down;
+    QComboBox *choose_market;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QToolBar *mainToolBar;
@@ -76,7 +79,7 @@ public:
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         widget = new QWidget(centralWidget);
         widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(31, 11, 398, 108));
+        widget->setGeometry(QRect(31, 11, 398, 135));
         horizontalLayout = new QHBoxLayout(widget);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
@@ -156,45 +159,55 @@ public:
         gridLayout = new QGridLayout();
         gridLayout->setSpacing(6);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        lineup = new QLineEdit(widget);
-        lineup->setObjectName(QString::fromUtf8("lineup"));
+        pushButton = new QPushButton(widget);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
 
-        gridLayout->addWidget(lineup, 0, 0, 1, 1);
-
-        setup = new QPushButton(widget);
-        setup->setObjectName(QString::fromUtf8("setup"));
-
-        gridLayout->addWidget(setup, 0, 1, 1, 1);
-
-        label_up = new QLabel(widget);
-        label_up->setObjectName(QString::fromUtf8("label_up"));
-
-        gridLayout->addWidget(label_up, 0, 2, 1, 1);
-
-        linedown = new QLineEdit(widget);
-        linedown->setObjectName(QString::fromUtf8("linedown"));
-
-        gridLayout->addWidget(linedown, 1, 0, 1, 1);
-
-        setdown = new QPushButton(widget);
-        setdown->setObjectName(QString::fromUtf8("setdown"));
-
-        gridLayout->addWidget(setdown, 1, 1, 1, 1);
-
-        label_down = new QLabel(widget);
-        label_down->setObjectName(QString::fromUtf8("label_down"));
-
-        gridLayout->addWidget(label_down, 1, 2, 1, 1);
-
-        linepath = new QLineEdit(widget);
-        linepath->setObjectName(QString::fromUtf8("linepath"));
-
-        gridLayout->addWidget(linepath, 2, 0, 1, 1);
+        gridLayout->addWidget(pushButton, 0, 1, 1, 1);
 
         setpath = new QPushButton(widget);
         setpath->setObjectName(QString::fromUtf8("setpath"));
 
-        gridLayout->addWidget(setpath, 2, 1, 1, 1);
+        gridLayout->addWidget(setpath, 3, 1, 1, 1);
+
+        lineup = new QLineEdit(widget);
+        lineup->setObjectName(QString::fromUtf8("lineup"));
+
+        gridLayout->addWidget(lineup, 1, 0, 1, 1);
+
+        setup = new QPushButton(widget);
+        setup->setObjectName(QString::fromUtf8("setup"));
+
+        gridLayout->addWidget(setup, 1, 1, 1, 1);
+
+        setdown = new QPushButton(widget);
+        setdown->setObjectName(QString::fromUtf8("setdown"));
+
+        gridLayout->addWidget(setdown, 2, 1, 1, 1);
+
+        linedown = new QLineEdit(widget);
+        linedown->setObjectName(QString::fromUtf8("linedown"));
+
+        gridLayout->addWidget(linedown, 2, 0, 1, 1);
+
+        linepath = new QLineEdit(widget);
+        linepath->setObjectName(QString::fromUtf8("linepath"));
+
+        gridLayout->addWidget(linepath, 3, 0, 1, 1);
+
+        label_up = new QLabel(widget);
+        label_up->setObjectName(QString::fromUtf8("label_up"));
+
+        gridLayout->addWidget(label_up, 1, 2, 1, 1);
+
+        label_down = new QLabel(widget);
+        label_down->setObjectName(QString::fromUtf8("label_down"));
+
+        gridLayout->addWidget(label_down, 2, 2, 1, 1);
+
+        choose_market = new QComboBox(widget);
+        choose_market->setObjectName(QString::fromUtf8("choose_market"));
+
+        gridLayout->addWidget(choose_market, 0, 0, 1, 1);
 
 
         horizontalLayout->addLayout(gridLayout);
@@ -237,14 +250,15 @@ public:
         label_5->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
         spread->setText(QApplication::translate("MainWindow", "Spread", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("MainWindow", "Set Market", 0, QApplication::UnicodeUTF8));
+        setpath->setText(QApplication::translate("MainWindow", "Set Path", 0, QApplication::UnicodeUTF8));
         lineup->setText(QString());
         setup->setText(QApplication::translate("MainWindow", "Set Up", 0, QApplication::UnicodeUTF8));
-        label_up->setText(QString());
-        linedown->setText(QString());
         setdown->setText(QApplication::translate("MainWindow", "Set down", 0, QApplication::UnicodeUTF8));
-        label_down->setText(QString());
+        linedown->setText(QString());
         linepath->setText(QString());
-        setpath->setText(QApplication::translate("MainWindow", "Set Path", 0, QApplication::UnicodeUTF8));
+        label_up->setText(QString());
+        label_down->setText(QString());
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
