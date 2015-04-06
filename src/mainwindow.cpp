@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle("Crypto-Ticker");
     upper_bound = 10000;
     lower_bound = 0;
+    alarm_path= "play ~/Music/waving_files/gun.wav";
     curler.settings("https://www.okcoin.cn/api/ticker.do");
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerout()));
@@ -62,7 +63,7 @@ void MainWindow::set_down_input()
 
 void MainWindow::alarm()
 {
-    system("play ~/Music/waving_files/gun.wav");}
+    system(alarm_path.c_str());}
 
 void MainWindow::clear_alarm()
 {

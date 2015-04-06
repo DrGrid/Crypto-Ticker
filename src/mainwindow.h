@@ -36,6 +36,7 @@ private:
     QTimer * timer;
     CppCurl curler;
     std::string data;
+    std::string alarm_path;
     parsed_data current;
     five_step time_data;
 };

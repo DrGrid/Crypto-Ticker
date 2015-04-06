@@ -1,3 +1,6 @@
+#ifndef CURL_WRAPPER_CLASS_H
+#define CURL_WRAPPER_CLASS_H
+
 #include <string>
 #include <curl/curl.h>
 
@@ -45,3 +48,5 @@ public:
    void data_cleanup();
    ~CppCurl();
 };
+
+#endif //CURL_WRAPPER_CLASS_H

@@ -1,3 +1,6 @@
+#ifndef DATA_PARSER_H
+#define DATA_PARSER_H
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -26,3 +29,5 @@ public:
     float low_price;
     void memory_stepping(float new_price);
 };
+
+#endif //DATA_PARSER_H
