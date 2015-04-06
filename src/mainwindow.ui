@@ -14,140 +14,165 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>11</y>
-      <width>449</width>
-      <height>131</height>
+      <x>20</x>
+      <y>10</y>
+      <width>451</width>
+      <height>108</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0" rowspan="2">
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0" rowspan="2">
-        <layout class="QFormLayout" name="formLayout">
-         <property name="fieldGrowthPolicy">
-          <enum>QFormLayout::ExpandingFieldsGrow</enum>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="2">
+      <widget class="QPushButton" name="setdown">
+       <property name="text">
+        <string>Set down</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QPushButton" name="setpath">
+       <property name="text">
+        <string>Set Path</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="linepath">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" rowspan="3">
+      <layout class="QFormLayout" name="formLayout">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::ExpandingFieldsGrow</enum>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="price">
+         <property name="text">
+          <string>Price:</string>
          </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="price">
-           <property name="text">
-            <string>Price:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="high">
-           <property name="text">
-            <string>Daily High:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="low">
-           <property name="text">
-            <string>Daily Low:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="sell">
-           <property name="text">
-            <string>Lowest Sell:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="bid">
-           <property name="text">
-            <string>Highest Bid:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>Fetching Data...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Fetching Data...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Fetching Data...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>Fetching Data..</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Fetching Data...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="spread">
-           <property name="text">
-            <string>Spread</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Fetching Data...</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="lineup"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QPushButton" name="setup">
+        <widget class="QLabel" name="label">
          <property name="text">
-          <string>Set Up</string>
+          <string>Fetching Data...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="high">
+         <property name="text">
+          <string>Daily High:</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="linedown"/>
-       </item>
-       <item row="1" column="2">
-        <widget class="QPushButton" name="setdown">
+        <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Set down</string>
+          <string>Fetching Data..</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="low">
+         <property name="text">
+          <string>Daily Low:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Fetching Data...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="sell">
+         <property name="text">
+          <string>Lowest Sell:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Fetching Data...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="bid">
+         <property name="text">
+          <string>Highest Bid:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Fetching Data...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="spread">
+         <property name="text">
+          <string>Spread</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Fetching Data...</string>
          </property>
         </widget>
        </item>
       </layout>
      </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="setup">
+       <property name="text">
+        <string>Set Up</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="linedown">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="1">
+      <widget class="QLineEdit" name="lineup">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="label_down">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
       <widget class="QLabel" name="label_up">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="label_down">
+     <item row="2" column="3">
+      <widget class="QLabel" name="label_path">
        <property name="text">
         <string/>
        </property>

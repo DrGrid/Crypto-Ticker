@@ -27,16 +27,15 @@ private slots:
     void timerout();
     void set_up_input();
     void set_down_input();
+    void set_path();
 
 private:
     Ui::MainWindow *ui;
-    QString label_text;
-    QString up_bound, down_bound;
+    QString label_text, up_bound, down_bound, alarm_path;
     float upper_bound, lower_bound;
     QTimer * timer;
     CppCurl curler;
     std::string data;
-    std::string alarm_path;
     parsed_data current;
     five_step time_data;
 };

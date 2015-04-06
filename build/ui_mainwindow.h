@@ -33,28 +33,30 @@ class Ui_MainWindow
 public:
     QAction *actionNew_Ticker;
     QWidget *centralWidget;
-    QWidget *layoutWidget;
-    QGridLayout *gridLayout_2;
+    QWidget *widget;
     QGridLayout *gridLayout;
+    QPushButton *setdown;
+    QPushButton *setpath;
+    QLineEdit *linepath;
     QFormLayout *formLayout;
     QLabel *price;
+    QLabel *label;
     QLabel *high;
+    QLabel *label_2;
     QLabel *low;
+    QLabel *label_3;
     QLabel *sell;
+    QLabel *label_4;
     QLabel *bid;
     QLabel *label_5;
-    QLabel *label_4;
-    QLabel *label_3;
-    QLabel *label_2;
-    QLabel *label;
     QLabel *spread;
     QLabel *label_6;
-    QLineEdit *lineup;
     QPushButton *setup;
     QLineEdit *linedown;
-    QPushButton *setdown;
-    QLabel *label_up;
+    QLineEdit *lineup;
     QLabel *label_down;
+    QLabel *label_up;
+    QLabel *label_path;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QToolBar *mainToolBar;
@@ -69,116 +71,125 @@ public:
         actionNew_Ticker->setObjectName(QString::fromUtf8("actionNew_Ticker"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        layoutWidget = new QWidget(centralWidget);
-        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(10, 11, 449, 131));
-        gridLayout_2 = new QGridLayout(layoutWidget);
-        gridLayout_2->setSpacing(6);
-        gridLayout_2->setContentsMargins(11, 11, 11, 11);
-        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        gridLayout_2->setContentsMargins(0, 0, 0, 0);
-        gridLayout = new QGridLayout();
+        widget = new QWidget(centralWidget);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(20, 10, 451, 108));
+        gridLayout = new QGridLayout(widget);
         gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
+        setdown = new QPushButton(widget);
+        setdown->setObjectName(QString::fromUtf8("setdown"));
+
+        gridLayout->addWidget(setdown, 1, 2, 1, 1);
+
+        setpath = new QPushButton(widget);
+        setpath->setObjectName(QString::fromUtf8("setpath"));
+
+        gridLayout->addWidget(setpath, 2, 2, 1, 1);
+
+        linepath = new QLineEdit(widget);
+        linepath->setObjectName(QString::fromUtf8("linepath"));
+
+        gridLayout->addWidget(linepath, 2, 1, 1, 1);
+
         formLayout = new QFormLayout();
         formLayout->setSpacing(6);
         formLayout->setObjectName(QString::fromUtf8("formLayout"));
         formLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
-        price = new QLabel(layoutWidget);
+        price = new QLabel(widget);
         price->setObjectName(QString::fromUtf8("price"));
 
         formLayout->setWidget(0, QFormLayout::LabelRole, price);
 
-        high = new QLabel(layoutWidget);
-        high->setObjectName(QString::fromUtf8("high"));
-
-        formLayout->setWidget(1, QFormLayout::LabelRole, high);
-
-        low = new QLabel(layoutWidget);
-        low->setObjectName(QString::fromUtf8("low"));
-
-        formLayout->setWidget(2, QFormLayout::LabelRole, low);
-
-        sell = new QLabel(layoutWidget);
-        sell->setObjectName(QString::fromUtf8("sell"));
-
-        formLayout->setWidget(3, QFormLayout::LabelRole, sell);
-
-        bid = new QLabel(layoutWidget);
-        bid->setObjectName(QString::fromUtf8("bid"));
-
-        formLayout->setWidget(4, QFormLayout::LabelRole, bid);
-
-        label_5 = new QLabel(layoutWidget);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
-
-        formLayout->setWidget(4, QFormLayout::FieldRole, label_5);
-
-        label_4 = new QLabel(layoutWidget);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
-
-        formLayout->setWidget(3, QFormLayout::FieldRole, label_4);
-
-        label_3 = new QLabel(layoutWidget);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-
-        formLayout->setWidget(2, QFormLayout::FieldRole, label_3);
-
-        label_2 = new QLabel(layoutWidget);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-
-        formLayout->setWidget(1, QFormLayout::FieldRole, label_2);
-
-        label = new QLabel(layoutWidget);
+        label = new QLabel(widget);
         label->setObjectName(QString::fromUtf8("label"));
 
         formLayout->setWidget(0, QFormLayout::FieldRole, label);
 
-        spread = new QLabel(layoutWidget);
+        high = new QLabel(widget);
+        high->setObjectName(QString::fromUtf8("high"));
+
+        formLayout->setWidget(1, QFormLayout::LabelRole, high);
+
+        label_2 = new QLabel(widget);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        formLayout->setWidget(1, QFormLayout::FieldRole, label_2);
+
+        low = new QLabel(widget);
+        low->setObjectName(QString::fromUtf8("low"));
+
+        formLayout->setWidget(2, QFormLayout::LabelRole, low);
+
+        label_3 = new QLabel(widget);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        formLayout->setWidget(2, QFormLayout::FieldRole, label_3);
+
+        sell = new QLabel(widget);
+        sell->setObjectName(QString::fromUtf8("sell"));
+
+        formLayout->setWidget(3, QFormLayout::LabelRole, sell);
+
+        label_4 = new QLabel(widget);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+
+        formLayout->setWidget(3, QFormLayout::FieldRole, label_4);
+
+        bid = new QLabel(widget);
+        bid->setObjectName(QString::fromUtf8("bid"));
+
+        formLayout->setWidget(4, QFormLayout::LabelRole, bid);
+
+        label_5 = new QLabel(widget);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+
+        formLayout->setWidget(4, QFormLayout::FieldRole, label_5);
+
+        spread = new QLabel(widget);
         spread->setObjectName(QString::fromUtf8("spread"));
 
         formLayout->setWidget(5, QFormLayout::LabelRole, spread);
 
-        label_6 = new QLabel(layoutWidget);
+        label_6 = new QLabel(widget);
         label_6->setObjectName(QString::fromUtf8("label_6"));
 
         formLayout->setWidget(5, QFormLayout::FieldRole, label_6);
 
 
-        gridLayout->addLayout(formLayout, 0, 0, 2, 1);
+        gridLayout->addLayout(formLayout, 0, 0, 3, 1);
 
-        lineup = new QLineEdit(layoutWidget);
-        lineup->setObjectName(QString::fromUtf8("lineup"));
-
-        gridLayout->addWidget(lineup, 0, 1, 1, 1);
-
-        setup = new QPushButton(layoutWidget);
+        setup = new QPushButton(widget);
         setup->setObjectName(QString::fromUtf8("setup"));
 
         gridLayout->addWidget(setup, 0, 2, 1, 1);
 
-        linedown = new QLineEdit(layoutWidget);
+        linedown = new QLineEdit(widget);
         linedown->setObjectName(QString::fromUtf8("linedown"));
 
         gridLayout->addWidget(linedown, 1, 1, 1, 1);
 
-        setdown = new QPushButton(layoutWidget);
-        setdown->setObjectName(QString::fromUtf8("setdown"));
+        lineup = new QLineEdit(widget);
+        lineup->setObjectName(QString::fromUtf8("lineup"));
 
-        gridLayout->addWidget(setdown, 1, 2, 1, 1);
+        gridLayout->addWidget(lineup, 0, 1, 1, 1);
 
-
-        gridLayout_2->addLayout(gridLayout, 0, 0, 2, 1);
-
-        label_up = new QLabel(layoutWidget);
-        label_up->setObjectName(QString::fromUtf8("label_up"));
-
-        gridLayout_2->addWidget(label_up, 0, 1, 1, 1);
-
-        label_down = new QLabel(layoutWidget);
+        label_down = new QLabel(widget);
         label_down->setObjectName(QString::fromUtf8("label_down"));
 
-        gridLayout_2->addWidget(label_down, 1, 1, 1, 1);
+        gridLayout->addWidget(label_down, 1, 3, 1, 1);
+
+        label_up = new QLabel(widget);
+        label_up->setObjectName(QString::fromUtf8("label_up"));
+
+        gridLayout->addWidget(label_up, 0, 3, 1, 1);
+
+        label_path = new QLabel(widget);
+        label_path->setObjectName(QString::fromUtf8("label_path"));
+
+        gridLayout->addWidget(label_path, 2, 3, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
@@ -206,22 +217,27 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
         actionNew_Ticker->setText(QApplication::translate("MainWindow", "New Ticker", 0, QApplication::UnicodeUTF8));
+        setdown->setText(QApplication::translate("MainWindow", "Set down", 0, QApplication::UnicodeUTF8));
+        setpath->setText(QApplication::translate("MainWindow", "Set Path", 0, QApplication::UnicodeUTF8));
+        linepath->setText(QString());
         price->setText(QApplication::translate("MainWindow", "Price:", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
         high->setText(QApplication::translate("MainWindow", "Daily High:", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWindow", "Fetching Data..", 0, QApplication::UnicodeUTF8));
         low->setText(QApplication::translate("MainWindow", "Daily Low:", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
         sell->setText(QApplication::translate("MainWindow", "Lowest Sell:", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
         bid->setText(QApplication::translate("MainWindow", "Highest Bid:", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("MainWindow", "Fetching Data..", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
         spread->setText(QApplication::translate("MainWindow", "Spread", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
         setup->setText(QApplication::translate("MainWindow", "Set Up", 0, QApplication::UnicodeUTF8));
-        setdown->setText(QApplication::translate("MainWindow", "Set down", 0, QApplication::UnicodeUTF8));
-        label_up->setText(QString());
+        linedown->setText(QString());
+        lineup->setText(QString());
         label_down->setText(QString());
+        label_up->setText(QString());
+        label_path->setText(QString());
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
