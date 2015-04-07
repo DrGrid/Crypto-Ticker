@@ -13,7 +13,7 @@ void CppCurl::settings(std::string url)
     SetOptions();
 }
 
-std::string CppCurl::Fetch()
+std::string CppCurl::fetch()
 {
     SendGetRequest();
     return m_data;

@@ -25,9 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::timerout()
 {
-    data = curler.Fetch();
-    curler.data_cleanup();
-    current.data_writer(data);
+    std::thread curl_thread  (&MainWindow::curl_request,this);
+    curl_thread.join();
     time_data.memory_stepping(current.last);
     ui->label->setText(label_text.setNum(current.last));
     label_text.clear();
@@ -48,8 +47,16 @@ void MainWindow::timerout()
     if ((upper_bound<=current.sell) | (lower_bound>=current.buy))
     {
       std::thread(&MainWindow::clear_alarm, this).detach();
-      std::thread(&MainWindow::alarm,this).detach();
+      std::thread(&MainWindow::alarm, this).detach();
     }
+}
+
+void MainWindow::curl_request()
+{
+            data = curler.fetch();
+            curler.data_cleanup();
+            current.data_writer(data);
+            data.clear();
 }
 
 void MainWindow::set_up_input()

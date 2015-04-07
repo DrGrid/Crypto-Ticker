@@ -44,7 +44,7 @@ private:
 public:
    CppCurl();
    void settings(std::string url);
-   std::string Fetch();
+   std::string fetch();
    void data_cleanup();
    ~CppCurl();
 };

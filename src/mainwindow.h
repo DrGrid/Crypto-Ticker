@@ -21,6 +21,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     void clear_alarm();
     void alarm();
+    void curl_request();
     ~MainWindow();
 
 private slots:
