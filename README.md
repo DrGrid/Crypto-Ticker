@@ -14,6 +14,6 @@ ___
 
 Dependencies:
 
-qt4
-c++11
-curl
+qt4  
+c++11  
+curl  
