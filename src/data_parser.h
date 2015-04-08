@@ -17,7 +17,11 @@ public:
 	float sell;
 	float daily_high;
 	float daily_low;
-	void data_writer(std::string& data);
+    double volume;
+    void okcoin_data_writer(std::string& data);
+    void btcchina_data_writer(std::string& data);
+    void bitstamp_data_writer(std::string& data);
+    void bitfinex_data_writer(std::string& data);
 };
 
 class five_step{

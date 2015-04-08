@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle("Crypto-Ticker");
     upper_bound = 10000;
     lower_bound = 0;
-    curler.settings("https://www.okcoin.cn/api/ticker.do");
+    curler.settings("https://www.bitstamp.net/api/ticker/");
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerout()));
     timer -> start(1000);
@@ -55,7 +55,7 @@ void MainWindow::curl_request()
 {
             data = curler.fetch();
             curler.data_cleanup();
-            current.data_writer(data);
+            current.bitstamp_data_writer(data);
             data.clear();
 }
 
