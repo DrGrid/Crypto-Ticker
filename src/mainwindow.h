@@ -35,7 +35,7 @@ private:
     QString label_text, up_bound, down_bound, alarm_path;
     float upper_bound, lower_bound;
     QTimer * timer;
-    CppCurl curler;
+    CppCurl okcoin_curler, btcchina_curler, bitstamp_curler, bitfinex_curler;
     std::string data;
     parsed_data current;
     five_step time_data;

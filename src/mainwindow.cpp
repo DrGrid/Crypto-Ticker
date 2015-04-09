@@ -13,11 +13,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->choose_market->addItem("BTCChina");
     ui->choose_market->addItem("Bitfinex");
     ui->choose_market->addItem("Bitstamp");
-    alarm_path= "play ";
+   ui->choose_market->setCurrentIndex(0);
     setWindowTitle("Crypto-Ticker");
     upper_bound = 10000;
     lower_bound = 0;
-    curler.settings("https://www.bitstamp.net/api/ticker/");
+    alarm_path= "play ";
+    okcoin_curler.settings("https://www.okcoin.cn/api/ticker.do");
+    btcchina_curler.settings("https://data.btcchina.com/data/ticker");
+    bitfinex_curler.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
+    bitstamp_curler.settings("https://www.bitstamp.net/api/ticker/");
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerout()));
     timer -> start(1000);
@@ -53,10 +57,31 @@ void MainWindow::timerout()
 
 void MainWindow::curl_request()
 {
-            data = curler.fetch();
-            curler.data_cleanup();
-            current.bitstamp_data_writer(data);
-            data.clear();
+            if (ui->choose_market->currentIndex() == 0)
+            {
+                data = okcoin_curler.fetch();
+                okcoin_curler.data_cleanup();
+                current.okcoin_data_writer(data);
+            }
+            else if (ui->choose_market->currentIndex() == 1)
+            {
+                data = btcchina_curler.fetch();
+                btcchina_curler.data_cleanup();
+                current.btcchina_data_writer(data);
+            }
+            else if (ui->choose_market->currentIndex() == 2)
+            {
+                data = bitfinex_curler.fetch();
+                bitfinex_curler.data_cleanup();
+                current.bitfinex_data_writer(data);
+            }
+            else
+            {
+                data = bitstamp_curler.fetch();
+                bitstamp_curler.data_cleanup();
+                current.bitstamp_data_writer(data);
+            }
+           data.clear();
 }
 
 void MainWindow::set_up_input()
