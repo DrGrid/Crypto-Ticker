@@ -51,9 +51,12 @@ public:
     QLabel *label_5;
     QLabel *spread;
     QLabel *label_6;
+    QLabel *timestamp;
+    QLabel *label_7;
+    QLabel *volume;
+    QLabel *label_8;
     QSpacerItem *horizontalSpacer;
     QGridLayout *gridLayout;
-    QPushButton *pushButton;
     QPushButton *setpath;
     QLineEdit *lineup;
     QPushButton *setup;
@@ -79,7 +82,7 @@ public:
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         layoutWidget = new QWidget(centralWidget);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(31, 11, 398, 135));
+        layoutWidget->setGeometry(QRect(31, 11, 398, 144));
         horizontalLayout = new QHBoxLayout(layoutWidget);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
@@ -149,6 +152,26 @@ public:
 
         formLayout->setWidget(5, QFormLayout::FieldRole, label_6);
 
+        timestamp = new QLabel(layoutWidget);
+        timestamp->setObjectName(QString::fromUtf8("timestamp"));
+
+        formLayout->setWidget(6, QFormLayout::LabelRole, timestamp);
+
+        label_7 = new QLabel(layoutWidget);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
+
+        formLayout->setWidget(6, QFormLayout::FieldRole, label_7);
+
+        volume = new QLabel(layoutWidget);
+        volume->setObjectName(QString::fromUtf8("volume"));
+
+        formLayout->setWidget(7, QFormLayout::LabelRole, volume);
+
+        label_8 = new QLabel(layoutWidget);
+        label_8->setObjectName(QString::fromUtf8("label_8"));
+
+        formLayout->setWidget(7, QFormLayout::FieldRole, label_8);
+
 
         horizontalLayout->addLayout(formLayout);
 
@@ -159,11 +182,6 @@ public:
         gridLayout = new QGridLayout();
         gridLayout->setSpacing(6);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        pushButton = new QPushButton(layoutWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-
-        gridLayout->addWidget(pushButton, 0, 1, 1, 1);
-
         setpath = new QPushButton(layoutWidget);
         setpath->setObjectName(QString::fromUtf8("setpath"));
 
@@ -207,7 +225,7 @@ public:
         choose_market = new QComboBox(layoutWidget);
         choose_market->setObjectName(QString::fromUtf8("choose_market"));
 
-        gridLayout->addWidget(choose_market, 0, 0, 1, 1);
+        gridLayout->addWidget(choose_market, 0, 0, 1, 2);
 
 
         horizontalLayout->addLayout(gridLayout);
@@ -250,7 +268,10 @@ public:
         label_5->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
         spread->setText(QApplication::translate("MainWindow", "Spread", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "Set Market", 0, QApplication::UnicodeUTF8));
+        timestamp->setText(QApplication::translate("MainWindow", "Timestamp", 0, QApplication::UnicodeUTF8));
+        label_7->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
+        volume->setText(QApplication::translate("MainWindow", "Volume", 0, QApplication::UnicodeUTF8));
+        label_8->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
         setpath->setText(QApplication::translate("MainWindow", "Set Path", 0, QApplication::UnicodeUTF8));
         lineup->setText(QString());
         setup->setText(QApplication::translate("MainWindow", "Set Up", 0, QApplication::UnicodeUTF8));

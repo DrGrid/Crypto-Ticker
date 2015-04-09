@@ -178,7 +178,7 @@ void parsed_data::bitfinex_data_writer(std::string &data)
         keeper += data[c];
     }
     str << keeper;
-    str >> buy; //buy
+    str >> sell; //sell
     str.str("");
     str.clear();
     keeper.clear();
@@ -189,7 +189,7 @@ void parsed_data::bitfinex_data_writer(std::string &data)
         c++;
     }
     str << keeper;
-    str >> sell; //sell
+    str >> buy; //buy
     str.str("");
     str.clear();
     keeper.clear();

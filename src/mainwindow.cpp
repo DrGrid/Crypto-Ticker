@@ -75,7 +75,7 @@ void MainWindow::curl_request()
                 bitfinex_curler.data_cleanup();
                 current.bitfinex_data_writer(data);
             }
-            else
+            else if (ui->choose_market->currentIndex() == 3)
             {
                 data = bitstamp_curler.fetch();
                 bitstamp_curler.data_cleanup();
