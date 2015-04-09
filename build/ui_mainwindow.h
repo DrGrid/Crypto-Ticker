@@ -219,6 +219,7 @@ public:
         horizontalLayout->addLayout(gridLayout);
 
         MainWindow->setCentralWidget(centralWidget);
+        layoutWidget->raise();
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 533, 20));
@@ -254,9 +255,9 @@ public:
         label_4->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
         bid->setText(QApplication::translate("MainWindow", "Highest Bid:", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
-        spread->setText(QApplication::translate("MainWindow", "Spread", 0, QApplication::UnicodeUTF8));
+        spread->setText(QApplication::translate("MainWindow", "Spread:", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
-        volume->setText(QApplication::translate("MainWindow", "Volume", 0, QApplication::UnicodeUTF8));
+        volume->setText(QApplication::translate("MainWindow", "Volume:", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainWindow", "Fetching Data..", 0, QApplication::UnicodeUTF8));
         setpath->setText(QApplication::translate("MainWindow", "Set Path", 0, QApplication::UnicodeUTF8));
         lineup->setText(QString());
