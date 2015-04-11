@@ -80,11 +80,24 @@ void parsed_data::okcoin_data_writer(std::string& data)
 			keeper += data[c];
 			c++;
 		}
-		str << keeper; 
-		str >> sell; //finish writing the last sell order.
-		str.str("");
-		str.clear();
-		keeper.clear();
+        str << keeper;
+        str >> sell; //finish writing the last sell order.
+        str.str("");
+        str.clear();
+        keeper.clear();
+        c+=9;
+        keeper = data[c];
+        c++;
+        while (data[c+1] != ',')
+        {
+            keeper += data[c];
+            c++;
+        }
+        str << keeper;
+        str >> volume; //finish writing the last sell order.
+        str.str("");
+        str.clear();
+        keeper.clear();
 }
 
 void parsed_data::btcchina_data_writer(std::string &data)

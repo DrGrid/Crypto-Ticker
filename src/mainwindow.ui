@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>533</width>
-    <height>200</height>
+    <height>369</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>31</x>
-      <y>11</y>
+      <x>0</x>
+      <y>0</y>
       <width>398</width>
       <height>135</height>
      </rect>
@@ -146,6 +146,9 @@
       <layout class="QGridLayout" name="gridLayout">
        <item row="3" column="1">
         <widget class="QPushButton" name="setpath">
+         <property name="toolTip">
+          <string extracomment="Path to alarm .wav file"/>
+         </property>
          <property name="text">
           <string>Set Path</string>
          </property>
@@ -207,8 +210,6 @@
      </item>
     </layout>
    </widget>
-   <zorder>layoutWidget</zorder>
-   <zorder></zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
