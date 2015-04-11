@@ -219,7 +219,6 @@ public:
         horizontalLayout->addLayout(gridLayout);
 
         MainWindow->setCentralWidget(centralWidget);
-        layoutWidget->raise();
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 533, 20));
@@ -259,6 +258,9 @@ public:
         label_6->setText(QApplication::translate("MainWindow", "Fetching Data...", 0, QApplication::UnicodeUTF8));
         volume->setText(QApplication::translate("MainWindow", "Volume:", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainWindow", "Fetching Data..", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        setpath->setToolTip(QString());
+#endif // QT_NO_TOOLTIP
         setpath->setText(QApplication::translate("MainWindow", "Set Path", 0, QApplication::UnicodeUTF8));
         lineup->setText(QString());
         setup->setText(QApplication::translate("MainWindow", "Set Up", 0, QApplication::UnicodeUTF8));

@@ -1,6 +1,7 @@
 #include "data_parser.h"
 #include <string>
 #include <sstream>
+#include <vector>
 
 void parsed_data::okcoin_data_writer(std::string& data)
 {
@@ -339,33 +340,7 @@ void parsed_data::bitstamp_data_writer(std::string &data)
     keeper.clear();
 }
 
-void five_step::memory_stepping(float new_price)
+void save::memory_stepping(float current_price)
 {
-        price[4]=price[3];
-        price[3]=price[2];
-        price[2]=price[1];
-        price[1]=price[0];
-        price[0]=new_price;
-        if(tester < price[0])
-            tester = price[0];
-        if(tester < price[1])
-            tester = price[1];
-        if(tester < price[2])
-            tester = price[2];
-        if(tester < price[3])
-            tester = price[3];
-        if(tester < price[4])
-            tester = price[4];
-        high_price = tester;
-        if(tester > price[0])
-            tester = price[0];
-        if(tester > price[1])
-            tester = price[1];
-        if(tester > price[2])
-            tester = price[2];
-        if(tester > price[3])
-            tester = price[3];
-        if(tester > price[4])
-            tester = price[4];
-        low_price = tester;
+    history.push_back(current_price);
 }

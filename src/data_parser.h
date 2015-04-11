@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 class parsed_data{
 private:
@@ -24,14 +25,11 @@ public:
     void bitfinex_data_writer(std::string& data);
 };
 
-class five_step{
+class save{
 private:
-    float tester;
-    float price[5];
+    std::vector<float> history;
 public:
-    float high_price;
-    float low_price;
-    void memory_stepping(float new_price);
+    void memory_stepping(float current_price);
 };
 
 #endif //DATA_PARSER_H

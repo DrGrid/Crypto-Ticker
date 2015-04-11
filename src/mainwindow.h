@@ -35,10 +35,10 @@ private:
     QString label_text, up_bound, down_bound, alarm_path;
     float upper_bound, lower_bound;
     QTimer * timer;
-    CppCurl okcoin_curler, btcchina_curler, bitstamp_curler, bitfinex_curler;
-    std::string data;
-    parsed_data current;
-    five_step time_data;
+    CppCurl okcoin_curler, btcchina_curler, bitstamp_curler, bitfinex_curler; //initializes the different curl object; more efficient than constant cleanup and re-setting of data
+    std::string data; //passed to the curl object and returned, with the conentent of the tickers
+    parsed_data current; //shows the current data
+    save time_data;
 };
 
 #endif // MAINWINDOW_H
