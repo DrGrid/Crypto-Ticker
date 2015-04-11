@@ -44,7 +44,7 @@ void MainWindow::timerout()
     label_text.clear();
     ui->label_6->setText(label_text.setNum(current.sell-current.buy));
     label_text.clear();
-        ui->label_7->setText(label_text.setNum(current.volume));
+    ui->label_7->setText(label_text.setNum(current.volume));
     label_text.clear();
     data.clear();
     connect(ui->setup,SIGNAL(clicked()), this, SLOT(set_up_input()));
