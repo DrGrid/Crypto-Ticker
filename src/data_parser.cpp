@@ -356,4 +356,6 @@ void parsed_data::bitstamp_data_writer(std::string &data)
 void save::memory_stepping(float current_price)
 {
     history.push_back(current_price);
+    if (history.size() > 1000)
+        history.erase(history.begin());
 }
