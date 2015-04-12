@@ -1,7 +1,7 @@
 #include "data_parser.h"
 #include <string>
 #include <sstream>
-#include <vector>
+#include <QVector>
 
 void parsed_data::okcoin_data_writer(std::string& data)
 {
@@ -353,9 +353,4 @@ void parsed_data::bitstamp_data_writer(std::string &data)
     keeper.clear();
 }
 
-void save::memory_stepping(float current_price)
-{
-    history.push_back(current_price);
-    if (history.size() > 1000)
-        history.erase(history.begin());
-}
+

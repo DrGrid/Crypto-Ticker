@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <vector>
+#include <QVector>
 
 class parsed_data{
 private:
@@ -14,7 +14,7 @@ private:
 public:
     long int time_number;
 	float buy;
-	float last;
+    double last;
 	float sell;
 	float daily_high;
 	float daily_low;
@@ -25,11 +25,5 @@ public:
     void bitfinex_data_writer(std::string& data);
 };
 
-class save{
-private:
-    std::vector<float> history;
-public:
-    void memory_stepping(float current_price);
-};
 
 #endif //DATA_PARSER_H

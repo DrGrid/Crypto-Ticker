@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QString>
+#include <QVector>
 #include <QtGui>
 #include <thread>
 
@@ -30,8 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::timerout()
 {
     std::thread curl_thread  (&MainWindow::curl_request,this);
-    curl_thread.join();
-    time_data.memory_stepping(current.last);
+    curl_thread.join(); //waits for the curl request to finish, before resuming the programm
+    memory_stepping();
     ui->label->setText(label_text.setNum(current.last));
     label_text.clear();
     ui->label_2->setText(label_text.setNum(current.daily_high));
@@ -55,6 +56,7 @@ void MainWindow::timerout()
       std::thread(&MainWindow::clear_alarm, this).detach();
       std::thread(&MainWindow::alarm, this).detach();
     }
+    plotter(); //call the plotting function last in the method, to avoid data collisions.
 }
 
 void MainWindow::curl_request()
@@ -120,6 +122,41 @@ void MainWindow::clear_alarm()
     ui->label_down->setText("");
     lower_bound = 0;
 }
+
+void MainWindow::plotter()
+{
+    QVector<double> price(101);
+    QVector<double>time(101);
+    price = give_data();
+    for(unsigned short c(0); c < 101; c++)
+    {
+        time[c] = c;
+    }
+    //initialise customPlot graphs
+    ui->customPlot->addGraph();
+    ui->customPlot->graph(0)->setData(time, price);
+    // give the axes some labels:
+    ui->customPlot->xAxis->setLabel("Time");
+    ui->customPlot->yAxis->setLabel("Price");
+    // set the range
+    ui->customPlot->xAxis->setRange(0, 101);
+    ui->customPlot->yAxis->setRange(current.last-10, current.last+10);
+    ui->customPlot->replot();
+}
+
+void MainWindow::memory_stepping()
+{
+    history[position] = current.last;
+    position++;
+    if (position % 100 == 0)
+        position = 0;
+}
+
+QVector<double>MainWindow::give_data()
+{
+    return history;
+}
+
 
 MainWindow::~MainWindow()
 {

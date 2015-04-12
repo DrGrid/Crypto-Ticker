@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QVector>
 #include <QtGui>
 #include <string>
 #include <thread>
@@ -22,6 +23,9 @@ public:
     void clear_alarm();
     void alarm();
     void curl_request();
+    void plotter();
+    void memory_stepping();
+    QVector<double>  give_data();
     ~MainWindow();
 
 private slots:
@@ -38,7 +42,8 @@ private:
     CppCurl okcoin_curler, btcchina_curler, bitstamp_curler, bitfinex_curler; //initializes the different curl object; more efficient than constant cleanup and re-setting of data
     std::string data; //passed to the curl object and returned, with the conentent of the tickers
     parsed_data current; //shows the current data
-    save time_data;
+   QVector<double> history = QVector<double> (101); //QVector initialized with C++11 copy-only member initialisers. The Vector holds the last price of the past 100 seconds.
+    int position; //position for the data, that is being appended to the plot
 };
 
 #endif // MAINWINDOW_H
