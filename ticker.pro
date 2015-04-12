@@ -11,9 +11,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = ticker
 TEMPLATE = app
 
-OBJECTS_DIR = build
-MOC_DIR = ../src
-UI_DIR = ../src
+OBJECTS_DIR = src
+MOC_DIR = src
+UI_DIR = src
 
 QMAKE_CFLAGS += -std=c++11 -lcurl -lpthread
 QMAKE_CXXFLAGS += -std=c++11 -lcurl -lpthread
