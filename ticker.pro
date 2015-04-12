@@ -12,8 +12,8 @@ TARGET = ticker
 TEMPLATE = app
 
 OBJECTS_DIR = build
-MOC_DIR = build
-UI_DIR = build
+MOC_DIR = ../src
+UI_DIR = ../src
 
 QMAKE_CFLAGS += -std=c++11 -lcurl -lpthread
 QMAKE_CXXFLAGS += -std=c++11 -lcurl -lpthread
@@ -23,12 +23,12 @@ SOURCES += ../src/main.cpp\
         ../src/mainwindow.cpp\
         ../src/curl_wrapper_class.cpp\
         ../src/data_parser.cpp\
-    ../qcustomplot/qcustomplot.cpp
+    ../src/qcustomplot.cpp
 
 HEADERS  += ../src/mainwindow.h\
             ../src/curl_wrapper_class.h\
             ../src/data_parser.h \
-    ../qcustomplot/qcustomplot.h
+    ../src/qcustomplot.h
 
 FORMS    += ../src/mainwindow.ui
 
