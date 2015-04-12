@@ -28,6 +28,7 @@
 #include <QtGui/QStatusBar>
 #include <QtGui/QToolBar>
 #include <QtGui/QWidget>
+#include "../qcustomplot/qcustomplot.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -64,6 +65,7 @@ public:
     QLabel *label_up;
     QLabel *label_down;
     QComboBox *choose_market;
+    QCustomPlot *customPlot;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QToolBar *mainToolBar;
@@ -73,14 +75,14 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(533, 369);
+        MainWindow->resize(533, 453);
         actionNew_Ticker = new QAction(MainWindow);
         actionNew_Ticker->setObjectName(QString::fromUtf8("actionNew_Ticker"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         layoutWidget = new QWidget(centralWidget);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(0, 0, 398, 135));
+        layoutWidget->setGeometry(QRect(70, 0, 398, 135));
         horizontalLayout = new QHBoxLayout(layoutWidget);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
@@ -218,6 +220,9 @@ public:
 
         horizontalLayout->addLayout(gridLayout);
 
+        customPlot = new QCustomPlot(centralWidget);
+        customPlot->setObjectName(QString::fromUtf8("customPlot"));
+        customPlot->setGeometry(QRect(70, 160, 381, 231));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
