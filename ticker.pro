@@ -15,9 +15,9 @@ OBJECTS_DIR = src
 MOC_DIR = src
 UI_DIR = src
 
-QMAKE_CFLAGS += -std=c++11 -lcurl -lpthread -g
-QMAKE_CXXFLAGS += -std=c++11 -lcurl -lpthread -g
-QMAKE_LFLAGS += -std=c++11 -lcurl -lpthread -g
+QMAKE_CFLAGS += -std=c++11 -lcurl
+QMAKE_CXXFLAGS += -std=c++11 -lcurl
+QMAKE_LFLAGS += -std=c++11 -lcurl
 
 SOURCES += src/main.cpp\
         src/mainwindow.cpp\
