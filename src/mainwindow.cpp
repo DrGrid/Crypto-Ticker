@@ -146,7 +146,7 @@ void MainWindow::clear_alarm() //resets the alarm input to be able to accept a n
 void MainWindow::plotter()
 {
     //initialise customPlot graphs
-    ui->customPlot->graph(0)->setData(time, give_data());
+    ui->customPlot->graph(0)->setData(time, history);
     // give the axes some labels:
     ui->customPlot->xAxis->setLabel("Time");
     ui->customPlot->yAxis->setLabel("Price");
@@ -173,12 +173,6 @@ void MainWindow::memory_stepping()
         }
     }
 }
-
-QVector<double>MainWindow::give_data()
-{
-    return history;
-}
-
 
 MainWindow::~MainWindow()
 {
