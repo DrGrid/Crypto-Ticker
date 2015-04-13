@@ -70,7 +70,7 @@ void MainWindow::timerout() //triggers on timeout every second.
     connect(ui->setdown,SIGNAL(clicked()), this, SLOT(set_down_input()));
     connect(ui->setpath,SIGNAL(clicked()), this, SLOT(set_path()));
     //set the logic to call the alarm function, detach the called thread, to allow the program to run further in the background
-    if ((upper_bound<=current.sell) | (lower_bound>=current.buy))
+    if ((upper_bound<current.sell) | (lower_bound>current.buy))
     {
       std::thread(&MainWindow::clear_alarm, this).detach();
       std::thread(&MainWindow::alarm, this).detach();
