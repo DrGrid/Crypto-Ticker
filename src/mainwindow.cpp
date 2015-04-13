@@ -18,10 +18,11 @@ MainWindow::MainWindow(QWidget *parent) :
     }
    //add and construct the graph layout
     ui->customPlot->addGraph();
-    // give the axes some labels and publish user defined as false:
+    // give the axes some labels and set the initial range values:
     ui->customPlot->xAxis->setLabel("Time");
     ui->customPlot->yAxis->setLabel("Price");
-    user_defined = false;
+    plot_price = 10;
+    plot_time = 100;
      //add the different fields to the ui, that can't be declared in the form
     ui->choose_market->addItem("OkCoin");
     ui->choose_market->addItem("BTCChina");
@@ -154,11 +155,8 @@ void MainWindow::clear_alarm() //resets the alarm input to be able to accept a n
 void MainWindow::plotter()
 {
     // if not defined by user, set the range
-    if (!user_defined)
-    {
-        ui->customPlot->xAxis->setRange(0,100);
-        ui->customPlot->yAxis->setRange(current.last-10, current.last+10);
-    }
+    ui->customPlot->xAxis->setRange(0,plot_time);
+    ui->customPlot->yAxis->setRange(current.last-plot_price, current.last+plot_price);
     //initialise customPlot graphs
     ui->customPlot->graph(0)->setData(time, history);
     // replot every time the function is called to show the changes
@@ -167,15 +165,15 @@ void MainWindow::plotter()
 
 void MainWindow::memory_stepping()
 {
-    if (position < 100) //populates the vector for the first hundred time steps (default case would be price every second)
+    if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
     {
         history[position] = current.last;
         position++;
     }
     else
     {
-        history[100] = current.last;
-        for (unsigned short c(0); c < 100; c++ ) //step through the past hundred seconds and update them to their nearest cell.
+        history[plot_time] = current.last;
+        for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
         {
             history[c] = history[c+1];
         }
@@ -185,8 +183,7 @@ void MainWindow::memory_stepping()
 void MainWindow::set_time_scale() //take the time of the q_text_edit, convert to double and resize the graph
 {
     ranges = ui->edit_time_scale->text();
-    ui->customPlot->xAxis->setRange(0,ranges.toDouble());
-    user_defined = true;
+    plot_time = ranges.toDouble();
     ranges.clear();
 }
 
@@ -194,8 +191,6 @@ void MainWindow::set_price_range()
 {
     ranges = ui->edit_price_range->text();
     plot_price = ranges.toDouble();
-    ui->customPlot->yAxis->setRange(current.last-plot_price, current.last+plot_price);
-    user_defined = true;
     ranges.clear();
 }
 

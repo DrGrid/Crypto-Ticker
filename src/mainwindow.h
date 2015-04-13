@@ -39,7 +39,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
-    bool user_defined; //checks if the user has defined a range already, or not
     float upper_bound, lower_bound;
     QTimer * timer;
     CppCurl okcoin_curler, btcchina_curler, bitstamp_curler, bitfinex_curler; //initializes the different curl object; more efficient than constant cleanup and re-setting of data
@@ -48,7 +47,7 @@ private:
    QVector<double> history = QVector<double> (1000); //QVector initialized with C++11 copy-only member initialisers. The Vector holds the last price of the past 100 seconds.
    QVector<double>time = QVector<double>(1000); //This Vector holds the time, as in 100 seconds.
     int position; //position for the data, that is being appended to the plot
-    double plot_price; //hold the range of the plot time and plot and price
+    double plot_time, plot_price; //hold the range of the plot time and plot  price
 };
 
 #endif // MAINWINDOW_H
