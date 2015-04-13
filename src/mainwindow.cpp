@@ -16,8 +16,13 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         time[c] = c;
     }
-    //add the different fields to the ui, that can't be declared in the form
+   //add and construct the graph layout
     ui->customPlot->addGraph();
+    // give the axes some labels and publish user defined as false:
+    ui->customPlot->xAxis->setLabel("Time");
+    ui->customPlot->yAxis->setLabel("Price");
+    user_defined = false;
+     //add the different fields to the ui, that can't be declared in the form
     ui->choose_market->addItem("OkCoin");
     ui->choose_market->addItem("BTCChina");
     ui->choose_market->addItem("Bitfinex");
@@ -69,6 +74,9 @@ void MainWindow::timerout() //triggers on timeout every second.
     connect(ui->setup,SIGNAL(clicked()), this, SLOT(set_up_input()));
     connect(ui->setdown,SIGNAL(clicked()), this, SLOT(set_down_input()));
     connect(ui->setpath,SIGNAL(clicked()), this, SLOT(set_path()));
+    //accept input to change the range of the graph
+    connect(ui->push_price_range,SIGNAL(clicked()), this,SLOT(set_price_range()));
+    connect(ui->push_time_scale,SIGNAL(clicked()), this, SLOT(set_time_scale()));
     //set the logic to call the alarm function, detach the called thread, to allow the program to run further in the background
     if ((upper_bound<current.sell) | (lower_bound>current.buy))
     {
@@ -145,14 +153,14 @@ void MainWindow::clear_alarm() //resets the alarm input to be able to accept a n
 
 void MainWindow::plotter()
 {
+    // if not defined by user, set the range
+    if (!user_defined)
+    {
+        ui->customPlot->xAxis->setRange(0,100);
+        ui->customPlot->yAxis->setRange(current.last-10, current.last+10);
+    }
     //initialise customPlot graphs
     ui->customPlot->graph(0)->setData(time, history);
-    // give the axes some labels:
-    ui->customPlot->xAxis->setLabel("Time");
-    ui->customPlot->yAxis->setLabel("Price");
-    // set the range
-    ui->customPlot->xAxis->setRange(0, 101);
-    ui->customPlot->yAxis->setRange(current.last-10, current.last+10);
     // replot every time the function is called to show the changes
     ui->customPlot->replot();
 }
@@ -172,6 +180,23 @@ void MainWindow::memory_stepping()
             history[c] = history[c+1];
         }
     }
+}
+
+void MainWindow::set_time_scale() //take the time of the q_text_edit, convert to double and resize the graph
+{
+    ranges = ui->edit_time_scale->text();
+    ui->customPlot->xAxis->setRange(0,ranges.toDouble());
+    user_defined = true;
+    ranges.clear();
+}
+
+void MainWindow::set_price_range()
+{
+    ranges = ui->edit_price_range->text();
+    plot_price = ranges.toDouble();
+    ui->customPlot->yAxis->setRange(current.last-plot_price, current.last+plot_price);
+    user_defined = true;
+    ranges.clear();
 }
 
 MainWindow::~MainWindow()
