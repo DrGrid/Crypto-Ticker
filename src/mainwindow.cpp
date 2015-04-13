@@ -10,6 +10,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    for(unsigned short c(0); c < 101; c++) //set the data of the time vector, every step is called once every second.
+    {
+        time[c] = c;
+    }
+    ui->customPlot->addGraph();
     ui->choose_market->addItem("OkCoin");
     ui->choose_market->addItem("BTCChina");
     ui->choose_market->addItem("Bitfinex");
@@ -125,16 +130,8 @@ void MainWindow::clear_alarm()
 
 void MainWindow::plotter()
 {
-    QVector<double> price(101);
-    QVector<double>time(101);
-    price = give_data();
-    for(unsigned short c(0); c < 101; c++)
-    {
-        time[c] = c;
-    }
     //initialise customPlot graphs
-    ui->customPlot->addGraph();
-    ui->customPlot->graph(0)->setData(time, price);
+    ui->customPlot->graph(0)->setData(time, give_data());
     // give the axes some labels:
     ui->customPlot->xAxis->setLabel("Time");
     ui->customPlot->yAxis->setLabel("Price");

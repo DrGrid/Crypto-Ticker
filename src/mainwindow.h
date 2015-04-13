@@ -43,6 +43,7 @@ private:
     std::string data; //passed to the curl object and returned, with the conentent of the tickers
     parsed_data current; //shows the current data
    QVector<double> history = QVector<double> (101); //QVector initialized with C++11 copy-only member initialisers. The Vector holds the last price of the past 100 seconds.
+   QVector<double>time = QVector<double>(101); //This Vector holds the time, as in 100 seconds.
     int position; //position for the data, that is being appended to the plot
 };
 
