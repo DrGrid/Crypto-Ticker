@@ -143,10 +143,19 @@ void MainWindow::plotter()
 
 void MainWindow::memory_stepping()
 {
-    history[position] = current.last;
-    position++;
-    if (position % 100 == 0)
-        position = 0;
+    if (position < 100) //populates the vector for the first hundred time steps (default case would be price every second)
+    {
+        history[position] = current.last;
+        position++;
+    }
+    else
+    {
+        history[100] = current.last;
+        for (unsigned short c(0); c < 100; c++ )
+        {
+            history[c] = history[c+1];
+        }
+    }
 }
 
 QVector<double>MainWindow::give_data()
