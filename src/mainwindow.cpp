@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     btcchina_curler.settings("https://data.btcchina.com/data/ticker");
     bitfinex_curler.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
     bitstamp_curler.settings("https://www.bitstamp.net/api/ticker/");
+    position = 0;
     //Spawn a timer, that timeouts every second and calls the functions, that will trigger action.
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerout()));
