@@ -42,6 +42,13 @@ MainWindow::MainWindow(QWidget *parent) :
     bitfinex_curler.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
     bitstamp_curler.settings("https://www.bitstamp.net/api/ticker/");
     position = 0;
+     //accept input for the threashholds to trigger the alarm
+    connect(ui->setup,SIGNAL(clicked()), this, SLOT(set_up_input()));
+    connect(ui->setdown,SIGNAL(clicked()), this, SLOT(set_down_input()));
+    connect(ui->setpath,SIGNAL(clicked()), this, SLOT(set_path()));
+    //accept input to change the range of the graph
+    connect(ui->push_price_range,SIGNAL(clicked()), this,SLOT(set_price_range()));
+    connect(ui->push_time_scale,SIGNAL(clicked()), this, SLOT(set_time_scale()));
     //Spawn a timer, that timeouts every second and calls the functions, that will trigger action.
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerout()));
@@ -72,13 +79,6 @@ void MainWindow::timerout() //triggers on timeout every second.
     label_text.clear();
     //clear the data string
     data.clear();
-    //accept input for the threashholds to trigger the alarm
-    connect(ui->setup,SIGNAL(clicked()), this, SLOT(set_up_input()));
-    connect(ui->setdown,SIGNAL(clicked()), this, SLOT(set_down_input()));
-    connect(ui->setpath,SIGNAL(clicked()), this, SLOT(set_path()));
-    //accept input to change the range of the graph
-    connect(ui->push_price_range,SIGNAL(clicked()), this,SLOT(set_price_range()));
-    connect(ui->push_time_scale,SIGNAL(clicked()), this, SLOT(set_time_scale()));
     //set the logic to call the alarm function, detach the called thread, to allow the program to run further in the background
     if ((upper_bound<current.sell) | (lower_bound>current.buy))
     {
