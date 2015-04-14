@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     btcchina_curler.settings("https://data.btcchina.com/data/ticker");
     bitfinex_curler.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
     bitstamp_curler.settings("https://www.bitstamp.net/api/ticker/");
+    //set the position of the data feeder to 0.
     position = 0;
      //accept input for the threashholds to trigger the alarm
     connect(ui->setup,SIGNAL(clicked()), this, SLOT(set_up_input()));
@@ -186,6 +187,7 @@ void MainWindow::set_time_scale() //take the time of the q_text_edit, convert to
     ranges = ui->edit_time_scale->text();
     plot_time = ranges.toDouble();
     ranges.clear();
+    position = 0;
 }
 
 void MainWindow::set_price_range()
@@ -193,6 +195,7 @@ void MainWindow::set_price_range()
     ranges = ui->edit_price_range->text();
     plot_price = ranges.toDouble();
     ranges.clear();
+    position = 0;
 }
 
 MainWindow::~MainWindow()
