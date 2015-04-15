@@ -23,10 +23,11 @@ SOURCES += src/main.cpp\
 HEADERS  += src/mainwindow.h\
             src/curl_wrapper_class.h\
             src/data_parser.h \
-    		src/qcustomplot.h\
+    		src/qcustomplot.h \
     src/cross_market_dialog.h
 
-FORMS    += src/mainwindow.ui
+FORMS    += src/mainwindow.ui \
+    src/cross_market_dialog.ui
 
 QT       += core gui
 

@@ -5,10 +5,12 @@
 #include <QString>
 #include <QVector>
 #include <QtGui>
+#include <QThread>
 #include <string>
 #include <thread>
 #include "data_parser.h"
 #include "curl_wrapper_class.h"
+#include "cross_market_dialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -35,13 +37,15 @@ private slots:
     void set_path();
     void set_price_range();
     void set_time_scale();
-    void go_cross_market();
+    void trig_power();
 
 private:
     Ui::MainWindow *ui;
+    cross_market_dialog *mDialog;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
     float upper_bound, lower_bound;
     QTimer * timer;
+    QThread* thread;
     CppCurl okcoin_curler, btcchina_curler, bitstamp_curler, bitfinex_curler; //initializes the different curl object; more efficient than constant cleanup and re-setting of data
     std::string data; //passed to the curl object and returned, with the conentent of the tickers
     parsed_data current; //shows the current data

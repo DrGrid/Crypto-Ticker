@@ -3,7 +3,9 @@
 #include <QString>
 #include <QVector>
 #include <QtGui>
+#include <QThread>
 #include <thread>
+#include "cross_market_dialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //call the ui function first, to allow interaction with the QObject
     ui->setupUi(this);
+    thread = new QThread;
     //set the data of the time vector, every step is called once every second.
     for(unsigned short c(0); c < 101; c++)
     {
@@ -51,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->push_price_range,SIGNAL(clicked()), this,SLOT(set_price_range()));
     connect(ui->push_time_scale,SIGNAL(clicked()), this, SLOT(set_time_scale()));
     //accept input to spawn the cross market analyzer
-    connect(ui->push_cross_market,SIGNAL(clicked()),this,SLOT(go_cross_market()));
+
     //Spawn a timer, that timeouts every second and calls the functions, that will trigger action.
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerout()));
@@ -63,6 +66,7 @@ void MainWindow::timerout() //triggers on timeout every second.
     //Initialize a thread and wait for the curl request to finish, before resuming the programm
     std::thread curl_thread  (&MainWindow::curl_request,this);
     curl_thread.join();
+    connect(ui->push_power,SIGNAL(clicked()),this,SLOT(trig_power()));
     //read the data string into a presentable Qt format
     memory_stepping();
     //print the data to the screen with text labels, clear the label text every time to allow reuse.
@@ -198,12 +202,15 @@ void MainWindow::set_price_range()
     ranges.clear();
 }
 
-void MainWindow::go_cross_market()
-{
-    QDialog *cross_market_dialog = new QDialog;
-}
-
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::trig_power()
+{
+    mDialog = new cross_market_dialog(this);
+    mDialog->moveToThread(thread);
+    mDialog->show();
+}
+
