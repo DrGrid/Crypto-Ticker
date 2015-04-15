@@ -35,6 +35,7 @@ private slots:
     void set_path();
     void set_price_range();
     void set_time_scale();
+    void go_cross_market();
 
 private:
     Ui::MainWindow *ui;

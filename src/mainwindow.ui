@@ -20,7 +20,7 @@
       <x>70</x>
       <y>0</y>
       <width>442</width>
-      <height>126</height>
+      <height>135</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -203,6 +203,13 @@
         <widget class="QLineEdit" name="linepath">
          <property name="text">
           <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QPushButton" name="push_cross_market">
+         <property name="text">
+          <string>Cross Market Analyzer</string>
          </property>
         </widget>
        </item>

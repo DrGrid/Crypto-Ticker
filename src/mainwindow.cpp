@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //accept input to change the range of the graph
     connect(ui->push_price_range,SIGNAL(clicked()), this,SLOT(set_price_range()));
     connect(ui->push_time_scale,SIGNAL(clicked()), this, SLOT(set_time_scale()));
+    //accept input to spawn the cross market analyzer
+    connect(ui->push_cross_market,SIGNAL(clicked()),this,SLOT(go_cross_market()));
     //Spawn a timer, that timeouts every second and calls the functions, that will trigger action.
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerout()));
@@ -187,7 +189,6 @@ void MainWindow::set_time_scale() //take the time of the q_text_edit, convert to
     ranges = ui->edit_time_scale->text();
     plot_time = ranges.toDouble();
     ranges.clear();
-    position = 0;
 }
 
 void MainWindow::set_price_range()
@@ -195,7 +196,11 @@ void MainWindow::set_price_range()
     ranges = ui->edit_price_range->text();
     plot_price = ranges.toDouble();
     ranges.clear();
-    position = 0;
+}
+
+void MainWindow::go_cross_market()
+{
+    QDialog *cross_market_dialog = new QDialog;
 }
 
 MainWindow::~MainWindow()
