@@ -18,13 +18,13 @@ SOURCES += src/main.cpp\
         src/curl_wrapper_class.cpp\
         src/data_parser.cpp\
     	src/qcustomplot.cpp\
-    	src/cross_market_dialog.cpp
+    src/cross_market_dialog.cpp
 
 HEADERS  += src/mainwindow.h\
             src/curl_wrapper_class.h\
             src/data_parser.h \
     		src/qcustomplot.h\
-    		src/cross_market_dialog.h
+    src/cross_market_dialog.h
 
 FORMS    += src/mainwindow.ui
 
