@@ -3,9 +3,7 @@
 #include <QString>
 #include <QVector>
 #include <QtGui>
-#include <QThread>
 #include <thread>
-#include "cross_market_dialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //call the ui function first, to allow interaction with the QObject
     ui->setupUi(this);
-    thread = new QThread;
     //set the data of the time vector, every step is called once every second.
     for(unsigned short c(0); c < 1001; c++)
     {
@@ -64,16 +61,15 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::timerout() //triggers on timeout every second.
 {
     //Initialize threads and wait for the curl request to finish, before resuming the programm
-    std::thread okcoin_curl_thread  (&MainWindow::curl_request, 0,this);
-    std::thread btcchina_curl_thread (&MainWindow::curl_request, 1, this);
-    std::thread bitfinex_curl_thread (&MainWindow::curl_request, 2, this);
-    std::thread bitstamp_curl_thread (&MainWindow::curl_request, 3, this);
+    std::thread okcoin_curl_thread  (&MainWindow::okcoin_curl_request,this);
+    std::thread btcchina_curl_thread (&MainWindow::bitstamp_curl_request, this);
+    std::thread bitfinex_curl_thread (&MainWindow::bitfinex_curl_request, this);
+    std::thread bitstamp_curl_thread (&MainWindow::btcchina_curl_request, this);
     //join the threads in reverse order, keeping in mind perceived order of response time.
     bitstamp_curl_thread.join();
     bitfinex_curl_thread.join();
     btcchina_curl_thread.join();
     okcoin_curl_thread.join();
-    connect(ui->push_cross_market,SIGNAL(clicked()),this,SLOT(trig_power()));
     //read the data string into a presentable Qt format
     memory_stepping();
     //print the data to the screen with text labels, clear the label text every time to allow reuse.
@@ -91,8 +87,6 @@ void MainWindow::timerout() //triggers on timeout every second.
     label_text.clear();
     ui->label_7->setText(label_text.setNum(current.volume));
     label_text.clear();
-    //clear the data string
-    data.clear();
     //set the logic to call the alarm function, detach the called thread, to allow the program to run further in the background
     if ((upper_bound<current.sell) | (lower_bound>current.buy))
     {
@@ -103,37 +97,40 @@ void MainWindow::timerout() //triggers on timeout every second.
     plotter();
 }
 
-void MainWindow::curl_request(int Index) //depending on the index of the comoboBox, the data string is filled with the JSON of the respective ticker API.
+void MainWindow::okcoin_curl_request() //depending on the index of the comoboBox, the data string is filled with the JSON of the respective ticker API.
 {
-            if (Index == 0)
-            {
                 okcoin_data = okcoin_curler.fetch();
                 okcoin_curler.data_cleanup();
-                if (ui->choose_market->currentIndex() == 3)
+                if(ui->choose_market->currentIndex() == 0)
                     current.okcoin_data_writer(okcoin_data);
-            }
-            else if (Index == 1)
-            {
+                okcoin_data.clear();
+}
+
+void MainWindow::btcchina_curl_request()
+ {
                 btcchina_data = btcchina_curler.fetch();
                 btcchina_curler.data_cleanup();
-                if (ui->choose_market->currentIndex() == 3)
-                    current.btcchina_data_writer(btcchina_data);
-            }
-            else if (Index == 2)
-            {
-                bitifnex_data = bitfinex_curler.fetch();
+                if(ui->choose_market->currentIndex() == 1)
+                current.btcchina_data_writer(btcchina_data);
+                btcchina_data.clear();
+}
+
+void MainWindow::bitfinex_curl_request()
+{
+                bitfinex_data = bitfinex_curler.fetch();
                 bitfinex_curler.data_cleanup();
-                if (ui->choose_market->currentIndex() == 3)
-                    current.bitfinex_data_writer(bitfinex_data);
-            }
-            else if (ui->choose_market->currentIndex() == 3)
-            {
+                if(ui->choose_market->currentIndex() == 2)
+                current.bitfinex_data_writer(bitfinex_data);
+                bitfinex_data.clear();
+}
+
+void MainWindow::bitstamp_curl_request()
+{
                 bitstamp_data = bitstamp_curler.fetch();
                 bitstamp_curler.data_cleanup();
-                if (ui->choose_market->currentIndex() == 3)
-                    current.bitstamp_data_writer(bitstamp_data);
-            }
-           data.clear();
+                if(ui->choose_market->currentIndex() == 3)
+                current.bitstamp_data_writer(bitstamp_data);
+                bitstamp_data.clear();
 }
 
 void MainWindow::set_up_input() //sets the upper trigger for the alarm. Once this price has been reached, the alarm will sound
@@ -216,12 +213,5 @@ void MainWindow::set_price_range()
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::trig_power()
-{
-    mDialog = new cross_market_dialog(this);
-    mDialog->moveToThread(thread);
-    mDialog->show();
 }
 

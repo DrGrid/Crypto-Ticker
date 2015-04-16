@@ -17,19 +17,14 @@ SOURCES += src/main.cpp\
         src/mainwindow.cpp\
         src/curl_wrapper_class.cpp\
         src/data_parser.cpp\
-    	src/qcustomplot.cpp\
-        src/cross_market_dialog.cpp \
-        src/comparer.cpp
+    	src/qcustomplot.cpp
 
 HEADERS  += src/mainwindow.h\
             src/curl_wrapper_class.h\
             src/data_parser.h \
-            src/qcustomplot.h \
-            src/cross_market_dialog.h \
-            src/comparer.h
+            src/qcustomplot.h
 
-FORMS    += src/mainwindow.ui \
-    src/cross_market_dialog.ui
+FORMS    += src/mainwindow.ui
 
 QT       += core gui
 

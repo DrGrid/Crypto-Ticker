@@ -10,7 +10,6 @@
 #include <thread>
 #include "data_parser.h"
 #include "curl_wrapper_class.h"
-#include "cross_market_dialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,9 +23,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     void clear_alarm();
     void alarm();
-    void curl_request();
+    void curl_request(int Index);
     void plotter();
     void memory_stepping();
+    void okcoin_curl_request();
+    void btcchina_curl_request();
+    void bitstamp_curl_request();
+    void bitfinex_curl_request();
     QVector<double>  give_data();
     ~MainWindow();
 
@@ -37,11 +40,9 @@ private slots:
     void set_path();
     void set_price_range();
     void set_time_scale();
-    void trig_power();
 
 private:
     Ui::MainWindow *ui;
-    cross_market_dialog *mDialog;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
     float upper_bound, lower_bound;
     QTimer * timer;
