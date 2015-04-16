@@ -48,7 +48,7 @@ private slots:
     void set_price_range();
     void set_time_scale();
     void set_basic_information();
-    void analyzer(std::string);
+    void set_debug(QString str);
 
 private:
     Ui::MainWindow *ui;

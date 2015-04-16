@@ -13,8 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     worker = new curl_worker();
     curl_thread = new QThread;
-    connect(curl_thread, SIGNAL(finished_thread(my_data)),this,SLOT(setText(my_data)));
     connect(curl_thread,SIGNAL(started()), worker,SLOT(process()));
+    connect(worker, SIGNAL(finished_thread(QString)),this,SLOT(set_debug(QString)));
     worker->moveToThread(curl_thread);
     curl_thread->start();
     //set the data used by the plotter
@@ -232,10 +232,9 @@ void MainWindow::set_price_range()
     ranges.clear();
 }
 
-void MainWindow::analyzer(std::string str)
+void MainWindow::set_debug(QString str)
 {
-    QString display_string  = QString::fromStdString(str);
-    ui->debug->setText(display_string);
+    ui->debug->setText(str);
 }
 
 MainWindow::~MainWindow()
