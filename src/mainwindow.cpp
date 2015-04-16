@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     thread = new QThread;
     //set the data of the time vector, every step is called once every second.
-    for(unsigned short c(0); c < 101; c++)
+    for(unsigned short c(0); c < 1001; c++)
     {
         time[c] = c;
     }
@@ -66,7 +66,7 @@ void MainWindow::timerout() //triggers on timeout every second.
     //Initialize a thread and wait for the curl request to finish, before resuming the programm
     std::thread curl_thread  (&MainWindow::curl_request,this);
     curl_thread.join();
-    connect(ui->push_power,SIGNAL(clicked()),this,SLOT(trig_power()));
+    connect(ui->push_cross_market,SIGNAL(clicked()),this,SLOT(trig_power()));
     //read the data string into a presentable Qt format
     memory_stepping();
     //print the data to the screen with text labels, clear the label text every time to allow reuse.
