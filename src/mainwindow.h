@@ -10,6 +10,7 @@
 #include <thread>
 #include "data_parser.h"
 #include "curl_wrapper_class.h"
+#include "curl_worker_class.h"
 
 namespace Ui {
 class MainWindow;
@@ -51,6 +52,7 @@ private:
     Ui::MainWindow *ui;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
     float upper_bound, lower_bound;
+    curl_worker* worker;
     QTimer * curl_timer;
     QThread* curl_thread;
     CppCurl okcoin_curler, btcchina_curler, bitstamp_curler, bitfinex_curler; //initializes the different curl object; more efficient than constant cleanup and re-setting of data

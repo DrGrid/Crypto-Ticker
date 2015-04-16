@@ -17,12 +17,14 @@ SOURCES += src/main.cpp\
         src/mainwindow.cpp\
         src/curl_wrapper_class.cpp\
         src/data_parser.cpp\
-    	src/qcustomplot.cpp
+    	src/qcustomplot.cpp\
+    	src/curl_worker_class.cpp
 
 HEADERS  += src/mainwindow.h\
             src/curl_wrapper_class.h\
             src/data_parser.h \
-            src/qcustomplot.h
+            src/qcustomplot.h \
+            src/curl_worker_class.h
 
 FORMS    += src/mainwindow.ui
 

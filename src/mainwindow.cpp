@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //call the ui function first, to allow interaction with the QObject
     ui->setupUi(this);
+    worker = new curl_worker;
     //set the data used by the plotter
     set_plot_data();
     //set the details of the mainwindow ui
