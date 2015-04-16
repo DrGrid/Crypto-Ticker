@@ -54,7 +54,6 @@ void MainWindow::curl_timeout() //triggers on timeout every second.
     btcchina_curl_thread.join();
     okcoin_curl_thread.join();
      emit finished();
-     switcher = true;
 }
 
 void MainWindow::set_basic_information()
