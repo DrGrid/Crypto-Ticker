@@ -11,7 +11,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //call the ui function first, to allow interaction with the QObject
     ui->setupUi(this);
-    worker = new curl_worker;
+    worker = new curl_worker();
+    curl_thread = new QThread;
+    connect(curl_thread, SIGNAL(finished_thread(my_data)),this,SLOT(setText(my_data)));
+    connect(curl_thread,SIGNAL(started()), worker,SLOT(process()));
+    worker->moveToThread(curl_thread);
+    curl_thread->start();
     //set the data used by the plotter
     set_plot_data();
     //set the details of the mainwindow ui
@@ -54,7 +59,7 @@ void MainWindow::curl_timeout() //triggers on timeout every second.
     bitfinex_curl_thread.join();
     btcchina_curl_thread.join();
     okcoin_curl_thread.join();
-     emit finished();
+    emit finished();
 }
 
 void MainWindow::set_basic_information()
@@ -225,6 +230,12 @@ void MainWindow::set_price_range()
     ranges = ui->edit_price_range->text();
     plot_price = ranges.toDouble();
     ranges.clear();
+}
+
+void MainWindow::analyzer(std::string str)
+{
+    QString display_string  = QString::fromStdString(str);
+    ui->debug->setText(display_string);
 }
 
 MainWindow::~MainWindow()

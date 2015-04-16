@@ -35,6 +35,7 @@ public:
 
 signals:
    void  finished();
+   void finished_thread(QString my_data);
 
 private slots:
     void plotter();
@@ -47,6 +48,7 @@ private slots:
     void set_price_range();
     void set_time_scale();
     void set_basic_information();
+    void analyzer(std::string);
 
 private:
     Ui::MainWindow *ui;
