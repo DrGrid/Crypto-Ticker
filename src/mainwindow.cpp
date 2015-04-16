@@ -11,26 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //call the ui function first, to allow interaction with the QObject
     ui->setupUi(this);
-    //set the data of the time vector, every step is called once every second.
-    for(unsigned short c(0); c < 1001; c++)
-    {
-        time[c] = c;
-    }
-   //add and construct the graph layout
-    ui->customPlot->addGraph();
-    // give the axes some labels and set the initial range values:
-    ui->customPlot->xAxis->setLabel("Time");
-    ui->customPlot->yAxis->setLabel("Price");
-    plot_price = 10;
-    plot_time = 100;
-     //add the different fields to the ui, that can't be declared in the form
-    ui->choose_market->addItem("OkCoin");
-    ui->choose_market->addItem("BTCChina");
-    ui->choose_market->addItem("Bitfinex");
-    ui->choose_market->addItem("Bitstamp");
-   ui->choose_market->setCurrentIndex(0);
-   //sets the title of the programm
-    setWindowTitle("Crypto-Ticker");
+    //set the data used by the plotter
+    set_plot_data();
+    //set the details of the mainwindow ui
+    set_ui_details();
     //sets two arbitrary low and high bounds
     upper_bound = 10000;
     lower_bound = 0;
@@ -41,8 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     btcchina_curler.settings("https://data.btcchina.com/data/ticker");
     bitfinex_curler.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
     bitstamp_curler.settings("https://www.bitstamp.net/api/ticker/");
-    //set the position of the data feeder to 0.
-    position = 0;
      //accept input for the threashholds to trigger the alarm
     connect(ui->setup,SIGNAL(clicked()), this, SLOT(set_up_input()));
     connect(ui->setdown,SIGNAL(clicked()), this, SLOT(set_down_input()));
@@ -50,15 +32,16 @@ MainWindow::MainWindow(QWidget *parent) :
     //accept input to change the range of the graph
     connect(ui->push_price_range,SIGNAL(clicked()), this,SLOT(set_price_range()));
     connect(ui->push_time_scale,SIGNAL(clicked()), this, SLOT(set_time_scale()));
-    //accept input to spawn the cross market analyzer
-
+    //when the curl threads finish, output the data
+    connect(this,SIGNAL (finished()), this, SLOT(set_basic_information()));
+    connect(this,SIGNAL (finished()), this, SLOT(plotter()));
     //Spawn a timer, that timeouts every second and calls the functions, that will trigger action.
-    timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(timerout()));
-    timer -> start(1000);
+    curl_timer = new QTimer();
+    connect(curl_timer, SIGNAL(timeout()), this, SLOT(curl_timeout()));
+    curl_timer -> start(1000);
 }
 
-void MainWindow::timerout() //triggers on timeout every second.
+void MainWindow::curl_timeout() //triggers on timeout every second.
 {
     //Initialize threads and wait for the curl request to finish, before resuming the programm
     std::thread okcoin_curl_thread  (&MainWindow::okcoin_curl_request,this);
@@ -70,8 +53,14 @@ void MainWindow::timerout() //triggers on timeout every second.
     bitfinex_curl_thread.join();
     btcchina_curl_thread.join();
     okcoin_curl_thread.join();
+     emit finished();
+     switcher = true;
+}
+
+void MainWindow::set_basic_information()
+{
     //read the data string into a presentable Qt format
-    memory_stepping();
+    plot_memory_stepping();
     //print the data to the screen with text labels, clear the label text every time to allow reuse.
     ui->label->setText(label_text.setNum(current.last));
     label_text.clear();
@@ -93,8 +82,36 @@ void MainWindow::timerout() //triggers on timeout every second.
       std::thread(&MainWindow::clear_alarm, this).detach();
       std::thread(&MainWindow::alarm, this).detach();
     }
-    //call the plotting function last in the method, to avoid data collisions
-    plotter();
+}
+
+void MainWindow::set_plot_data()
+{
+    //set the data of the time vector, every step is called once every second.
+    for(unsigned short c(0); c < 1001; c++)
+    {
+        time[c] = c;
+    }
+   //add and construct the graph layout
+    ui->customPlot->addGraph();
+    // give the axes some labels and set the initial range values:
+    ui->customPlot->xAxis->setLabel("Time");
+    ui->customPlot->yAxis->setLabel("Price");
+    plot_price = 10;
+    plot_time = 100;
+    //set the position of the data feeder to 0.
+    position = 0;
+}
+
+void MainWindow::set_ui_details()
+{
+    //add the different fields to the ui, that can't be declared in the form
+   ui->choose_market->addItem("OkCoin");
+   ui->choose_market->addItem("BTCChina");
+   ui->choose_market->addItem("Bitfinex");
+   ui->choose_market->addItem("Bitstamp");
+  ui->choose_market->setCurrentIndex(0);
+  //sets the title of the programm
+   setWindowTitle("Crypto-Ticker");
 }
 
 void MainWindow::okcoin_curl_request() //depending on the index of the comoboBox, the data string is filled with the JSON of the respective ticker API.
@@ -179,7 +196,7 @@ void MainWindow::plotter()
     ui->customPlot->replot();
 }
 
-void MainWindow::memory_stepping()
+void MainWindow::plot_memory_stepping()
 {
     if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
     {
