@@ -47,7 +47,7 @@ private:
     QTimer * timer;
     QThread* thread;
     CppCurl okcoin_curler, btcchina_curler, bitstamp_curler, bitfinex_curler; //initializes the different curl object; more efficient than constant cleanup and re-setting of data
-    std::string data; //passed to the curl object and returned, with the conentent of the tickers
+    std::string okcoin_data, bitfinex_data, btcchina_data, bitstamp_data; //passed to the curl object and returned, with the conentent of the tickers
     parsed_data current; //shows the current data
    QVector<double> history = QVector<double> (1001); //QVector initialized with C++11 copy-only member initialisers. The Vector holds the last price of the past 100 seconds.
    QVector<double>time = QVector<double>(1001); //This Vector holds the time, as in 100 seconds.
