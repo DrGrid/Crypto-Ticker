@@ -63,9 +63,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::timerout() //triggers on timeout every second.
 {
-    //Initialize a thread and wait for the curl request to finish, before resuming the programm
-    std::thread curl_thread  (&MainWindow::curl_request,this);
-    curl_thread.join();
+    //Initialize threads and wait for the curl request to finish, before resuming the programm
+    std::thread okcoin_curl_thread  (&MainWindow::curl_request, 0,this);
+    std::thread btcchina_curl_thread (&MainWindow::curl_request, 1, this);
+    std::thread bitfinex_curl_thread (&MainWindow::curl_request, 2, this);
+    std::thread bitstamp_curl_thread (&MainWindow::curl_request, 3, this);
+    //join the threads in reverse order, keeping in mind perceived order of response time.
+    bitstamp_curl_thread.join();
+    bitfinex_curl_thread.join();
+    btcchina_curl_thread.join();
+    okcoin_curl_thread.join();
     connect(ui->push_cross_market,SIGNAL(clicked()),this,SLOT(trig_power()));
     //read the data string into a presentable Qt format
     memory_stepping();
@@ -96,31 +103,35 @@ void MainWindow::timerout() //triggers on timeout every second.
     plotter();
 }
 
-void MainWindow::curl_request() //depending on the index of the comoboBox, the data string is filled with the JSON of the respective ticker API.
+void MainWindow::curl_request(int Index) //depending on the index of the comoboBox, the data string is filled with the JSON of the respective ticker API.
 {
-            if (ui->choose_market->currentIndex() == 0)
+            if (Index == 0)
             {
-                data = okcoin_curler.fetch();
+                okcoin_data = okcoin_curler.fetch();
                 okcoin_curler.data_cleanup();
-                current.okcoin_data_writer(data);
+                if (ui->choose_market->currentIndex() == 3)
+                    current.okcoin_data_writer(okcoin_data);
             }
-            else if (ui->choose_market->currentIndex() == 1)
+            else if (Index == 1)
             {
-                data = btcchina_curler.fetch();
+                btcchina_data = btcchina_curler.fetch();
                 btcchina_curler.data_cleanup();
-                current.btcchina_data_writer(data);
+                if (ui->choose_market->currentIndex() == 3)
+                    current.btcchina_data_writer(btcchina_data);
             }
-            else if (ui->choose_market->currentIndex() == 2)
+            else if (Index == 2)
             {
-                data = bitfinex_curler.fetch();
+                bitifnex_data = bitfinex_curler.fetch();
                 bitfinex_curler.data_cleanup();
-                current.bitfinex_data_writer(data);
+                if (ui->choose_market->currentIndex() == 3)
+                    current.bitfinex_data_writer(bitfinex_data);
             }
             else if (ui->choose_market->currentIndex() == 3)
             {
-                data = bitstamp_curler.fetch();
+                bitstamp_data = bitstamp_curler.fetch();
                 bitstamp_curler.data_cleanup();
-                current.bitstamp_data_writer(data);
+                if (ui->choose_market->currentIndex() == 3)
+                    current.bitstamp_data_writer(bitstamp_data);
             }
            data.clear();
 }
