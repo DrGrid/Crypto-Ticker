@@ -5,7 +5,6 @@
 #include "curl_wrapper_class.h"
 #include <string>
 #include <QString>
-#include <thread>
 
 class curl_worker: public QObject
 {
@@ -13,9 +12,13 @@ class curl_worker: public QObject
 private:
     CppCurl okcoin_curling, btcchina_curling, bitfinex_curling, bitstamp_curling;
     std::string okcoin_string, btcchina_string, bitfinex_string, bitstamp_string;
-    QString okcoin_data, btcchina_data. bitfinex_data. bitstamp_data;
+    QString okcoin_data, btcchina_data, bitfinex_data, bitstamp_data;
+    bool something = true;
 public:
-    curl_worker();
+    void okcoin_process();
+    void btcchina_process();
+    void bitfinex_process();
+    void bitstamp_process();
 public slots:
     void process();
 signals:

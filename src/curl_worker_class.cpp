@@ -1,24 +1,20 @@
  #include "curl_worker_class.h"
-
-curl_worker::curl_worker()
-{
- bool something = true;
- okcoin_curling.settings("https://www.okcoin.cn/api/ticker.do");
- btcchina_curling.settings("https://data.btcchina.com/data/ticker");
- bitfinex_curling.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
- bitstamp_curling.settings("https://www.bitstamp.net/api/ticker/");
-}
+#include <thread>
 
 // --- PROCESS ---
 // Start processing data.
 void curl_worker::process()
 {
+    okcoin_curling.settings("https://www.okcoin.cn/api/ticker.do");
+    btcchina_curling.settings("https://data.btcchina.com/data/ticker");
+    bitfinex_curling.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
+    bitstamp_curling.settings("https://www.bitstamp.net/api/ticker/");
  while (something)
  {
-    std::thread okcoin_tread(&curl_worker, okcoin_process, this);
-    std::thread btcchina_thread(&curl_worker, btcchina_process, this);
-    std::thread bitfinex_thread(&curl_worker, bitfinex_process, this);
-    std::thread bitstamp_thread(&curl_worker, bitstamp_process, this);
+    std::thread okcoin_thread(&curl_worker::okcoin_process, this);
+    std::thread btcchina_thread(&curl_worker::btcchina_process, this);
+    std::thread bitfinex_thread(&curl_worker::bitfinex_process, this);
+    std::thread bitstamp_thread(&curl_worker::bitstamp_process, this);
     bitstamp_thread.join();
     bitfinex_thread.join();
     btcchina_thread.join();
