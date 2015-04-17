@@ -25,9 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(worker, SIGNAL(finished_bitstamp(QString)),this,SLOT(set_bitfinex_data(QString)));
     worker->moveToThread(curl_thread);
     curl_thread->start();
-    //when the data is finished writing, begin its manipulation
-    connect(this,SIGNAL (finished_all()), this, SLOT(plot_memory_stepping()));
-    connect(this,SIGNAL (finished_all()), this, SLOT(plotter()));
+    //when the data is finished writing, check it against the alarm
     connect(this,SIGNAL (finished_all()), this, SLOT(check_alarm()));
     //sets two arbitrary low and high bounds for the alarm
     upper_bound = 10000;
@@ -41,6 +39,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //accept input to change the range of the graph
     connect(ui->push_price_range,SIGNAL(clicked()), this,SLOT(set_price_range()));
     connect(ui->push_time_scale,SIGNAL(clicked()), this, SLOT(set_time_scale()));
+    //timer to get the seconds in the plotter right
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->start(1000);
 }
 
 void MainWindow::set_ui_details() //called in the constructor
@@ -124,6 +126,13 @@ void MainWindow::clear_alarm()
     lower_bound = 0;
 }
 
+//triggers on timer timeout, which is once every second. Allows to accurately plot the time function
+void MainWindow::update()
+{
+    plot_memory_stepping();
+    plotter();
+}
+
 void MainWindow::plotter()
 {
     // if not defined by user, set the range
@@ -188,7 +197,7 @@ void MainWindow::set_okcoin_data(QString okcoin_data)
         label_text.clear();
         ui->label_5->setText(label_text.setNum(okcoin_parsing.buy));
         label_text.clear();
-        ui->label_6->setText(label_text.setNum(okcoin_parsing.sell-current.buy));
+        ui->label_6->setText(label_text.setNum(okcoin_parsing.sell-okcoin_parsing.buy));
         label_text.clear();
         ui->label_7->setText(label_text.setNum(okcoin_parsing.volume));
         label_text.clear();
@@ -214,7 +223,7 @@ void MainWindow::set_btcchina_data(QString btcchina_data)
         label_text.clear();
         ui->label_5->setText(label_text.setNum(btcchina_parsing.buy));
         label_text.clear();
-        ui->label_6->setText(label_text.setNum(btcchina_parsing.sell-current.buy));
+        ui->label_6->setText(label_text.setNum(btcchina_parsing.sell-btcchina_parsing.buy));
         label_text.clear();
         ui->label_7->setText(label_text.setNum(btcchina_parsing.volume));
         label_text.clear();
@@ -240,7 +249,7 @@ void MainWindow::set_bitfinex_data(QString bitfinex_data)
         label_text.clear();
         ui->label_5->setText(label_text.setNum(bitfinex_parsing.buy));
         label_text.clear();
-        ui->label_6->setText(label_text.setNum(bitfinex_parsing.sell-current.buy));
+        ui->label_6->setText(label_text.setNum(bitfinex_parsing.sell-bitfinex_parsing.buy));
         label_text.clear();
         ui->label_7->setText(label_text.setNum(bitfinex_parsing.volume));
         label_text.clear();
@@ -266,7 +275,7 @@ void MainWindow::set_bitstamp_data(QString bitstamp_data)
         label_text.clear();
         ui->label_5->setText(label_text.setNum(bitstamp_parsing.buy));
         label_text.clear();
-        ui->label_6->setText(label_text.setNum(bitstamp_parsing.sell-current.buy));
+        ui->label_6->setText(label_text.setNum(bitstamp_parsing.sell-bitfinex_parsing.buy));
         label_text.clear();
         ui->label_7->setText(label_text.setNum(bitstamp_parsing.volume));
         label_text.clear();

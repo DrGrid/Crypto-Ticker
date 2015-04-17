@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "curl_wrapper_class.h"
-#include "data_parser.h"
 #include <string>
 #include <QString>
 
