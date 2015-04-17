@@ -11,6 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //call the ui function first, to allow interaction with the QObject
     ui->setupUi(this);
+    //set the data used by the plotter
+    set_plot_data();
+    //set the details of the mainwindow ui
+    set_ui_details();
     worker = new curl_worker();
     curl_thread = new QThread;
     connect(curl_thread,SIGNAL(started()), worker,SLOT(process()));
@@ -18,22 +22,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(worker, SIGNAL(finished_btcchina(QString)),this,SLOT(set_btcchina_data(QString)));
     connect(worker, SIGNAL(finished_bitfinex(QString)),this,SLOT(set_bitstamp_data(QString)));
     connect(worker, SIGNAL(finished_bitstamp(QString)),this,SLOT(set_bitfinex_data(QString)));
+    //when the data is finished writin, begin its manipulation
+    connect(worker,SIGNAL (finished_all()), this, SLOT(set_basic_information()));
+    connect(worker,SIGNAL (finished_all()), this, SLOT(plotter()));
+    connect(worker,SIGNAL (finished_all()), this, SLOT(check_alarm()));
     worker->moveToThread(curl_thread);
     curl_thread->start();
-    //set the data used by the plotter
-    set_plot_data();
-    //set the details of the mainwindow ui
-    set_ui_details();
-    //sets two arbitrary low and high bounds
+    //sets two arbitrary low and high bounds for the alarm
     upper_bound = 10000;
     lower_bound = 0;
     //adds the play command to the alarm path, this will be prepended to the actual path.
     alarm_path= "play ";
-    //initialise the settings for the respective curl requests
-    okcoin_curler.settings("https://www.okcoin.cn/api/ticker.do");
-    btcchina_curler.settings("https://data.btcchina.com/data/ticker");
-    bitfinex_curler.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
-    bitstamp_curler.settings("https://www.bitstamp.net/api/ticker/");
      //accept input for the threashholds to trigger the alarm
     connect(ui->setup,SIGNAL(clicked()), this, SLOT(set_up_input()));
     connect(ui->setdown,SIGNAL(clicked()), this, SLOT(set_down_input()));
@@ -41,33 +40,21 @@ MainWindow::MainWindow(QWidget *parent) :
     //accept input to change the range of the graph
     connect(ui->push_price_range,SIGNAL(clicked()), this,SLOT(set_price_range()));
     connect(ui->push_time_scale,SIGNAL(clicked()), this, SLOT(set_time_scale()));
-    //when the curl threads finish, output the data
-    connect(this,SIGNAL (finished()), this, SLOT(set_basic_information()));
-    connect(this,SIGNAL (finished()), this, SLOT(plotter()));
-    //Spawn a timer, that timeouts every second and calls the functions, that will trigger action.
-    curl_timer = new QTimer();
-    connect(curl_timer, SIGNAL(timeout()), this, SLOT(curl_timeout()));
-    curl_timer -> start(1000);
 }
 
-void MainWindow::curl_timeout() //triggers on timeout every second.
+void MainWindow::set_ui_details() //called in the constructor
 {
-
+    //add the different fields to the ui, that can't be declared in the form
+   ui->choose_market->addItem("OkCoin");
+   ui->choose_market->addItem("BTCChina");
+   ui->choose_market->addItem("Bitfinex");
+   ui->choose_market->addItem("Bitstamp");
+  ui->choose_market->setCurrentIndex(0);
+  //sets the title of the programm
+   setWindowTitle("Crypto-Ticker");
 }
 
-void MainWindow::set_basic_information()
-{
-    //read the data string into a presentable Qt format
-    plot_memory_stepping();
-    //set the logic to call the alarm function, detach the called thread, to allow the program to run further in the background
-    if ((upper_bound<current.sell) | (lower_bound>current.buy))
-    {
-      std::thread(&MainWindow::clear_alarm, this).detach();
-      std::thread(&MainWindow::alarm, this).detach();
-    }
-}
-
-void MainWindow::set_plot_data()
+void MainWindow::set_plot_data() //called  in the constructor
 {
     //set the data of the time vector, every step is called once every second.
     for(unsigned short c(0); c < 1001; c++)
@@ -85,16 +72,14 @@ void MainWindow::set_plot_data()
     position = 0;
 }
 
-void MainWindow::set_ui_details()
+void MainWindow::check_alarm()
 {
-    //add the different fields to the ui, that can't be declared in the form
-   ui->choose_market->addItem("OkCoin");
-   ui->choose_market->addItem("BTCChina");
-   ui->choose_market->addItem("Bitfinex");
-   ui->choose_market->addItem("Bitstamp");
-  ui->choose_market->setCurrentIndex(0);
-  //sets the title of the programm
-   setWindowTitle("Crypto-Ticker");
+    //set the logic to call the alarm function, detach the called thread, to allow the program to run further in the background
+    if ((upper_bound<okcoin_parsing.sell) | (lower_bound>okcoin_parsing.buy))
+    {
+      std::thread(&MainWindow::clear_alarm, this).detach();
+      std::thread(&MainWindow::alarm, this).detach();
+    }
 }
 
 void MainWindow::set_up_input() //sets the upper trigger for the alarm. Once this price has been reached, the alarm will sound

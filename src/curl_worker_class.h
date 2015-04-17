@@ -28,7 +28,6 @@ signals:
     void finished_btcchina (QString btcchina_data);
     void finished_bitfinex (QString bitfinex_data);
     void finished_bitstamp (QString bitstamp_data);
-    void finished_all();
 };
 
 #endif

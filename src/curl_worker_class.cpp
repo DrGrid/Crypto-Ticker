@@ -24,7 +24,6 @@ void curl_worker::process()
         emit finished_btcchina(btcchina_data);
         emit finished_bitfinex(bitfinex_data);
         emit finished_bitstamp(bitstamp_data);
-        emit finished_all();
     }
 }
 
