@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     worker = new curl_worker();
     curl_thread = new QThread;
     connect(curl_thread,SIGNAL(started()), worker,SLOT(process()));
-    connect(worker, SIGNAL(finished_thread(QString)),this,SLOT(set_debug(QString)));
+    connect(worker, SIGNAL(finished_okcoin(QString)),this,SLOT(set_debug(QString)));
     worker->moveToThread(curl_thread);
     curl_thread->start();
     //set the data used by the plotter
