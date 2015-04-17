@@ -2,16 +2,23 @@
 
 curl_worker::curl_worker()
 {
+ bool something = true;
+ okcoin_curling.settings("https://www.okcoin.cn/api/ticker.do");
+ btcchina_curling.settings("https://data.btcchina.com/data/ticker");
+ bitfinex_curling.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
+ bitstamp_curling.settings("https://www.bitstamp.net/api/ticker/");
 }
 
 // --- PROCESS ---
 // Start processing data.
 void curl_worker::process()
 {
-    curling.settings("https://www.okcoin.cn/api/ticker.do");
-    curl_data = curling.fetch();
-    my_data = QString::fromStdString(curl_data);
+ while (something)
+ {
+    curl_data = okcoin_curling.fetch();
+    okcoin_data = QString::fromStdString(okcoin_string);
     curling.data_cleanup();
     // allocate resources using new here
-    emit finished_thread(my_data);
+    emit finished_okcoin(okcoin_data);
+ }
 }
