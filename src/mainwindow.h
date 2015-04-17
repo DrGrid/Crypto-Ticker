@@ -35,7 +35,7 @@ public:
 
 signals:
    void  finished();
-   void finished_thread(QString my_data);
+   void finished_okcoin(QString my_data);
 
 private slots:
     void plotter();
