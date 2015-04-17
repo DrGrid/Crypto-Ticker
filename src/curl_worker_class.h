@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "curl_wrapper_class.h"
+#include "data_parser.h"
 #include <string>
 #include <QString>
 
@@ -19,6 +20,7 @@ public:
     void btcchina_process();
     void bitfinex_process();
     void bitstamp_process();
+    void clear_data();
 public slots:
     void process();
 signals:
@@ -26,6 +28,7 @@ signals:
     void finished_btcchina (QString btcchina_data);
     void finished_bitfinex (QString bitfinex_data);
     void finished_bitstamp (QString bitstamp_data);
+    void finished_all();
 };
 
 #endif

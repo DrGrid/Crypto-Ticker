@@ -14,7 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     worker = new curl_worker();
     curl_thread = new QThread;
     connect(curl_thread,SIGNAL(started()), worker,SLOT(process()));
-    connect(worker, SIGNAL(finished_okcoin(QString)),this,SLOT(set_debug(QString)));
+    connect(worker, SIGNAL(finished_okcoin(QString)),this,SLOT(set_okcoin_data(QString)));
+    connect(worker, SIGNAL(finished_btcchina(QString)),this,SLOT(set_btcchina_data(QString)));
+    connect(worker, SIGNAL(finished_bitfinex(QString)),this,SLOT(set_bitstamp_data(QString)));
+    connect(worker, SIGNAL(finished_bitstamp(QString)),this,SLOT(set_bitfinex_data(QString)));
     worker->moveToThread(curl_thread);
     curl_thread->start();
     //set the data used by the plotter
@@ -49,38 +52,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::curl_timeout() //triggers on timeout every second.
 {
-    //Initialize threads and wait for the curl request to finish, before resuming the programm
-    std::thread okcoin_curl_thread  (&MainWindow::okcoin_curl_request,this);
-    std::thread btcchina_curl_thread (&MainWindow::bitstamp_curl_request, this);
-    std::thread bitfinex_curl_thread (&MainWindow::bitfinex_curl_request, this);
-    std::thread bitstamp_curl_thread (&MainWindow::btcchina_curl_request, this);
-    //join the threads in reverse order, keeping in mind perceived order of response time.
-    bitstamp_curl_thread.join();
-    bitfinex_curl_thread.join();
-    btcchina_curl_thread.join();
-    okcoin_curl_thread.join();
-    emit finished();
+
 }
 
 void MainWindow::set_basic_information()
 {
     //read the data string into a presentable Qt format
     plot_memory_stepping();
-    //print the data to the screen with text labels, clear the label text every time to allow reuse.
-    ui->label->setText(label_text.setNum(current.last));
-    label_text.clear();
-    ui->label_2->setText(label_text.setNum(current.daily_high));
-    label_text.clear();
-    ui->label_3->setText(label_text.setNum(current.daily_low));
-    label_text.clear();
-    ui->label_4->setText(label_text.setNum(current.sell));
-    label_text.clear();
-    ui->label_5->setText(label_text.setNum(current.buy));
-    label_text.clear();
-    ui->label_6->setText(label_text.setNum(current.sell-current.buy));
-    label_text.clear();
-    ui->label_7->setText(label_text.setNum(current.volume));
-    label_text.clear();
     //set the logic to call the alarm function, detach the called thread, to allow the program to run further in the background
     if ((upper_bound<current.sell) | (lower_bound>current.buy))
     {
@@ -117,42 +95,6 @@ void MainWindow::set_ui_details()
   ui->choose_market->setCurrentIndex(0);
   //sets the title of the programm
    setWindowTitle("Crypto-Ticker");
-}
-
-void MainWindow::okcoin_curl_request() //depending on the index of the comoboBox, the data string is filled with the JSON of the respective ticker API.
-{
-                okcoin_data = okcoin_curler.fetch();
-                okcoin_curler.data_cleanup();
-                if(ui->choose_market->currentIndex() == 0)
-                    current.okcoin_data_writer(okcoin_data);
-                okcoin_data.clear();
-}
-
-void MainWindow::btcchina_curl_request()
- {
-                btcchina_data = btcchina_curler.fetch();
-                btcchina_curler.data_cleanup();
-                if(ui->choose_market->currentIndex() == 1)
-                current.btcchina_data_writer(btcchina_data);
-                btcchina_data.clear();
-}
-
-void MainWindow::bitfinex_curl_request()
-{
-                bitfinex_data = bitfinex_curler.fetch();
-                bitfinex_curler.data_cleanup();
-                if(ui->choose_market->currentIndex() == 2)
-                current.bitfinex_data_writer(bitfinex_data);
-                bitfinex_data.clear();
-}
-
-void MainWindow::bitstamp_curl_request()
-{
-                bitstamp_data = bitstamp_curler.fetch();
-                bitstamp_curler.data_cleanup();
-                if(ui->choose_market->currentIndex() == 3)
-                current.bitstamp_data_writer(bitstamp_data);
-                bitstamp_data.clear();
 }
 
 void MainWindow::set_up_input() //sets the upper trigger for the alarm. Once this price has been reached, the alarm will sound
@@ -232,9 +174,100 @@ void MainWindow::set_price_range()
     ranges.clear();
 }
 
-void MainWindow::set_debug(QString str)
+void MainWindow::set_okcoin_data(QString okcoin_data)
 {
-    ui->debug->setText(str);
+    okcoin_string = okcoin_data.toStdString();
+    okcoin_parsing.okcoin_data_writer(okcoin_string);
+    if (ui->choose_market->currentIndex() == 0)
+    {
+        //print the data to the screen with text labels, clear the label text every time to allow reuse.
+        ui->label->setText(label_text.setNum(okcoin_parsing.last));
+        label_text.clear();
+        ui->label_2->setText(label_text.setNum(okcoin_parsing.daily_high));
+        label_text.clear();
+        ui->label_3->setText(label_text.setNum(okcoin_parsing.daily_low));
+        label_text.clear();
+        ui->label_4->setText(label_text.setNum(okcoin_parsing.sell));
+        label_text.clear();
+        ui->label_5->setText(label_text.setNum(okcoin_parsing.buy));
+        label_text.clear();
+        ui->label_6->setText(label_text.setNum(okcoin_parsing.sell-current.buy));
+        label_text.clear();
+        ui->label_7->setText(label_text.setNum(okcoin_parsing.volume));
+        label_text.clear();
+    }
+}
+
+void MainWindow::set_btcchina_data(QString btcchina_data)
+{
+    btcchina_string = btcchina_data.toStdString();
+    btcchina_parsing.btcchina_data_writer(btcchina_string);
+    if (ui->choose_market->currentIndex() == 1)
+    {
+        //print the data to the screen with text labels, clear the label text every time to allow reuse.
+        ui->label->setText(label_text.setNum(btcchina_parsing.last));
+        label_text.clear();
+        ui->label_2->setText(label_text.setNum(btcchina_parsing.daily_high));
+        label_text.clear();
+        ui->label_3->setText(label_text.setNum(btcchina_parsing.daily_low));
+        label_text.clear();
+        ui->label_4->setText(label_text.setNum(btcchina_parsing.sell));
+        label_text.clear();
+        ui->label_5->setText(label_text.setNum(btcchina_parsing.buy));
+        label_text.clear();
+        ui->label_6->setText(label_text.setNum(btcchina_parsing.sell-current.buy));
+        label_text.clear();
+        ui->label_7->setText(label_text.setNum(btcchina_parsing.volume));
+        label_text.clear();
+    }
+}
+
+void MainWindow::set_bitfinex_data(QString bitfinex_data)
+{
+    bitfinex_string = bitfinex_data.toStdString();
+    bitfinex_parsing.bitfinex_data_writer(bitfinex_string);
+    if (ui->choose_market->currentIndex() == 2)
+    {
+        //print the data to the screen with text labels, clear the label text every time to allow reuse.
+        ui->label->setText(label_text.setNum(bitfinex_parsing.last));
+        label_text.clear();
+        ui->label_2->setText(label_text.setNum(bitfinex_parsing.daily_high));
+        label_text.clear();
+        ui->label_3->setText(label_text.setNum(bitfinex_parsing.daily_low));
+        label_text.clear();
+        ui->label_4->setText(label_text.setNum(bitfinex_parsing.sell));
+        label_text.clear();
+        ui->label_5->setText(label_text.setNum(bitfinex_parsing.buy));
+        label_text.clear();
+        ui->label_6->setText(label_text.setNum(bitfinex_parsing.sell-current.buy));
+        label_text.clear();
+        ui->label_7->setText(label_text.setNum(bitfinex_parsing.volume));
+        label_text.clear();
+    }
+}
+
+void MainWindow::set_bitstamp_data(QString bitstamp_data)
+{
+    bitstamp_string = bitstamp_data.toStdString();
+    bitstamp_parsing.bitstamp_data_writer(bitstamp_string);
+    if (ui->choose_market->currentIndex() == 3)
+    {
+        //print the data to the screen with text labels, clear the label text every time to allow reuse.
+        ui->label->setText(label_text.setNum(bitstamp_parsing.last));
+        label_text.clear();
+        ui->label_2->setText(label_text.setNum(bitstamp_parsing.daily_high));
+        label_text.clear();
+        ui->label_3->setText(label_text.setNum(bitstamp_parsing.daily_low));
+        label_text.clear();
+        ui->label_4->setText(label_text.setNum(bitstamp_parsing.sell));
+        label_text.clear();
+        ui->label_5->setText(label_text.setNum(bitstamp_parsing.buy));
+        label_text.clear();
+        ui->label_6->setText(label_text.setNum(bitstamp_parsing.sell-current.buy));
+        label_text.clear();
+        ui->label_7->setText(label_text.setNum(bitstamp_parsing.volume));
+        label_text.clear();
+    }
 }
 
 MainWindow::~MainWindow()
