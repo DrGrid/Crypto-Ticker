@@ -20,6 +20,9 @@ public slots:
     void process();
 signals:
     void finished_okcoin (QString okcoin_data);
+    void finished_btcchina (QString btcchina_data);
+    void finished_bitfinex (QString bitfinex_data);
+    void finished_bitstamp (QString bitstamp_data);
 };
 
 #endif
