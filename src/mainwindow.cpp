@@ -21,8 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(curl_thread,SIGNAL(started()), worker,SLOT(process()));
     connect(worker, SIGNAL(finished_okcoin(QString)),this,SLOT(set_okcoin_data(QString)));
     connect(worker, SIGNAL(finished_btcchina(QString)),this,SLOT(set_btcchina_data(QString)));
-    connect(worker, SIGNAL(finished_bitfinex(QString)),this,SLOT(set_bitstamp_data(QString)));
-    connect(worker, SIGNAL(finished_bitstamp(QString)),this,SLOT(set_bitfinex_data(QString)));
+    connect(worker, SIGNAL(finished_bitfinex(QString)),this,SLOT(set_bitfinex_data(QString)));
+    connect(worker, SIGNAL(finished_bitstamp(QString)),this,SLOT(set_bitstamp_data(QString)));
     worker->moveToThread(curl_thread);
     curl_thread->start();
     //when the data is finished writing, check it against the alarm
