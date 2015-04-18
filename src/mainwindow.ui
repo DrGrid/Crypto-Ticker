@@ -338,6 +338,19 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>choose_market</tabstop>
+  <tabstop>lineup</tabstop>
+  <tabstop>setup</tabstop>
+  <tabstop>linedown</tabstop>
+  <tabstop>setdown</tabstop>
+  <tabstop>linepath</tabstop>
+  <tabstop>setpath</tabstop>
+  <tabstop>edit_time_scale</tabstop>
+  <tabstop>push_time_scale</tabstop>
+  <tabstop>edit_price_range</tabstop>
+  <tabstop>push_price_range</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
