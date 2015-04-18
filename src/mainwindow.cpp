@@ -31,8 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //sets two arbitrary low and high bounds for the alarm
     upper_bound = 10000;
     lower_bound = 0;
-    //adds the play command to the alarm path, this will be prepended to the actual path.
-    alarm_path= "play ";
      //accept input for the threashholds to trigger the alarm
     connect(ui->setup,SIGNAL(clicked()), this, SLOT(set_up_input()));
     connect(ui->setdown,SIGNAL(clicked()), this, SLOT(set_down_input()));
@@ -94,6 +92,7 @@ void MainWindow::check_alarm()
 void MainWindow::set_up_input()
 {
     up_bound = ui->lineup->text();
+    ui->lineup->clear();
     ui->label_up->setText(up_bound);
     upper_bound = up_bound.toFloat();
 }
@@ -102,6 +101,7 @@ void MainWindow::set_up_input()
 void MainWindow::set_down_input()
 {
     down_bound = ui->linedown->text();
+    ui->lineup->clear();
     ui->label_down->setText(down_bound);
     lower_bound = down_bound.toFloat();
 }
@@ -109,6 +109,9 @@ void MainWindow::set_down_input()
 //triggers on click; set the path to the location of the of the .wav file. The "path" already contains the "play"  command, which will initialise the built in default playback device"
 void MainWindow::set_path()
 {
+    alarm_path.clear();
+    //adds the play command to the alarm path, this will be prepended to the actual path.
+    alarm_path= "play ";
     alarm_path+= ui->linepath->text();
     ui->linepath->clear();
 }
