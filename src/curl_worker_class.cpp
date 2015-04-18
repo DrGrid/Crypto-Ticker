@@ -3,12 +3,18 @@
 
 // --- PROCESS ---
 // Start processing data.
-void curl_worker::process()
+
+curl_worker::curl_worker()
+    : QObject()
 {
     okcoin_curling.settings("https://www.okcoin.cn/api/ticker.do");
     btcchina_curling.settings("https://data.btcchina.com/data/ticker");
     bitfinex_curling.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
     bitstamp_curling.settings("https://www.bitstamp.net/api/ticker/");
+}
+
+void curl_worker::process()
+{
     std::thread (&curl_worker::okcoin_process, this).detach();
     std::thread (&curl_worker::btcchina_process, this).detach();
     std::thread (&curl_worker::bitfinex_process, this).detach();
