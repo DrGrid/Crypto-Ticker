@@ -187,6 +187,7 @@ void MainWindow::set_cross_market()
     ui->label_8->setText(label_text.setNum(okcoin_parsing.last-btcchina_parsing.last));
     label_text.clear();
     ui->label_9->setText(label_text.setNum(bitfinex_parsing.last-bitstamp_parsing.last));
+    label_text.clear();
 }
 
 void MainWindow::set_okcoin_data(QString okcoin_data)
