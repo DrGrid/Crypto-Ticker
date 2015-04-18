@@ -141,9 +141,6 @@ void MainWindow::plotter()
     // if not defined by user, set the range
     ui->customPlot->xAxis->setRange(0,plot_time);
     ui->customPlot->yAxis->setRange(current_last-plot_price, current_last+plot_price);
-    ui->customPlot->yAxis->setRange(current_last-plot_price, current_last+plot_price);
-    ui->customPlot->yAxis->setRange(current_last-plot_price, current_last+plot_price);
-    ui->customPlot->yAxis->setRange(current_last-plot_price, current_last+plot_price);
     //initialise customPlot graphs
     ui->customPlot->graph(0)->setData(time, history);
     // replot every time the function is called to show the changes
