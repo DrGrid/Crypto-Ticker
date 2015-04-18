@@ -21,32 +21,46 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    //constructor
     explicit MainWindow(QWidget *parent = 0);
+    //functions called in the constructor
+    void set_plot_data();
+    void set_ui_details();
+    //reset the alarm triggers
     void clear_alarm();
+    //sound the alarm
     void alarm();
+    //call the data pushing function for the plot, and the plot ui function
     void plot_memory_stepping();
     void plotter();
-    QVector<double>  give_data();
+    //Destructor
     ~MainWindow();
 
 signals:
+    //singals that the writing of the current market is finished, others may still be under work! This has the potential for race conditions
    void  finished_all();
+   //signals that the writing and parsing for the specific markets has been done
    void finished_okcoin(std::string okcoin_string);
    void finished_btcchina(std::string btcchina_string);
    void finished_bitfinex(std::string bitfinex_string);
    void finished_bitstamp(std::string bitstamp_string);
 
 private slots:
-    void set_plot_data();
-    void set_ui_details();
-    void set_up_input();
-    void set_down_input();
-    void update();
-    void set_path();
+   //listens for user signals regarding plot parameters
     void set_price_range();
     void set_time_scale();
+    //updates the plot after timeout every second and calls the public functions responsible for it
+    void update_plot();
+    //sets the path when the user send the signal
+    void set_path();
+    //checks the alarm after the finished_all signal
     void check_alarm();
+    //sets the alarm bariers on the user input signal
+    void set_up_input();
+    void set_down_input();
+    //sets the cross market labels after finished_all, subject to said race condition!
     void set_cross_market();
+    //sets the data after it has been emited from the parallel thread
     void set_okcoin_data(QString okcoin_data);
     void set_btcchina_data(QString btcchina_data);
     void set_bitfinex_data(QString bitfinex_data);
@@ -55,7 +69,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     curl_worker* worker;
-    QTimer * curl_timer;
+    QTimer * plot_timer;
     QThread* curl_thread;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
     float upper_bound, lower_bound;

@@ -39,9 +39,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->push_price_range,SIGNAL(clicked()), this,SLOT(set_price_range()));
     connect(ui->push_time_scale,SIGNAL(clicked()), this, SLOT(set_time_scale()));
     //timer to get the seconds in the plotter right
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(1000);
+   plot_timer = new QTimer(this);
+    connect(plot_timer, SIGNAL(timeout()), this, SLOT(update_plot()));
+    plot_timer->start(1000);
 }
 
 void MainWindow::set_ui_details() //called in the constructor
@@ -134,7 +134,7 @@ void MainWindow::clear_alarm()
 }
 
 //triggers on timer timeout, which is once every second. Allows to accurately plot the time function
-void MainWindow::update()
+void MainWindow::update_plot()
 {
     plot_memory_stepping();
     plotter();
