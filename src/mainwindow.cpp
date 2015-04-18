@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     curl_thread->start();
     //when the data is finished writing, check it against the alarm
     connect(this,SIGNAL (finished_all()), this, SLOT(check_alarm()));
+    connect(this,SIGNAL (finished_all()), this, SLOT(set_cross_market()));
     //sets two arbitrary low and high bounds for the alarm
     upper_bound = 10000;
     lower_bound = 0;
@@ -178,6 +179,14 @@ void MainWindow::set_price_range()
     ranges = ui->edit_price_range->text();
     plot_price = ranges.toDouble();
     ranges.clear();
+}
+
+//triggered on finished_all signal
+void MainWindow::set_cross_market()
+{
+    ui->label_8->setText(label_text.setNum(okcoin_parsing.last-btcchina_parsing.last));
+    label_text.clear();
+    ui->label_9->setText(label_text.setNum(bitfinex_parsing.last-bitstamp_parsing.last));
 }
 
 void MainWindow::set_okcoin_data(QString okcoin_data)

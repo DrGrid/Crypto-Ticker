@@ -46,6 +46,7 @@ private slots:
     void set_price_range();
     void set_time_scale();
     void check_alarm();
+    void set_cross_market();
     void set_okcoin_data(QString okcoin_data);
     void set_btcchina_data(QString btcchina_data);
     void set_bitfinex_data(QString bitfinex_data);
