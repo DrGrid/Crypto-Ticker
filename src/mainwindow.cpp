@@ -73,6 +73,9 @@ void MainWindow::set_plot_data() //called  in the constructor
     plot_time = 100;
     //set the position of the data feeder to 0.
     position = 0;
+    //something for the title here
+    ui->customPlot->plotLayout()->insertRow(0);
+    ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, "Market Data"));
 }
 
 //triggers on the finished all_signal, as soon as the current curl request is done processing
