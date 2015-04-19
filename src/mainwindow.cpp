@@ -295,7 +295,7 @@ void MainWindow::set_labels(parsed_data &data)
     label_text.clear();
     ui->label_5->setText(label_text.setNum(data.buy));
     label_text.clear();
-    ui->label_6->setText(label_text.setNum(data.sell-bitfinex_parsing.buy));
+    ui->label_6->setText(label_text.setNum(data.sell-data.buy));
     label_text.clear();
     ui->label_7->setText(label_text.setNum(data.volume));
     label_text.clear();
