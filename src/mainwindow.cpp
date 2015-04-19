@@ -146,7 +146,14 @@ void MainWindow::plotter()
     ui->customPlot->xAxis->setRange(0,plot_time);
     ui->customPlot->yAxis->setRange(current_last-plot_price, current_last+plot_price);
     //initialise customPlot graphs
-    ui->customPlot->graph(0)->setData(time, history);
+    if (ui->choose_market->currentIndex() == 0)
+        ui->customPlot->graph(0)->setData(time, okcoin_history);
+    if (ui->choose_market->currentIndex() == 1)
+        ui->customPlot->graph(0)->setData(time, btcchina_history);
+    if (ui->choose_market->currentIndex() == 2)
+        ui->customPlot->graph(0)->setData(time, bitfinex_history);
+    if (ui->choose_market->currentIndex() == 3)
+        ui->customPlot->graph(0)->setData(time, bitstamp_history);
     // replot every time the function is called to show the changes
     ui->customPlot->replot();
 }
@@ -155,15 +162,51 @@ void MainWindow::plot_memory_stepping()
 {
     if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
     {
-        history[position] = current_last;
+        okcoin_history[position] = okcoin_parsing.last;
+    }
+    else
+    {
+        okcoin_history[plot_time] = okcoin_parsing.last;
+        for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
+        {
+            okcoin_history[c] = okcoin_history[c+1];
+        }
+    }
+    if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
+    {
+        btcchina_history[position] = btcchina_parsing.last;
+    }
+    else
+    {
+        btcchina_history[plot_time] = btcchina_parsing.last;
+        for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
+        {
+            btcchina_history[c] = btcchina_history[c+1];
+        }
+    }
+    if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
+    {
+        bitfinex_history[position] = bitfinex_parsing.last;
+    }
+    else
+    {
+        bitfinex_history[plot_time] = bitfinex_parsing.last;
+        for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
+        {
+            bitfinex_history[c] = bitfinex_history[c+1];
+        }
+    }
+    if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
+    {
+        bitstamp_history[position] = bitstamp_parsing.last;
         position++;
     }
     else
     {
-        history[plot_time] = current_last;
+        bitstamp_history[plot_time] = bitstamp_parsing.last;
         for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
         {
-            history[c] = history[c+1];
+            bitstamp_history[c] = bitstamp_history[c+1];
         }
     }
 }
