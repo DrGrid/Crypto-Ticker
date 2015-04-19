@@ -33,6 +33,8 @@ public:
     //call the data pushing function for the plot, and the plot ui function
     void plot_memory_stepping();
     void plotter();
+
+    void set_labels(parsed_data &data);
     //Destructor
     ~MainWindow();
 

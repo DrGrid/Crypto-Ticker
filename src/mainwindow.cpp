@@ -199,23 +199,7 @@ void MainWindow::set_okcoin_data(QString okcoin_data)
     okcoin_parsing.okcoin_data_writer(okcoin_string);
     if (ui->choose_market->currentIndex() == 0)
     {
-        //print the data to the screen with text labels, clear the label text every time to allow reuse.
-        ui->label->setText(label_text.setNum(okcoin_parsing.last));
-        label_text.clear();
-        ui->label_2->setText(label_text.setNum(okcoin_parsing.daily_high));
-        label_text.clear();
-        ui->label_3->setText(label_text.setNum(okcoin_parsing.daily_low));
-        label_text.clear();
-        ui->label_4->setText(label_text.setNum(okcoin_parsing.sell));
-        label_text.clear();
-        ui->label_5->setText(label_text.setNum(okcoin_parsing.buy));
-        label_text.clear();
-        ui->label_6->setText(label_text.setNum(okcoin_parsing.sell-okcoin_parsing.buy));
-        label_text.clear();
-        ui->label_7->setText(label_text.setNum(okcoin_parsing.volume));
-        label_text.clear();
-        emit finished_all();
-        current_last = okcoin_parsing.last;
+        set_labels(okcoin_parsing);
     }
 }
 
@@ -225,23 +209,7 @@ void MainWindow::set_btcchina_data(QString btcchina_data)
     btcchina_parsing.btcchina_data_writer(btcchina_string);
     if (ui->choose_market->currentIndex() == 1)
     {
-        //print the data to the screen with text labels, clear the label text every time to allow reuse.
-        ui->label->setText(label_text.setNum(btcchina_parsing.last));
-        label_text.clear();
-        ui->label_2->setText(label_text.setNum(btcchina_parsing.daily_high));
-        label_text.clear();
-        ui->label_3->setText(label_text.setNum(btcchina_parsing.daily_low));
-        label_text.clear();
-        ui->label_4->setText(label_text.setNum(btcchina_parsing.sell));
-        label_text.clear();
-        ui->label_5->setText(label_text.setNum(btcchina_parsing.buy));
-        label_text.clear();
-        ui->label_6->setText(label_text.setNum(btcchina_parsing.sell-btcchina_parsing.buy));
-        label_text.clear();
-        ui->label_7->setText(label_text.setNum(btcchina_parsing.volume));
-        label_text.clear();
-        emit finished_all();
-        current_last = btcchina_parsing.last;
+        set_labels(btcchina_parsing);
     }
 }
 
@@ -251,23 +219,7 @@ void MainWindow::set_bitfinex_data(QString bitfinex_data)
     bitfinex_parsing.bitfinex_data_writer(bitfinex_string);
     if (ui->choose_market->currentIndex() == 2)
     {
-        //print the data to the screen with text labels, clear the label text every time to allow reuse.
-        ui->label->setText(label_text.setNum(bitfinex_parsing.last));
-        label_text.clear();
-        ui->label_2->setText(label_text.setNum(bitfinex_parsing.daily_high));
-        label_text.clear();
-        ui->label_3->setText(label_text.setNum(bitfinex_parsing.daily_low));
-        label_text.clear();
-        ui->label_4->setText(label_text.setNum(bitfinex_parsing.sell));
-        label_text.clear();
-        ui->label_5->setText(label_text.setNum(bitfinex_parsing.buy));
-        label_text.clear();
-        ui->label_6->setText(label_text.setNum(bitfinex_parsing.sell-bitfinex_parsing.buy));
-        label_text.clear();
-        ui->label_7->setText(label_text.setNum(bitfinex_parsing.volume));
-        label_text.clear();
-        emit finished_all();
-        current_last = bitfinex_parsing.last;
+        set_labels(bitfinex_parsing);
     }
 }
 
@@ -277,24 +229,29 @@ void MainWindow::set_bitstamp_data(QString bitstamp_data)
     bitstamp_parsing.bitstamp_data_writer(bitstamp_string);
     if (ui->choose_market->currentIndex() == 3)
     {
-        //print the data to the screen with text labels, clear the label text every time to allow reuse.
-        ui->label->setText(label_text.setNum(bitstamp_parsing.last));
-        label_text.clear();
-        ui->label_2->setText(label_text.setNum(bitstamp_parsing.daily_high));
-        label_text.clear();
-        ui->label_3->setText(label_text.setNum(bitstamp_parsing.daily_low));
-        label_text.clear();
-        ui->label_4->setText(label_text.setNum(bitstamp_parsing.sell));
-        label_text.clear();
-        ui->label_5->setText(label_text.setNum(bitstamp_parsing.buy));
-        label_text.clear();
-        ui->label_6->setText(label_text.setNum(bitstamp_parsing.sell-bitfinex_parsing.buy));
-        label_text.clear();
-        ui->label_7->setText(label_text.setNum(bitstamp_parsing.volume));
-        label_text.clear();
-        emit finished_all();
-        current_last = bitstamp_parsing.last;
+        set_labels(bitstamp_parsing);
     }
+}
+
+void MainWindow::set_labels(parsed_data &data)
+{
+    //print the data to the screen with text labels, clear the label text every time to allow reuse.
+    ui->label->setText(label_text.setNum(data.last));
+    label_text.clear();
+    ui->label_2->setText(label_text.setNum(data.daily_high));
+    label_text.clear();
+    ui->label_3->setText(label_text.setNum(data.daily_low));
+    label_text.clear();
+    ui->label_4->setText(label_text.setNum(data.sell));
+    label_text.clear();
+    ui->label_5->setText(label_text.setNum(data.buy));
+    label_text.clear();
+    ui->label_6->setText(label_text.setNum(data.sell-bitfinex_parsing.buy));
+    label_text.clear();
+    ui->label_7->setText(label_text.setNum(data.volume));
+    label_text.clear();
+    emit finished_all();
+    current_last = data.last;
 }
 
 MainWindow::~MainWindow()
