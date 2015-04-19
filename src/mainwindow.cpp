@@ -136,8 +136,9 @@ void MainWindow::clear_alarm()
 //triggers on timer timeout, which is once every second. Allows to accurately plot the time function
 void MainWindow::update_plot()
 {
-    plot_memory_stepping();
-    plotter();
+    plot_memory_stepping(); //add the current data state into the last data element in the vector (which is static)
+    plotter(); //plots the selected market
+    analyzer(); //analyzes the vector
 }
 
 void MainWindow::plotter()
@@ -199,7 +200,6 @@ void MainWindow::plot_memory_stepping()
     if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
     {
         bitstamp_history[position] = bitstamp_parsing.last;
-        position++;
     }
     else
     {
@@ -209,6 +209,7 @@ void MainWindow::plot_memory_stepping()
             bitstamp_history[c] = bitstamp_history[c+1];
         }
     }
+    position++;
 }
 
 //triggered on push button clicked
@@ -225,6 +226,11 @@ void MainWindow::set_price_range()
     ranges = ui->edit_price_range->text();
     plot_price = ranges.toDouble();
     ranges.clear();
+}
+
+void MainWindow::analyzer()
+{
+
 }
 
 //triggered on finished_all signal

@@ -26,6 +26,8 @@ public:
     //functions called in the constructor
     void set_plot_data();
     void set_ui_details();
+    //set the labels with the curerntly selected market
+    void set_labels(parsed_data &data);
     //reset the alarm triggers
     void clear_alarm();
     //sound the alarm
@@ -33,8 +35,8 @@ public:
     //call the data pushing function for the plot, and the plot ui function
     void plot_memory_stepping();
     void plotter();
-
-    void set_labels(parsed_data &data);
+    //analyze the data in the vectors
+    void analyzer();
     //Destructor
     ~MainWindow();
 
