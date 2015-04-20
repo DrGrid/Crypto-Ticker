@@ -23,7 +23,7 @@ void curl_worker::process()
 
 void curl_worker::okcoin_process()
 {
-    while (something)
+    while (true)
     {
         okcoin_string = okcoin_curling.fetch();
         okcoin_data = QString::fromStdString(okcoin_string);
@@ -35,7 +35,7 @@ void curl_worker::okcoin_process()
 
 void curl_worker::btcchina_process()
 {
-    while(something)
+    while(true)
     {
         btcchina_string = btcchina_curling.fetch();
         btcchina_data = QString::fromStdString(btcchina_string);
@@ -47,7 +47,7 @@ void curl_worker::btcchina_process()
 
 void curl_worker::bitfinex_process()
 {
-    while(something)
+    while(true)
     {
         bitfinex_string = bitfinex_curling.fetch();
         bitfinex_data = QString::fromStdString(bitfinex_string);
@@ -59,7 +59,7 @@ void curl_worker::bitfinex_process()
 
 void curl_worker::bitstamp_process()
 {
-    while (something)
+    while (true)
     {
         bitstamp_string = bitstamp_curling.fetch();
         bitstamp_data = QString::fromStdString(bitstamp_string);

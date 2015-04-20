@@ -13,7 +13,6 @@ private:
     CppCurl okcoin_curling, btcchina_curling, bitfinex_curling, bitstamp_curling;
     std::string okcoin_string, btcchina_string, bitfinex_string, bitstamp_string;
     QString okcoin_data, btcchina_data, bitfinex_data, bitstamp_data;
-    bool something = true;
 public:
     curl_worker();
     void okcoin_process();
