@@ -138,7 +138,7 @@ void MainWindow::update_plot()
 {
     plot_memory_stepping(); //add the current data state into the last data element in the vector (which is static)
     plotter(); //plots the selected market
-    analyzer(); //analyzes the vector
+    predictor(); //attempts a prediction with the previously updated vector
 }
 
 void MainWindow::plotter()
@@ -301,6 +301,35 @@ void MainWindow::set_labels(parsed_data &data)
     label_text.clear();
     emit finished_all();
     current_last = data.last;
+}
+
+bool MainWindow::significant_discrimination(double market_1, double market_2) //returns true, if it detects a significant difference between the market prices
+{
+    diff = market_1 - market_2;
+    if (diff > -0.5 && diff < 0.5)
+        return false;
+    else
+        return true;
+}
+
+double MainWindow::delta(QVector<double> &marketlist, int difference) //calculates the price variance within a specific time
+{
+    return marketlist[marketlist.size()] - marketlist[marketlist.size() - difference];
+}
+
+void MainWindow::predictor()
+{
+    if (significant_discrimination(okcoin_parsing.last, btcchina_parsing.last))
+        {
+            if (((delta(okcoin_history, 5)  > 1) | (delta(okcoin_history, 5)  < -1) | (delta(btcchina_history, 5)  > 1) |  (delta(btcchina_history, 5)  < -1)) && ((delta(okcoin_history, 5)  > 2) | (delta(okcoin_history, 5)  < -2) | ((delta(btcchina_history, 5)  > 2) | (delta(btcchina_history, 5)  < -2))))
+            {
+                //execute order, derivation from standard market behaviour deteted.
+                if(delta(okcoin_history, 5) > 0)
+                    ui->buynow->setText("Buy now!");
+                else
+                    ui->sellnow->setText("Sell now!");
+            }
+        }
 }
 
 MainWindow::~MainWindow()

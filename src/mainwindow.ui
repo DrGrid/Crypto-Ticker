@@ -88,6 +88,20 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="2">
+        <widget class="QLabel" name="sellnow">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="buynow">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
