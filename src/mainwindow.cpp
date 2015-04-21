@@ -321,7 +321,11 @@ void MainWindow::predictor()
 {
     if (significant_discrimination(okcoin_parsing.last, btcchina_parsing.last))
         {
-            if (((delta(okcoin_history, 5)  > 1) | (delta(okcoin_history, 5)  < -1) | (delta(btcchina_history, 5)  > 1) |  (delta(btcchina_history, 5)  < -1)) && ((delta(okcoin_history, 5)  > 2) | (delta(okcoin_history, 5)  < -2) | ((delta(btcchina_history, 5)  > 2) | (delta(btcchina_history, 5)  < -2))))
+            okcoin_delta_five = delta(okcoin_history,5);
+            okcoin_delta_ten =  delta(okcoin_history, 10);
+            btcchina_delta_five = delta(btcchina_history, 5);
+            btcchina_delta_ten = delta (btcchina_history, 10);
+            if (((okcoin_delta_five  > 1) | (okcoin_delta_five  < -1) | (btcchina_delta_five  > 1) |  (btcchina_delta_five  < -1)) && ((okcoin_delta_ten  > 2) | (okcoin_delta_ten  < -2) | (btcchina_delta_ten  > 2) | (btcchina_delta_five  < -2)))
             {
                 //execute order, derivation from standard market behaviour deteted.
                 if(delta(okcoin_history, 5) > 0)
