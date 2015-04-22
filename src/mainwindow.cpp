@@ -328,7 +328,7 @@ void MainWindow::predictor()
             if (((okcoin_delta_five  > 1) | (okcoin_delta_five  < -1) | (btcchina_delta_five  > 1) |  (btcchina_delta_five  < -1)) && ((okcoin_delta_ten  > 2) | (okcoin_delta_ten  < -2) | (btcchina_delta_ten  > 2) | (btcchina_delta_five  < -2)))
             {
                 //execute order, derivation from standard market behaviour deteted.
-                if(delta(okcoin_history, 5) > 0)
+                if(okcoin_delta_five > 0)
                     ui->buynow->setText("Buy now!");
                 else
                     ui->sellnow->setText("Sell now!");
