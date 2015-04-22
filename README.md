@@ -16,7 +16,7 @@ ___
 
 Dependencies:
 
-qt4  
-curl   
+qt4.8  
+liburl   
 c++11    
  
