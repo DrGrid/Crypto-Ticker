@@ -1,9 +1,11 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QString>
 #include <QVector>
 #include <QtGui>
 #include <thread>
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "learner.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -138,7 +140,6 @@ void MainWindow::update_plot()
 {
     plot_memory_stepping(); //add the current data state into the last data element in the vector (which is static)
     plotter(); //plots the selected market
-    predictor(); //attempts a prediction with the previously updated vector
 }
 
 void MainWindow::plotter()
@@ -280,39 +281,6 @@ void MainWindow::set_cross_market()
     label_text.clear();
     ui->label_9->setText(label_text.setNum(bitfinex_parsing.last-bitstamp_parsing.last));
     label_text.clear();
-}
-
-bool MainWindow::significant_discrimination(double market_1, double market_2) //returns true, if it detects a significant difference between the market prices
-{
-    diff = market_1 - market_2;
-    if (diff > -0.5 && diff < 0.5)
-        return false;
-    else
-        return true;
-}
-
-double MainWindow::delta(QVector<double> &marketlist, int difference) //calculates the price variance within a specific time
-{
-    return marketlist[marketlist.size()] - marketlist[marketlist.size() - difference];
-}
-
-void MainWindow::predictor()
-{
-    if (significant_discrimination(okcoin_parsing.last, btcchina_parsing.last))
-        {
-            okcoin_delta_five = delta(okcoin_history,5);
-            okcoin_delta_ten =  delta(okcoin_history, 10);
-            btcchina_delta_five = delta(btcchina_history, 5);
-            btcchina_delta_ten = delta (btcchina_history, 10);
-            if (((okcoin_delta_five  > 1) | (okcoin_delta_five  < -1) | (btcchina_delta_five  > 1) |  (btcchina_delta_five  < -1)) && ((okcoin_delta_ten  > 2) | (okcoin_delta_ten  < -2) | (btcchina_delta_ten  > 2) | (btcchina_delta_five  < -2)))
-            {
-                //execute order, derivation from standard market behaviour deteted.
-                if(okcoin_delta_five > 0)
-                    ui->buynow->setText("Buy now!");
-                else
-                    ui->sellnow->setText("Sell now!");
-            }
-        }
 }
 
 MainWindow::~MainWindow()
