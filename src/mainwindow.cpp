@@ -151,17 +151,17 @@ void MainWindow::plotter()
         ui->customPlot->yAxis->setRange(okcoin_parsing.last-plot_price, okcoin_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, okcoin_history);
     }
-    if (ui->choose_market->currentIndex() == 1)
+    else if (ui->choose_market->currentIndex() == 1)
     {
         ui->customPlot->yAxis->setRange(btcchina_parsing.last-plot_price, btcchina_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, btcchina_history);
     }
-    if (ui->choose_market->currentIndex() == 2)
+    else if (ui->choose_market->currentIndex() == 2)
     {
         ui->customPlot->yAxis->setRange(bitfinex_parsing.last-plot_price, bitfinex_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, bitfinex_history);
     }
-    if (ui->choose_market->currentIndex() == 3)
+    else
     {
         ui->customPlot->yAxis->setRange(bitstamp_parsing.last-plot_price, bitstamp_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, bitstamp_history);
