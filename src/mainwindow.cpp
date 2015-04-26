@@ -212,20 +212,7 @@ void MainWindow::set_price_range()
     ranges.clear();
 }
 
-void MainWindow::analyzer()
-{
-
-}
-
-//triggered on finished_all signal
-void MainWindow::set_cross_market()
-{
-    ui->label_8->setText(label_text.setNum(okcoin_parsing.last-btcchina_parsing.last));
-    label_text.clear();
-    ui->label_9->setText(label_text.setNum(bitfinex_parsing.last-bitstamp_parsing.last));
-    label_text.clear();
-}
-
+//Parse the string  returned from the different curl threads and read them into the correct places
 void MainWindow::set_okcoin_data(QString okcoin_data)
 {
     okcoin_string = okcoin_data.toStdString();
@@ -284,6 +271,15 @@ void MainWindow::set_labels(parsed_data &data)
     ui->label_7->setText(label_text.setNum(data.volume));
     label_text.clear();
     emit finished_all();
+}
+
+//triggered on finished_all signal
+void MainWindow::set_cross_market()
+{
+    ui->label_8->setText(label_text.setNum(okcoin_parsing.last-btcchina_parsing.last));
+    label_text.clear();
+    ui->label_9->setText(label_text.setNum(bitfinex_parsing.last-bitstamp_parsing.last));
+    label_text.clear();
 }
 
 bool MainWindow::significant_discrimination(double market_1, double market_2) //returns true, if it detects a significant difference between the market prices
