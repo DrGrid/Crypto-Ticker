@@ -89,7 +89,7 @@ private:
     QVector<double> bitstamp_history = QVector<double> (1001);
     QVector<double>time = QVector<double>(1001); //This Vector holds the time, as in 100 seconds.
     int position; //position for the data, that is being appended to the plot
-    double plot_time, plot_price, current_last; //hold the range of the plot time and plot  price ; holds the last price of the selecte market in the ui
+    double plot_time, plot_price; //hold the range of the plot time and plot  price ; holds the last price of the selecte market in the ui
     double okcoin_delta_five, okcoin_delta_ten, btcchina_delta_five, btcchina_delta_ten;
     double diff; //calculates the difference between the two markets
 };

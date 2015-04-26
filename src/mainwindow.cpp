@@ -24,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(worker, SIGNAL(finished_bitfinex(QString)),this,SLOT(set_bitfinex_data(QString)));
     connect(worker, SIGNAL(finished_bitstamp(QString)),this,SLOT(set_bitstamp_data(QString)));
     worker->moveToThread(curl_thread);
-    curl_thread->start();
     //when the data is finished writing, check it against the alarm
     connect(this,SIGNAL (finished_all()), this, SLOT(check_alarm()));
     connect(this,SIGNAL (finished_all()), this, SLOT(set_cross_market()));
@@ -41,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //timer to get the seconds in the plotter right
    plot_timer = new QTimer(this);
     connect(plot_timer, SIGNAL(timeout()), this, SLOT(update_plot()));
+    curl_thread->start();
     plot_timer->start(1000);
 }
 
@@ -145,16 +145,27 @@ void MainWindow::plotter()
 {
     // if not defined by user, set the range
     ui->customPlot->xAxis->setRange(0,plot_time);
-    ui->customPlot->yAxis->setRange(current_last-plot_price, current_last+plot_price);
     //initialise customPlot graphs
     if (ui->choose_market->currentIndex() == 0)
+    {
+        ui->customPlot->yAxis->setRange(okcoin_parsing.last-plot_price, okcoin_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, okcoin_history);
+    }
     if (ui->choose_market->currentIndex() == 1)
+    {
+        ui->customPlot->yAxis->setRange(btcchina_parsing.last-plot_price, btcchina_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, btcchina_history);
+    }
     if (ui->choose_market->currentIndex() == 2)
+    {
+        ui->customPlot->yAxis->setRange(bitfinex_parsing.last-plot_price, bitfinex_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, bitfinex_history);
+    }
     if (ui->choose_market->currentIndex() == 3)
+    {
+        ui->customPlot->yAxis->setRange(bitstamp_parsing.last-plot_price, bitstamp_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, bitstamp_history);
+    }
     // replot every time the function is called to show the changes
     ui->customPlot->replot();
 }
@@ -164,48 +175,21 @@ void MainWindow::plot_memory_stepping()
     if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
     {
         okcoin_history[position] = okcoin_parsing.last;
-    }
-    else
-    {
-        okcoin_history[plot_time] = okcoin_parsing.last;
-        for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
-        {
-            okcoin_history[c] = okcoin_history[c+1];
-        }
-    }
-    if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
-    {
         btcchina_history[position] = btcchina_parsing.last;
-    }
-    else
-    {
-        btcchina_history[plot_time] = btcchina_parsing.last;
-        for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
-        {
-            btcchina_history[c] = btcchina_history[c+1];
-        }
-    }
-    if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
-    {
         bitfinex_history[position] = bitfinex_parsing.last;
-    }
-    else
-    {
-        bitfinex_history[plot_time] = bitfinex_parsing.last;
-        for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
-        {
-            bitfinex_history[c] = bitfinex_history[c+1];
-        }
-    }
-    if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
-    {
         bitstamp_history[position] = bitstamp_parsing.last;
     }
     else
     {
+        okcoin_history[plot_time] = okcoin_parsing.last;
+        btcchina_history[plot_time] = btcchina_parsing.last;
+        bitfinex_history[plot_time] = bitfinex_parsing.last;
         bitstamp_history[plot_time] = bitstamp_parsing.last;
         for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
         {
+            okcoin_history[c] = okcoin_history[c+1];
+            btcchina_history[c] = btcchina_history[c+1];
+            bitfinex_history[c] = bitfinex_history[c+1];
             bitstamp_history[c] = bitstamp_history[c+1];
         }
     }
@@ -300,7 +284,6 @@ void MainWindow::set_labels(parsed_data &data)
     ui->label_7->setText(label_text.setNum(data.volume));
     label_text.clear();
     emit finished_all();
-    current_last = data.last;
 }
 
 bool MainWindow::significant_discrimination(double market_1, double market_2) //returns true, if it detects a significant difference between the market prices
