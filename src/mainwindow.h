@@ -12,6 +12,7 @@
 #include "data_parser.h"
 #include "curl_wrapper_class.h"
 #include "curl_worker_class.h"
+#include "learner.h"
 
 namespace Ui {
 class MainWindow;
