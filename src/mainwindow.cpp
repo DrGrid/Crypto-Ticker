@@ -56,13 +56,13 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::set_ui_details() //called in the constructor
 {
     //add the different fields to the ui, that can't be declared in the form
-   ui->choose_market->addItem("OkCoin");
-   ui->choose_market->addItem("BTCChina");
-   ui->choose_market->addItem("Bitfinex");
-   ui->choose_market->addItem("Bitstamp");
-  ui->choose_market->setCurrentIndex(0);
-  //sets the title of the programm
-   setWindowTitle("Crypto-Ticker");
+    ui->choose_market->addItem("OkCoin");
+    ui->choose_market->addItem("BTCChina");
+    ui->choose_market->addItem("Bitfinex");
+    ui->choose_market->addItem("Bitstamp");
+    ui->choose_market->setCurrentIndex(0);
+    //sets the title of the programm
+    setWindowTitle("Crypto-Ticker");
 }
 
 void MainWindow::set_plot_data() //called  in the constructor
@@ -158,21 +158,33 @@ void MainWindow::plotter()
     {
         ui->customPlot->yAxis->setRange(okcoin_parsing.last-plot_price, okcoin_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, okcoin_history);
+        //Remove the current title and set to this
+        ui->customPlot->plotLayout()->removeAt(0);
+        ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, "OkCoin Price"));
     }
     else if (ui->choose_market->currentIndex() == 1)
     {
         ui->customPlot->yAxis->setRange(btcchina_parsing.last-plot_price, btcchina_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, btcchina_history);
+        //Remove the current title and set to this
+        ui->customPlot->plotLayout()->removeAt(0);
+        ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, "BTCChina Price"));
     }
     else if (ui->choose_market->currentIndex() == 2)
     {
         ui->customPlot->yAxis->setRange(bitfinex_parsing.last-plot_price, bitfinex_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, bitfinex_history);
+        //"Remove the current title and set to this"
+        ui->customPlot->plotLayout()->removeAt(0);
+        ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, "Bitfinex Price"));
     }
     else
     {
         ui->customPlot->yAxis->setRange(bitstamp_parsing.last-plot_price, bitstamp_parsing.last+plot_price);
         ui->customPlot->graph(0)->setData(time, bitstamp_history);
+        //Remove the current title and set to this
+        ui->customPlot->plotLayout()->removeAt(0);
+        ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, "Bitstamp Price"));
     }
     // replot every time the function is called to show the changes
     ui->customPlot->replot();
