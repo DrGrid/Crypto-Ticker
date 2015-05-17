@@ -9,6 +9,7 @@ class Learner : public QObject
     Q_OBJECT
 public:
     explicit Learner(QObject *parent = 0);
+    QVector<double> push_vector(double current, QVector<double>& new_storage);
     double delta(QVector<double> &marketlist, int difference);
     bool significant_discrimination(double market_1, double market_2);
     void predictor();

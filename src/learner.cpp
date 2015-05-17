@@ -7,46 +7,25 @@ Learner::Learner(QObject *parent) :
 
 void Learner::data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current)
 {
-    if (china1.size() <= 12)
-        china1.push_back(china1_current);
+    china1 = push_vector(china1_current, china1);
+    china2 = push_vector(china2_current, china2);
+    usd1 = push_vector(usd1_current, usd1);
+    usd2 = push_vector(usd2_current, usd2);
+}
+
+QVector<double> Learner::push_vector(double current, QVector<double>& new_storage)
+{
+    if (new_storage.size() <= 12)
+        new_storage.push_back(current);
     else
     {
         for (unsigned short c(0); c < 12; c++)
         {
-            china1[c] = china1[c+1];
+            new_storage[c] = new_storage[c+1];
         }
-        china1[11] = china1_current;
+        new_storage[11] = current;
     }
-    if (china2.size() <= 12)
-        china2.push_back(china2_current);
-    else
-    {
-        for (unsigned short c(0); c < 12; c++)
-        {
-            china2[c] = china2[c+1];
-        }
-        china2[11] = china2_current;
-    }
-    if (usd1.size() <= 12)
-        usd1.push_back(usd1_current);
-    else
-    {
-        for (unsigned short c(0); c < 12; c++)
-        {
-            usd1[c] = usd1[c+1];
-        }
-        usd1[11] = usd1_current;
-    }
-    if (usd1.size() <= 12)
-        usd2.push_back(usd2_current);
-    else
-    {
-        for (unsigned short c(0); c < 12; c++)
-        {
-            usd2[c] = usd2[c+1];
-        }
-        usd2[11] = usd2_current;
-    }
+    return new_storage;
 }
 
 double Learner::delta(QVector<double> &marketlist, int difference) //calculates the price variance within a specific time
