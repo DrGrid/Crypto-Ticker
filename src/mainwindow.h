@@ -44,7 +44,7 @@ signals:
     //singals that the writing of the current market is finished, others may still be under work! This has the potential for race conditions
    void  finished_all();
    //signals that the writing and parsing for the specific markets has been done
-   void push_data(int);
+   void push_data(double china1_current,double china2_current,double usd1_current,double usd2_current);
 
 private slots:
    //listens for user signals regarding plot parameters
@@ -66,6 +66,7 @@ private slots:
     void set_btcchina_data(QString btcchina_data);
     void set_bitfinex_data(QString bitfinex_data);
     void set_bitstamp_data(QString bitstamp_data);
+    void data_pusher();
 
 private:
     Ui::MainWindow *ui;

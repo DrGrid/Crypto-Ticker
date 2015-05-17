@@ -47,8 +47,8 @@ MainWindow::MainWindow(QWidget *parent) :
     learner_thread = new QThread;
     learner = new Learner();
     learner_timer = new QTimer(this);
-    connect(learner_timer, SIGNAL(timeout()), this,SIGNAL(push_data()));
-    connect(this, SIGNAL(push_data(int)), worker,SLOT(data_feeder()));
+    connect(learner_timer, SIGNAL(timeout()), this,SLOT(data_pusher()));
+    connect(this, SIGNAL(push_data(double china1_current,double china2_current,double usd1_current,double usd2_current)), worker,SLOT(data_feeder(double china1_current,double china2_current,double usd1_current,double usd2_current)));
     learner_timer->start(5000);
     learner->moveToThread(learner_thread);
 }
@@ -288,6 +288,12 @@ void MainWindow::set_cross_market()
     label_text.clear();
     ui->label_9->setText(label_text.setNum(bitfinex_parsing.last-bitstamp_parsing.last));
     label_text.clear();
+}
+
+void MainWindow::data_pusher()
+{
+    double china1_current = okcoin_parsing.last, china2_current = btcchina_parsing.last, usd1_current = bitfinex_parsing.last, usd2_current = bitstamp_parsing.last;
+    emit push_data(china1_current, china2_current, usd1_current, usd2_current);
 }
 
 MainWindow::~MainWindow()

@@ -15,15 +15,13 @@ public:
 signals:
 
 public slots:
-    void data_feeder();
+    void data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current);
 private:
     double market_1, market_2;
     double diff;
     double okcoin_delta_five, okcoin_delta_ten, btcchina_delta_five, btcchina_delta_ten;
-    QVector<double> okcoin_history = QVector<double> (1001); //QVector initialized with C++11 copy-only member initialisers. The Vector holds the last price of the past 100 seconds.
-    QVector<double> btcchina_history = QVector<double> (1001);
-    QVector<double> bitfinex_history = QVector<double> (1001);
-    QVector<double> bitstamp_history = QVector<double> (1001);
+    QVector<double> china1, china2, usd1, usd2;
+    QVector<double> btcchina_history, okcoin_history;
 };
 
 #endif // LEARNER_H

@@ -5,9 +5,12 @@ Learner::Learner(QObject *parent) :
 {
 }
 
-void Learner::data_feeder()
+void Learner::data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current)
 {
-
+    china1.push_back(china1_current);
+    china2.push_back(china2_current);
+    usd1.push_back(usd1_current);
+    usd2.push_back(usd2_current);
 }
 
 double Learner::delta(QVector<double> &marketlist, int difference) //calculates the price variance within a specific time
