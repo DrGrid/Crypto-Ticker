@@ -66,6 +66,8 @@ private slots:
     void set_btcchina_data(QString btcchina_data);
     void set_bitfinex_data(QString bitfinex_data);
     void set_bitstamp_data(QString bitstamp_data);
+
+public slots:
     void data_pusher();
 
 private:

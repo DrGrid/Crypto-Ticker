@@ -48,9 +48,9 @@ MainWindow::MainWindow(QWidget *parent) :
     learner = new Learner();
     learner_timer = new QTimer(this);
     connect(learner_timer, SIGNAL(timeout()), this,SLOT(data_pusher()));
-    connect(this, SIGNAL(push_data(double china1_current,double china2_current,double usd1_current,double usd2_current)), worker,SLOT(data_feeder(double china1_current,double china2_current,double usd1_current,double usd2_current)));
     learner_timer->start(5000);
     learner->moveToThread(learner_thread);
+    learner_thread->start();
 }
 
 void MainWindow::set_ui_details() //called in the constructor
