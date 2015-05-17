@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(worker, SIGNAL(finished_bitfinex(QString)),this,SLOT(set_bitfinex_data(QString)));
     connect(worker, SIGNAL(finished_bitstamp(QString)),this,SLOT(set_bitstamp_data(QString)));
     worker->moveToThread(curl_thread);
+    curl_thread->start();
     //when the data is finished writing, check it against the alarm
     connect(this,SIGNAL (finished_all()), this, SLOT(check_alarm()));
     connect(this,SIGNAL (finished_all()), this, SLOT(set_cross_market()));
@@ -39,10 +40,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->push_price_range,SIGNAL(clicked()), this,SLOT(set_price_range()));
     connect(ui->push_time_scale,SIGNAL(clicked()), this, SLOT(set_time_scale()));
     //timer to get the seconds in the plotter right
-   plot_timer = new QTimer(this);
+    plot_timer = new QTimer(this);
     connect(plot_timer, SIGNAL(timeout()), this, SLOT(update_plot()));
-    curl_thread->start();
     plot_timer->start(1000);
+    //next spawn the worker thread and class.
+    learner_thread = new QThread;
+    learner = new Learner();
+    learner_timer = new QTimer(this);
+    connect(learner_timer, SIGNAL(timeout()), this,SIGNAL(push_data()));
+    connect(this, SIGNAL(push_data(int)), worker,SLOT(data_feeder()));
+    learner_timer->start(5000);
+    learner->moveToThread(learner_thread);
 }
 
 void MainWindow::set_ui_details() //called in the constructor

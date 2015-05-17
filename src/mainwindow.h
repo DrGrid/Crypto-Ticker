@@ -44,10 +44,7 @@ signals:
     //singals that the writing of the current market is finished, others may still be under work! This has the potential for race conditions
    void  finished_all();
    //signals that the writing and parsing for the specific markets has been done
-   void finished_okcoin(std::string okcoin_string);
-   void finished_btcchina(std::string btcchina_string);
-   void finished_bitfinex(std::string bitfinex_string);
-   void finished_bitstamp(std::string bitstamp_string);
+   void push_data(int);
 
 private slots:
    //listens for user signals regarding plot parameters
@@ -72,10 +69,11 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    curl_worker* worker;
-    QTimer * plot_timer;
-    QThread* curl_thread;
+    curl_worker *worker;
+    QTimer *plot_timer, *learner_timer;
+    QThread *curl_thread, *learner_thread;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
+    Learner *learner;
     float upper_bound, lower_bound;
     std::string okcoin_string, bitfinex_string, btcchina_string, bitstamp_string; //passed to the curl object and returned, with the conentent of the tickers
     parsed_data okcoin_parsing, btcchina_parsing, bitstamp_parsing, bitfinex_parsing; //shows the current data

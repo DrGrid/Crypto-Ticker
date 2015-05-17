@@ -5,6 +5,11 @@ Learner::Learner(QObject *parent) :
 {
 }
 
+void Learner::data_feeder()
+{
+
+}
+
 double Learner::delta(QVector<double> &marketlist, int difference) //calculates the price variance within a specific time
 {
     return marketlist[marketlist.size()] - marketlist[marketlist.size() - difference];

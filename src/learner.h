@@ -15,7 +15,7 @@ public:
 signals:
 
 public slots:
-
+    void data_feeder();
 private:
     double market_1, market_2;
     double diff;
