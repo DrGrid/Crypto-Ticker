@@ -19,7 +19,7 @@ QVector<double> Learner::push_vector(double current, QVector<double>& new_storag
         new_storage.push_back(current);
     else
     {
-        for (unsigned short c(0); c < 12; c++)
+        for (unsigned short c(0); c < 11; c++)
         {
             new_storage[c] = new_storage[c+1];
         }

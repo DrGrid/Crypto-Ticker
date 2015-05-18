@@ -300,6 +300,8 @@ void MainWindow::set_cross_market()
     label_text.clear();
     ui->label_9->setText(label_text.setNum(bitfinex_parsing.last-bitstamp_parsing.last));
     label_text.clear();
+    ui->virtual_exchange_rate->setText(label_text.setNum(((okcoin_parsing.last+btcchina_parsing.last) / 2) / ((bitfinex_parsing.last+bitstamp_parsing.last) / 2)));
+    label_text.clear();
 }
 
 void MainWindow::data_pusher()
