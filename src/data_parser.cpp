@@ -5,7 +5,7 @@
 
 void parsed_data::okcoin_data_writer(std::string& data)
 {
-        keeper = data[9];
+    keeper = data[9];
 		keeper += data[10];
 		keeper += data[11];
 		keeper += data[12];
@@ -14,7 +14,7 @@ void parsed_data::okcoin_data_writer(std::string& data)
 		keeper += data[15];
 		keeper += data[16];
 		keeper += data[17];
-		keeper += data[18]; 
+		keeper += data[18];
 		keeper += data[19];
 		str << keeper;
 		str >> time_number; //finish writing the date / time.

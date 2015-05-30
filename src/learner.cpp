@@ -1,3 +1,4 @@
+
 #include "learner.h"
 
 Learner::Learner(QObject *parent) :
