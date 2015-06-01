@@ -2,355 +2,114 @@
 #include <string>
 #include <sstream>
 #include <QVector>
+#include <iostream>
+#include <cassert>
+
+void parsed_data::to_cstring(std::string& data)
+{
+    c_stringer = data.c_str();
+}
+
+void parsed_data::stream_clear(std::string option)
+{
+    str << keeper;
+    if (option == "date")
+      str >> time_number;
+    else if (option == "buy")
+      str >> buy;
+    else if (option == "daily_high")
+      str >> daily_high;
+    else if (option == "last")
+      str >> last;
+    else if (option == "daily_low")
+      str >> daily_low;
+    else if (option == "sell")
+      str >> sell;
+    else if (option == "volume")
+      str >> volume;
+    str.str("");
+    str.clear();
+    keeper.clear();
+}
 
 void parsed_data::okcoin_data_writer(std::string& data)
 {
-    keeper = data[9];
-		keeper += data[10];
-		keeper += data[11];
-		keeper += data[12];
-		keeper += data[13];
-		keeper += data[14];
-		keeper += data[15];
-		keeper += data[16];
-		keeper += data[17];
-		keeper += data[18];
-		keeper += data[19];
-		str << keeper;
-		str >> time_number; //finish writing the date / time.
-		str.str("");
-		str.clear();
-		keeper.clear();
-		keeper = data[38];
-		c = 39;
-		while (data[c+1] != ',')
-		{
-			keeper += data[c];
-			c++;
-		}
-		str << keeper;
-		str >> buy; //finish writing the current top buy order.
-		str.str("");
-		str.clear();
-		keeper.clear();
-		c+=10;
-		keeper = data[c];
-		c++;
-		while (data[c+1] != ',')
-		{
-			keeper += data[c];
-			c++;
-		}
-		str << keeper;
-		str >> daily_high; //finish writing the highest executed order during the last 24h.
-		str.str("");
-		str.clear();
-		keeper.clear();
-		c+=10;
-		keeper = data[c];
-		c++;
-		while (data[c+1] != ',')
-		{
-			keeper += data[c];
-			c++;
-		}
-		str << keeper;
-		str >> last; //finish writing the last executed order value.
-		str.str("");
-		str.clear();
-		keeper.clear();
-		c+=9;
-		keeper = data[c];
-		c++;
-		while (data[c+1] != ',')
-		{
-			keeper += data[c];
-			c++;
-		}
-		str << keeper;
-		str >> daily_low; //finish writing the lowest executed order of the last 24h.
-		str.str("");
-		str.clear();
-		keeper.clear();
-		c+=10;
-		keeper = data[c];
-		c++;
-		while (data[c+1] != ',')
-		{
-			keeper += data[c];
-			c++;
-		}
-        str << keeper;
-        str >> sell; //finish writing the last sell order.
-        str.str("");
-        str.clear();
-        keeper.clear();
-        c+=9;
-        keeper = data[c];
-        c++;
-        while (data[c+1] != ',')
-        {
-            keeper += data[c];
-            c++;
-        }
-        str << keeper;
-        str >> volume; //finish writing the last sell order.
-        str.str("");
-        str.clear();
-        keeper.clear();
+    to_cstring(data);
+    document.Parse(c_stringer);
+    keeper = document["date"].GetString();
+		stream_clear("date");
+		keeper = document["ticker"]["buy"].GetString();
+		stream_clear("buy");
+		keeper = document["ticker"]["high"].GetString();
+		stream_clear("daily_high");
+		keeper = document["ticker"]["last"].GetString();
+    stream_clear("last");
+    keeper = document["ticker"]["low"].GetString();
+		stream_clear("daily_low");
+    keeper = document["ticker"]["sell"].GetString();
+    stream_clear("sell");
+    keeper = document["ticker"]["vol"].GetString();
+    stream_clear("volume");
 }
 
 void parsed_data::btcchina_data_writer(std::string &data)
 {
-    c = 19;
-    keeper = data[c];
-    while (data[c+1] != '"')
-    {
-        c++;
-        keeper += data[c];
-    }
-    str << keeper;
-    str >> daily_high; //daily high
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=10;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> daily_low; //daily low
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=10;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> buy;   //buy
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=11;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> sell; //sell
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=11;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> last; //last
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=10;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> volume; //volume
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=11;
-    while (data[c+1] != ',')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> time_number; //volume
-    str.str("");
-    str.clear();
-    keeper.clear();
+    to_cstring(data);
+    document.Parse(c_stringer);
+    keeper = document["ticker"]["high"].GetString();
+    stream_clear("daily_high");
+    keeper = document["ticker"]["low"].GetString();
+    stream_clear("daily_low");
+    keeper = document["ticker"]["buy"].GetString();
+    stream_clear("buy");
+    keeper = document["ticker"]["sell"].GetString();
+    stream_clear("sell");
+    keeper = document["ticker"]["last"].GetString();
+    stream_clear("last");
+    keeper = document["ticker"]["vol"].GetString();
+    stream_clear("volume");
+    assert(document["ticker"]["date"].IsNumber()); //it passed ->the element is a number.
+    time_number = document["ticker"]["date"].GetInt64();
 }
 
 void parsed_data::bitfinex_data_writer(std::string &data)
 {
-    c = 24;
-    keeper = data[c];
-    while (data[c+1] != '"')
-    {
-        c++;
-        keeper += data[c];
-    }
-    str << keeper;
-    str >> buy; //sell
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=10;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> sell; //buy
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=17;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> last; //last
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=10;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> daily_low; //low
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=11;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> daily_high; //high
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=14;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> volume; //volume
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=16;
-    while (data[c+1] != '"')
-    {
-        keeper += data[c];
-        c++;
-    }
-    str << keeper;
-    str >> time_number; //timestamp
-    str.str("");
-    str.clear();
-    keeper.clear();
+    to_cstring(data);
+    document.Parse(c_stringer);
+    keeper = document["bid"].GetString();
+    stream_clear("buy");
+    keeper = document["ask"].GetString();
+    stream_clear("sell");
+    keeper = document["last_price"].GetString();
+    stream_clear("last");
+    keeper = document["low"].GetString();
+    stream_clear("daily_low");
+    keeper = document["high"].GetString();
+    stream_clear("daily_high");
+    keeper = document["volume"].GetString();
+    stream_clear("volume");
+    keeper = document["timestamp"].GetString();
+    stream_clear("date");
 }
 
 void parsed_data::bitstamp_data_writer(std::string &data)
 {
-    c = 10;
-    keeper = data[c];
-    while (data[c+1] != '"')
-    {
-        c++;
-        keeper += data[c];
-    }
-    str << keeper;
-    str >> daily_high; //buy
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=13;
-    keeper = data[c];
-    while (data[c+1] != '"')
-    {
-        c++;
-        keeper += data[c];
-    }
-    str << keeper;
-    str >> last; //last
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=17;
-    keeper = data[c];
-    while (data[c+1] != '"')
-    {
-        c++;
-        keeper += data[c];
-    }
-    str << keeper;
-    str >> time_number; //timestamp
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=11;
-    while (data[c+1] != '"')
-    {
-        c++;
-        keeper += data[c];
-    }
-    str << keeper;
-    str >> buy; //buy
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=13;
-    while (data[c+1] != '"')
-    {
-        c++;  //leave out for vwap
-    }
-    c+=15;
-    while (data[c+1] != '"')
-    {
-        c++;
-        keeper += data[c];
-    }
-    str << keeper;
-    str >> volume; //volume
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=11;
-    while (data[c+1] != '"')
-    {
-        c++;
-        keeper += data[c];
-    }
-    str << keeper;
-    str >> daily_low; //low
-    str.str("");
-    str.clear();
-    keeper.clear();
-    c+=11;
-    while (data[c+1] != '"')
-    {
-        c++;
-        keeper += data[c];
-    }
-    str << keeper;
-    str >> sell; //sell
-    str.str("");
-    str.clear();
-    keeper.clear();
+    to_cstring(data);
+    document.Parse(c_stringer);
+    keeper = document["high"].GetString();
+    stream_clear("daily_high");
+    keeper = document["last"].GetString();
+    stream_clear("last");
+    keeper = document["timestamp"].GetString();
+    stream_clear("date");
+    keeper = document["bid"].GetString();
+    stream_clear("buy");
+    keeper = document["volume"].GetString();
+    stream_clear("volume");
+    keeper = document["low"].GetString();
+    stream_clear("daily_low");
+    keeper = document["ask"].GetString();
+    stream_clear("sell");
 }
 
 

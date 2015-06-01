@@ -15,9 +15,11 @@ private:
 	std::stringstream str;
 	std::string keeper;
 	unsigned short c = 0;
+  const char * c_stringer;
+  rapidjson::Document document;
 public:
     //use the public variables as a callable interface for the calling class
-  long int time_number;
+  int64_t time_number;
 	float buy;
   double last;
 	float sell;
@@ -25,6 +27,7 @@ public:
 	float daily_low;
   double volume;
   //write the data into a readbble form, stores in the same object, for every call.
+  void stream_clear(std::string input);
   void to_cstring(std::string& data);
   void okcoin_data_writer(std::string& data);
   void btcchina_data_writer(std::string& data);
