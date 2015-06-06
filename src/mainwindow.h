@@ -43,8 +43,7 @@ public:
 signals:
     //singals that the writing of the current market is finished, others may still be under work! This has the potential for race conditions
    void  finished_all();
-   //signals that the writing and parsing for the specific markets has been done
-   void push_data(double china1_current,double china2_current,double usd1_current,double usd2_current);
+
 
 private slots:
    //listens for user signals regarding plot parameters
@@ -66,9 +65,9 @@ private slots:
     void set_btcchina_data(QString btcchina_data);
     void set_bitfinex_data(QString bitfinex_data);
     void set_bitstamp_data(QString bitstamp_data);
-
-public slots:
+    //pushes a copy of the data over to the learner
     void data_pusher();
+
 
 private:
     Ui::MainWindow *ui;
@@ -76,7 +75,7 @@ private:
     QTimer *plot_timer, *learner_timer;
     QThread *curl_thread, *learner_thread;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
-    Learner *learner;
+    Learner learner;
     float upper_bound, lower_bound;
     std::string okcoin_string, bitfinex_string, btcchina_string, bitstamp_string; //passed to the curl object and returned, with the conentent of the tickers
     parsed_data okcoin_parsing, btcchina_parsing, bitstamp_parsing, bitfinex_parsing; //shows the current data
@@ -88,6 +87,7 @@ private:
     int position; //position for the data, that is being appended to the plot
     double plot_time, plot_price; //hold the range of the plot time and plot  price ; holds the last price of the selecte market in the ui
     double diff; //calculates the difference between the two markets
+    double china1_current, china2_current, usd1_current, usd2_current;
 };
 
 #endif // MAINWINDOW_H

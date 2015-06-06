@@ -1,23 +1,31 @@
+#include <iostream>
 
 #include "learner.h"
+#include "mainwindow.h"
 
-Learner::Learner(QObject *parent) :
-    QObject(parent)
+Learner::Learner()
 {
+    std::cout << "I am being created!";
     china_move = false;
     usd_move = false;
 }
-
+//constant data feed timed in ~seconds.
 void Learner::data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current)
 {
-    if ((china1_current-china2_current > 0.1) | (china1_current-china2_current < -0.1))
+    std::cout << "I am being fed!";
+    //check if the there is a significant discrimination between the markets.
+    if (!china_move)
+    {
+      if ((china1_current-china2_current > 0.1) | (china1_current-china2_current < -0.1))
         china_move = true;
+    }
+    //Only set it to false again, once it reaches a certain capacity and is subject to no movement between them.
     if ((china1.size() == 11) && (zero_movement(china1,china2)))
         china_move = false;
     if (china_move)
     {
-        china1 = push_vector(china1_current, china1);
-        china2 = push_vector(china2_current, china2);
+        push_vector(china1_current, china1);
+        push_vector(china2_current, china2);
     }
     if ((usd1_current-usd2_current > 0.01) | (usd1_current-usd2_current < -0.01))
         usd_move = true;
@@ -25,12 +33,12 @@ void Learner::data_feeder(double china1_current, double china2_current, double u
         usd_move = false;
     if (usd_move)
     {
-        usd1 = push_vector(usd1_current, usd1);
-        usd2 = push_vector(usd2_current, usd2);
+        push_vector(usd1_current, usd1);
+         push_vector(usd2_current, usd2);
     }
 }
 
-bool Learner::zero_movement(QVector<double> &once, QVector<double> &twice)
+bool Learner::zero_movement(std::vector<double> &once, std::vector<double> &twice)
 {
     if (once.size() == 11)
         return false;
@@ -42,7 +50,7 @@ bool Learner::zero_movement(QVector<double> &once, QVector<double> &twice)
     return true;
 }
 
-QVector<double> Learner::push_vector(double current, QVector<double> &new_storage)
+void Learner::push_vector(double current, std::vector<double> &new_storage)
 {
     if (new_storage.size() <= 12)
         new_storage.push_back(current);
@@ -54,10 +62,9 @@ QVector<double> Learner::push_vector(double current, QVector<double> &new_storag
         }
         new_storage[11] = current;
     }
-    return new_storage;
 }
 
-double Learner::delta(QVector<double> &marketlist, int difference) //calculates the price variance within a specific time
+double Learner::delta(std::vector<double> &marketlist, int difference) //calculates the price variance within a specific time
 {
     return marketlist[marketlist.size()] - marketlist[marketlist.size() - difference];
 }

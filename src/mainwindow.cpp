@@ -1,8 +1,3 @@
-#include <QString>
-#include <QVector>
-#include <QtGui>
-#include <thread>
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -44,13 +39,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(plot_timer, SIGNAL(timeout()), this, SLOT(update_plot()));
     plot_timer->start(1000);
     //next spawn the worker thread and class.
-    learner_thread = new QThread;
-    learner = new Learner();
     learner_timer = new QTimer(this);
     connect(learner_timer, SIGNAL(timeout()), this,SLOT(data_pusher()));
     learner_timer->start(5000);
-    learner->moveToThread(learner_thread);
-    learner_thread->start();
 }
 
 void MainWindow::set_ui_details() //called in the constructor
@@ -306,8 +297,11 @@ void MainWindow::set_cross_market()
 
 void MainWindow::data_pusher()
 {
-    double china1_current = okcoin_parsing.last, china2_current = btcchina_parsing.last, usd1_current = bitfinex_parsing.last, usd2_current = bitstamp_parsing.last;
-    emit push_data(china1_current, china2_current, usd1_current, usd2_current);
+    china1_current = okcoin_parsing.last;
+    china2_current = btcchina_parsing.last;
+    usd1_current = bitfinex_parsing.last;
+    usd2_current = bitstamp_parsing.last;
+    learner.data_feeder(china1_current, china2_current, usd1_current, usd2_current);
 }
 
 MainWindow::~MainWindow()
