@@ -20,14 +20,20 @@ void Learner::data_feeder(double china1_current, double china2_current, double u
     }
     //Only set it to false again, once it reaches a certain capacity and is subject to no movement between them.
     if ((china1.size() == 11) && (zero_movement(china1,china2)))
+    {
         china_move = false;
+        china_measure = false;
+    }
     if (china_move)
     {
         push_vector(china1_current, china1);
         push_vector(china2_current, china2);
     }
     if ((usd1_current-usd2_current > 0.01) | (usd1_current-usd2_current < -0.01))
-        usd_move = true;
+    {
+        usd_move = false;
+        china_measure = false;
+    }
     if ((usd1.size() == 11) && (zero_movement(usd1,usd2)))
         usd_move = false;
     if (usd_move)
