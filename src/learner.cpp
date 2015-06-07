@@ -1,4 +1,3 @@
-#include <iostream>
 #include "learner.h"
 
 Learner::Learner()
@@ -72,7 +71,6 @@ void Learner::push_vector(double current, std::vector<double> &new_storage)
 
 void Learner::get_direction()
 {
-    std::cout << "I am looking for direction";
     //assess if the market is moving up or down, true is encoded for up, false is for down
     if ((china1.front()-china1.back() > 0.1))
         china1_direction = true;
@@ -98,8 +96,7 @@ void Learner::get_direction()
             china1_measure.set_measurements(china1_direction, china1.back());
             china2_measure.set_measurements(china2_direction, china2.back());
             china_measure = true;
-            std::cout << "I have found some directions!\n";
-        }
+       }
     }
     if ((usd1_direction && !usd2_direction) || (!usd1_direction && usd2_direction))
     {
@@ -108,14 +105,12 @@ void Learner::get_direction()
             usd1_measure.set_measurements(usd1_direction, usd1.back());
             usd2_measure.set_measurements(usd2_direction, usd2.back());
             usd_measure = true;
-            std::cout << "I have found some directions!\n";
-        }
+       }
     }
 }
 //once it resolves, give the market a score to
 void Learner::set_score()
 {
-    std::cout << "I am looking at the score!";
     if (china_measure)
     {
         if (china1_measure.direction == china2_direction)

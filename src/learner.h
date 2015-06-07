@@ -2,7 +2,6 @@
 #define LEARNER_H
 
 #include <vector>
-#include <map>
 #include <math.h>
 
 struct measurements
