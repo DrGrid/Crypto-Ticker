@@ -3,6 +3,11 @@
 
 #include <vector>
 #include <math.h>
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/filereadstream.h"
 
 struct measurements
 {
@@ -18,6 +23,7 @@ struct measurements
 class Learner
 {
 private:
+    rapidjson::Document score;
     double market_1, market_2;
     double diff;
     double okcoin_delta_five, okcoin_delta_ten, btcchina_delta_five, btcchina_delta_ten;
@@ -31,6 +37,7 @@ private:
     void track_record();
     void get_direction();
     void set_score();
+    void write_json();
 public:
     Learner();
     void data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current);
