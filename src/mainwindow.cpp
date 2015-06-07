@@ -302,6 +302,10 @@ void MainWindow::data_pusher()
     usd1_current = bitfinex_parsing.last;
     usd2_current = bitstamp_parsing.last;
     learner.data_feeder(china1_current, china2_current, usd1_current, usd2_current);
+    ui->label_11->setText(label_text.setNum(learner.score_china1));
+    ui->label_12->setText(label_text.setNum(learner.score_china2));
+    ui->label_13->setText(label_text.setNum(learner.score_usd1));
+    ui->label_14->setText(label_text.setNum(learner.score_usd2));
 }
 
 MainWindow::~MainWindow()

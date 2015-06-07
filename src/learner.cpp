@@ -1,18 +1,18 @@
 #include <iostream>
-
 #include "learner.h"
-#include "mainwindow.h"
 
 Learner::Learner()
 {
-    std::cout << "I am being created!";
     china_move = false;
     usd_move = false;
+    score_china1 = 0;
+    score_china2 = 0;
+    score_usd1 = 0;
+    score_usd2 = 0;
 }
 //constant data feed timed in ~seconds.
 void Learner::data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current)
 {
-    std::cout << "I am being fed!";
     //check if the there is a significant discrimination between the markets.
     if (!china_move)
     {
@@ -36,11 +36,16 @@ void Learner::data_feeder(double china1_current, double china2_current, double u
         push_vector(usd1_current, usd1);
          push_vector(usd2_current, usd2);
     }
+    if (usd_move & china_move && (china1.size() >= 11))
+        get_direction();
+    if (china_measure || usd_measure)
+        set_score();
 }
 
 bool Learner::zero_movement(std::vector<double> &once, std::vector<double> &twice)
 {
-    if (once.size() == 11)
+    //check if there has been no difference since more than 10 seconds
+    if (once.size() >= 11)
         return false;
     for (unsigned short c(0); c <= 10; c++)
     {
@@ -52,6 +57,7 @@ bool Learner::zero_movement(std::vector<double> &once, std::vector<double> &twic
 
 void Learner::push_vector(double current, std::vector<double> &new_storage)
 {
+    //push data into a vector up until size 12
     if (new_storage.size() <= 12)
         new_storage.push_back(current);
     else
@@ -64,35 +70,64 @@ void Learner::push_vector(double current, std::vector<double> &new_storage)
     }
 }
 
-double Learner::delta(std::vector<double> &marketlist, int difference) //calculates the price variance within a specific time
+void Learner::get_direction()
 {
-    return marketlist[marketlist.size()] - marketlist[marketlist.size() - difference];
-}
-
-bool Learner::significant_discrimination(double market_1, double market_2) //returns true, if it detects a significant difference between the market prices
-{
-    diff = market_1 - market_2;
-    if (diff > -0.5 && diff < 0.5)
-        return false;
+    std::cout << "I am looking for direction";
+    //assess if the market is moving up or down, true is encoded for up, false is for down
+    if ((china1.front()-china1.back() > 0.1))
+        china1_direction = true;
     else
-        return true;
-}
-
-void Learner::predictor()
-{
-    if (significant_discrimination(market_1, market_2))
+        china1_direction = false;
+    if ((china2.front()-china2.front()) > 0.1)
+        china2_direction = true;
+    else
+        china2_direction =false;
+    if ((usd1.front() - usd1.back() > 0.1))
+        usd1_direction = true;
+    else
+        usd1_direction = false;
+    if ((usd2.back()- usd2.front()) > 0.1)
+        usd2_direction = true;
+    else
+        usd2_direction = false;
+    //set the measurement record when a deviation is first detected, do not touch it until said deviation has been resolved.
+    if ((china1_direction && !china2_direction) || (!china1_direction && china2_direction))
+    {
+        if (!china_measure)
         {
-            okcoin_delta_five = delta(okcoin_history,5);
-            okcoin_delta_ten =  delta(okcoin_history, 10);
-            btcchina_delta_five = delta(btcchina_history, 5);
-            btcchina_delta_ten = delta (btcchina_history, 10);
-            /*if (((okcoin_delta_five  > 1) | (okcoin_delta_five  < -1) | (btcchina_delta_five  > 1) |  (btcchina_delta_five  < -1)) && ((okcoin_delta_ten  > 2) | (okcoin_delta_ten  < -2) | (btcchina_delta_ten  > 2) | (btcchina_delta_five  < -2)))
-            {
-                //execute order, derivation from standard market behaviour deteted.
-                if(okcoin_delta_five > 0)
-                    //do something here
-                else
-                    //do something here
-            }*/
+            china1_measure.set_measurements(china1_direction, china1.back());
+            china2_measure.set_measurements(china2_direction, china2.back());
+            china_measure = true;
+            std::cout << "I have found some directions!\n";
         }
+    }
+    if ((usd1_direction && !usd2_direction) || (!usd1_direction && usd2_direction))
+    {
+        if (!usd_measure)
+        {
+            usd1_measure.set_measurements(usd1_direction, usd1.back());
+            usd2_measure.set_measurements(usd2_direction, usd2.back());
+            usd_measure = true;
+            std::cout << "I have found some directions!\n";
+        }
+    }
+}
+//once it resolves, give the market a score to
+void Learner::set_score()
+{
+    std::cout << "I am looking at the score!";
+    if (china_measure)
+    {
+        if (china1_measure.direction == china2_direction)
+            score_china1 += pow(china1_measure.price - china1.front(), 2);
+        if (china2_measure.direction == china1_direction)
+            score_china2 += pow(china2_measure.price - china2.front(), 2);
+    }
+    if (usd_measure)
+    {
+        if (usd1_measure.direction == usd2_direction)
+            score_usd1 += pow(usd1_measure.price - usd1.front(), 2);
+        if (usd2_measure.direction == usd1_direction)
+            score_usd2 += pow(usd2_measure.price - usd2.front(), 2);
+    }
 }

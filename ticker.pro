@@ -5,8 +5,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = ticker
 TEMPLATE = app
 
-OBJECTS_DIR = src
-MOC_DIR = src
+OBJECTS_DIR = build
+MOC_DIR = build
 UI_DIR = src
 
 QMAKE_CFLAGS += -std=c++11 -lcurl
