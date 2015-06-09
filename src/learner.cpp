@@ -1,4 +1,5 @@
 #include "learner.h"
+#include <iostream>
 
 Learner::Learner()
 {
@@ -8,17 +9,34 @@ Learner::Learner()
     score_china2 = 0;
     score_usd1 = 0;
     score_usd2 = 0;
+
     score.SetObject();
     rapidjson::Document::AllocatorType &alloc = score.GetAllocator();
-    score.AddMember("okcoin", 0, alloc);
-    score.AddMember("btcchina", 0, alloc);
-    score.AddMember("bitfinex", 0, alloc);
-    score.AddMember("bitstamp", 0, alloc);
+    score.AddMember("arbi-score", newValue, alloc);
+    score.AddMember("ticker", tickValue, alloc);
+    score["arbi-score"].SetObject();
+    score["ticker"].SetObject();
+    rapidjson::Value& arbiParams = score["arbi-score"];
+    rapidjson::Value& tickerParams = score["ticker"];
+    arbiParams.AddMember("okcoin", 0, alloc);
+    arbiParams.AddMember("btcchina", 0, alloc);
+    arbiParams.AddMember("bitfinex", 0, alloc);
+    arbiParams.AddMember("bitstamp", 0, alloc);
+    tickerParams.AddMember("okcoin", 0, alloc);
+    tickerParams.AddMember("btcchina", 0, alloc);
+    tickerParams.AddMember("bitfinex", 0, alloc);
+    tickerParams.AddMember("bitstamp", 0, alloc);
     write_json();
 }
+
 //constant data feed timed in ~seconds.
 void Learner::data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current)
 {
+    score["ticker"]["okcoin"] = china1_current;
+    score["ticker"]["btcchina"] = china2_current;
+    score["ticker"]["bitfinex"] = usd1_current;
+    score["ticker"]["bitstamp"] = usd2_current;
+    write_json();
     //check if the there is a significant discrimination between the markets.
     if (!china_move)
     {
@@ -129,14 +147,14 @@ void Learner::set_score()
         if (china1_measure.direction == china2_direction)
         {
             score_china1 += pow(china1_measure.price - china1.front(), 2);
-            score["okcoin"] = score_china1;
+            score["arbi-score"]["okcoin"] = score_china1;
             write_json();
 
         }
         if (china2_measure.direction == china1_direction)
         {
             score_china2 += pow(china2_measure.price - china2.front(), 2);
-            score["okcoin"] = score_china2;
+            score["arbi-score"]["okcoin"] = score_china2;
             write_json();
         }
     }
@@ -145,13 +163,13 @@ void Learner::set_score()
         if (usd1_measure.direction == usd2_direction)
         {
             score_usd1 += pow(usd1_measure.price - usd1.front(), 2);
-            score["bitfinex"] = score_usd1;
+            score["score"]["bitfinex"] = score_usd1;
             write_json();
         }
         if (usd2_measure.direction == usd1_direction)
         {
             score_usd2 += pow(usd2_measure.price - usd2.front(), 2);
-            score["bitstamp"] = score_usd2;
+            score["score"]["bitstamp"] = score_usd2;
             write_json();
         }
     }
@@ -166,3 +184,4 @@ void Learner::write_json()
     score.Accept(writer);
     fclose(fp);
 }
+

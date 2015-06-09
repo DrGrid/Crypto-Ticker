@@ -24,6 +24,7 @@ class Learner
 {
 private:
     rapidjson::Document score;
+    rapidjson::Value newValue, tickValue;
     double market_1, market_2;
     double diff;
     double okcoin_delta_five, okcoin_delta_ten, btcchina_delta_five, btcchina_delta_ten;
