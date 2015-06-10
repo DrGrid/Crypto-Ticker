@@ -16,16 +16,14 @@ Learner::Learner()
     score.AddMember("ticker", tickValue, alloc);
     score["arbi-score"].SetObject();
     score["ticker"].SetObject();
-    rapidjson::Value& arbiParams = score["arbi-score"];
-    rapidjson::Value& tickerParams = score["ticker"];
-    arbiParams.AddMember("okcoin", 0, alloc);
-    arbiParams.AddMember("btcchina", 0, alloc);
-    arbiParams.AddMember("bitfinex", 0, alloc);
-    arbiParams.AddMember("bitstamp", 0, alloc);
-    tickerParams.AddMember("okcoin", 0, alloc);
-    tickerParams.AddMember("btcchina", 0, alloc);
-    tickerParams.AddMember("bitfinex", 0, alloc);
-    tickerParams.AddMember("bitstamp", 0, alloc);
+    score["arbi-score"].AddMember("okcoin", 0, alloc);
+    score["arbi-score"].AddMember("btcchina", 0, alloc);
+    score["arbi-score"].AddMember("bitfinex", 0, alloc);
+    score["arbi-score"].AddMember("bitstamp", 0, alloc);
+    score["ticker"].AddMember("okcoin", 0, alloc);
+    score["ticker"].AddMember("btcchina", 0, alloc);
+    score["ticker"].AddMember("bitfinex", 0, alloc);
+    score["ticker"].AddMember("bitstamp", 0, alloc);
     write_json();
 }
 
@@ -47,25 +45,27 @@ void Learner::data_feeder(double china1_current, double china2_current, double u
     if ((china1.size() == 11) && (zero_movement(china1,china2)))
     {
         china_move = false;
-        china_measure = false;
     }
     if (china_move)
     {
         push_vector(china1_current, china1);
         push_vector(china2_current, china2);
     }
-    if ((usd1_current-usd2_current > 0.01) | (usd1_current-usd2_current < -0.01))
+    if (!usd_move)
     {
-        usd_move = false;
-        china_measure = false;
+      if ((usd1_current-usd2_current > 0.01) | (usd1_current-usd2_current < -0.01))
+        usd_move = true;
     }
     if ((usd1.size() == 11) && (zero_movement(usd1,usd2)))
+    {
         usd_move = false;
+    }
     if (usd_move)
     {
         push_vector(usd1_current, usd1);
          push_vector(usd2_current, usd2);
     }
+
     if (usd_move & china_move && (china1.size() >= 11))
         get_direction();
     if (china_measure || usd_measure)
@@ -154,7 +154,7 @@ void Learner::set_score()
         if (china2_measure.direction == china1_direction)
         {
             score_china2 += pow(china2_measure.price - china2.front(), 2);
-            score["arbi-score"]["okcoin"] = score_china2;
+            score["arbi-score"]["btcchina"] = score_china2;
             write_json();
         }
     }
@@ -163,13 +163,13 @@ void Learner::set_score()
         if (usd1_measure.direction == usd2_direction)
         {
             score_usd1 += pow(usd1_measure.price - usd1.front(), 2);
-            score["score"]["bitfinex"] = score_usd1;
+            score["arbi-score"]["bitfinex"] = score_usd1;
             write_json();
         }
         if (usd2_measure.direction == usd1_direction)
         {
             score_usd2 += pow(usd2_measure.price - usd2.front(), 2);
-            score["score"]["bitstamp"] = score_usd2;
+            score["arbi-score"]["bitstamp"] = score_usd2;
             write_json();
         }
     }
@@ -181,7 +181,8 @@ void Learner::write_json()
     char writeBuffer[65563];
     rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
     rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
-    score.Accept(writer);
+    if (score.IsObject())
+      score.Accept(writer);
     fclose(fp);
 }
 
