@@ -1,5 +1,5 @@
-#include "learner.h"
 #include <iostream>
+#include "learner.h"
 
 Learner::Learner()
 {
@@ -9,28 +9,40 @@ Learner::Learner()
     score_china2 = 0;
     score_usd1 = 0;
     score_usd2 = 0;
-
+    debug.open("debug.log", std::ofstream::out | std::ofstream::trunc);
+    debug.close();
     score.SetObject();
-    rapidjson::Document::AllocatorType &alloc = score.GetAllocator();
-    score.AddMember("arbi-score", newValue, alloc);
-    score.AddMember("ticker", tickValue, alloc);
-    score["arbi-score"].SetObject();
-    score["ticker"].SetObject();
-    score["arbi-score"].AddMember("okcoin", 0, alloc);
-    score["arbi-score"].AddMember("btcchina", 0, alloc);
-    score["arbi-score"].AddMember("bitfinex", 0, alloc);
-    score["arbi-score"].AddMember("bitstamp", 0, alloc);
-    score["ticker"].AddMember("okcoin", 0, alloc);
-    score["ticker"].AddMember("btcchina", 0, alloc);
-    score["ticker"].AddMember("bitfinex", 0, alloc);
-    score["ticker"].AddMember("bitstamp", 0, alloc);
-    write_json();
+    if (read_json())
+    {
+        write_debug("File exists, writing object!");
+    }
+    else
+    {
+        score.SetObject();
+        rapidjson::Document::AllocatorType &alloc = score.GetAllocator();
+        score.AddMember("arbi-score", newValue, alloc);
+        score.AddMember("ticker", tickValue, alloc);
+        score["arbi-score"].SetObject();
+        score["ticker"].SetObject();
+        score["arbi-score"].AddMember("okcoin", 0, alloc);
+        score["arbi-score"].AddMember("btcchina", 0, alloc);
+        score["arbi-score"].AddMember("bitfinex", 0, alloc);
+        score["arbi-score"].AddMember("bitstamp", 0, alloc);
+        score["ticker"].AddMember("okcoin", 0, alloc);
+        score["ticker"].AddMember("btcchina", 0, alloc);
+        score["ticker"].AddMember("bitfinex", 0, alloc);
+        score["ticker"].AddMember("bitstamp", 0, alloc);
+        write_json();
+    }
+    std::cout << "I get to the constructor!";
 }
 
 //constant data feed timed in ~seconds.
 void Learner::data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current)
 {
+    write_debug("I reach the Learner function\n");
     score["ticker"]["okcoin"] = china1_current;
+    write_debug("The ticker object seems to be intact\n");
     score["ticker"]["btcchina"] = china2_current;
     score["ticker"]["bitfinex"] = usd1_current;
     score["ticker"]["bitstamp"] = usd2_current;
@@ -177,12 +189,48 @@ void Learner::set_score()
 
 void Learner::write_json()
 {
-    FILE* fp = fopen("json_output.json", "w");
-    char writeBuffer[65563];
-    rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
+    fp = fopen("json_output.json", "w");
+    rapidjson::FileWriteStream os(fp, fileBuffer, sizeof(fileBuffer));
     rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
     if (score.IsObject())
-      score.Accept(writer);
+    {
+        score.Accept(writer);
+    }
     fclose(fp);
 }
 
+bool Learner::read_json()
+{
+    std::ifstream infile("json_output.json");
+    if (infile.good())
+    {
+        fp = fopen("json_output.json", "r");
+        rapidjson::FileReadStream is(fp, fileBuffer, sizeof(fileBuffer));
+        if(!score.ParseStream(is).HasParseError())
+        {
+            write_debug("There is no parse Error");
+            if (score.ParseStream(is).IsObject())
+            {
+              write_debug("There is no object error");
+              score.ParseStream(is);
+           }
+       }
+       fclose (fp);
+    }
+    else
+      return false;
+    if (score.IsObject())
+    {
+      return true;
+    }
+    else
+      return false;
+}
+
+
+void Learner::write_debug(const char * input)
+{
+    debug.open ("debug.log", std::ios::app);
+    debug << input;
+    debug.close();
+}

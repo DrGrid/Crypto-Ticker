@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <math.h>
+#include <cstdio>
+#include <fstream>
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
@@ -32,6 +34,8 @@ private:
     bool china_move, usd_move;
     bool china1_direction, china2_direction, usd1_direction, usd2_direction;
     bool china_measure, usd_measure;
+    char fileBuffer[65536];
+    FILE *fp;
     measurements china1_measure, china2_measure, usd1_measure, usd2_measure;
     void push_vector(double current, std::vector<double>& new_storage);
     bool zero_movement(std::vector<double> &once, std::vector<double> &twice);
@@ -39,6 +43,9 @@ private:
     void get_direction();
     void set_score();
     void write_json();
+    bool read_json();
+    std::ofstream debug;
+    void write_debug(const char * input);
 public:
     Learner();
     void data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current);
