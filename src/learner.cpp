@@ -160,14 +160,11 @@ void Learner::set_score()
         {
             score_china1 += pow(china1_measure.price - china1.front(), 2);
             score["arbi-score"]["okcoin"] = score_china1;
-            write_json();
-
         }
         if (china2_measure.direction == china1_direction)
         {
             score_china2 += pow(china2_measure.price - china2.front(), 2);
             score["arbi-score"]["btcchina"] = score_china2;
-            write_json();
         }
     }
     if (usd_measure)
@@ -176,13 +173,11 @@ void Learner::set_score()
         {
             score_usd1 += pow(usd1_measure.price - usd1.front(), 2);
             score["arbi-score"]["bitfinex"] = score_usd1;
-            write_json();
         }
         if (usd2_measure.direction == usd1_direction)
         {
             score_usd2 += pow(usd2_measure.price - usd2.front(), 2);
             score["arbi-score"]["bitstamp"] = score_usd2;
-            write_json();
         }
     }
 }
