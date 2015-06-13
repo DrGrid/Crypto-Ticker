@@ -46,7 +46,6 @@ void Learner::data_feeder(double china1_current, double china2_current, double u
     score["ticker"]["btcchina"] = china2_current;
     score["ticker"]["bitfinex"] = usd1_current;
     score["ticker"]["bitstamp"] = usd2_current;
-    write_json();
     //check if the there is a significant discrimination between the markets.
     if (!china_move)
     {
@@ -82,6 +81,7 @@ void Learner::data_feeder(double china1_current, double china2_current, double u
         get_direction();
     if (china_measure || usd_measure)
         set_score();
+    write_json();
 }
 
 bool Learner::zero_movement(std::vector<double> &once, std::vector<double> &twice)
