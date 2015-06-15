@@ -1,4 +1,3 @@
-#include <iostream>
 #include "learner.h"
 
 Learner::Learner()
@@ -9,6 +8,7 @@ Learner::Learner()
     score_china2 = 0;
     score_usd1 = 0;
     score_usd2 = 0;
+    json_file = "json_output.json";
     debug.open("debug.log", std::ofstream::out | std::ofstream::trunc);
     debug.close();
     score.SetObject();
@@ -34,7 +34,6 @@ Learner::Learner()
         score["ticker"].AddMember("bitstamp", 0, alloc);
         write_json();
     }
-    std::cout << "I get to the constructor!";
 }
 
 //constant data feed timed in ~seconds.
@@ -184,42 +183,39 @@ void Learner::set_score()
 
 void Learner::write_json()
 {
-    fp = fopen("json_output.json", "w");
+    fp = std::fopen(json_file, "w");
     rapidjson::FileWriteStream os(fp, fileBuffer, sizeof(fileBuffer));
     rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
     if (score.IsObject())
     {
         score.Accept(writer);
     }
-    fclose(fp);
+    std::fclose(fp);
 }
 
 bool Learner::read_json()
 {
-    std::ifstream infile("json_output.json");
-    if (infile.good())
+   if (file.is_open())
     {
-        fp = fopen("json_output.json", "r");
-        rapidjson::FileReadStream is(fp, fileBuffer, sizeof(fileBuffer));
-        if(!score.ParseStream(is).HasParseError())
-        {
-            write_debug("There is no parse Error");
-            if (score.ParseStream(is).IsObject())
-            {
-              write_debug("There is no object error");
-              score.ParseStream(is);
-           }
-       }
-       fclose (fp);
+        std::getline(file, json_string);
+        file.close();
     }
     else
-      return false;
+      write_debug("There is no file");
     if (score.IsObject())
     {
-      return true;
+        score_china1 = score["arbi-score"]["okcoin"].GetDouble();
+        score_china2 = score["arbi-score"]["btcchina"].GetDouble();
+        score_usd1 = score["arbi-score"]["bitfinex"].GetDouble();
+        score_usd2 = score["arbi-score"]["bitstamp"].GetDouble();
+        write_debug("The json_file parsed!");
+        return true;
     }
     else
-      return false;
+    {
+        write_debug("Parsing failed\n\0");
+        return false;
+    }
 }
 
 
@@ -228,4 +224,5 @@ void Learner::write_debug(const char * input)
     debug.open ("debug.log", std::ios::app);
     debug << input;
     debug.close();
-}
+};
+

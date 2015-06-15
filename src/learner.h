@@ -5,6 +5,7 @@
 #include <math.h>
 #include <cstdio>
 #include <fstream>
+#include <string>
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
@@ -45,6 +46,9 @@ private:
     void write_json();
     bool read_json();
     std::ofstream debug;
+    std::ifstream file {"json_output.json"};
+    std::string json_string;
+    const char * json_file;
     void write_debug(const char * input);
 public:
     Learner();
