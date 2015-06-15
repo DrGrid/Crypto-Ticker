@@ -199,6 +199,7 @@ bool Learner::read_json()
     {
         std::getline(file, json_string);
         file.close();
+        score.Parse(json_string.c_str());
     }
     else
       write_debug("There is no file");
