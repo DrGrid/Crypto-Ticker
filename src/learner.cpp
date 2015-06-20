@@ -9,8 +9,8 @@ Learner::Learner()
     score_usd1 = 0;
     score_usd2 = 0;
     json_file = "json_output.json";
-    debug.open("debug.log", std::ofstream::out | std::ofstream::trunc);
-    debug.close();
+    //debug.open("debug.log", std::ofstream::out | std::ofstream::trunc);
+    //debug.close();
     score.SetObject();
     if (read_json())
     {
@@ -194,7 +194,7 @@ void Learner::write_json()
 }
 
 bool Learner::read_json()
-{
+  {
    if (file.is_open())
     {
         std::getline(file, json_string);

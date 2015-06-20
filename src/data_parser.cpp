@@ -1,8 +1,35 @@
 #include "data_parser.h"
 
+parsed_data::parsed_data()
+{
+    read_config();
+    debug_log.open("debug.log", std::ofstream::out | std::ofstream::trunc);
+    debug_log.close();
+}
+
 void parsed_data::to_cstring(std::string& data)
 {
     c_stringer = data.c_str();
+}
+
+void parsed_data::read_config()
+{
+    if (conf_file.is_open())
+    {
+        write_debug("The config file exists \n");
+        std::getline(conf_file, keeper);
+    }
+    conf_file.close();
+    if(!conf_doc.Parse(keeper.c_str()).HasParseError())
+    {
+        write_debug("The file has been parsed \n");
+        conf_doc.Parse(keeper.c_str());
+    }
+    if (conf_doc["json_config"].HasMember("key1"))
+    {
+        keeper = conf_doc["json_config"]["key1"].GetString();
+        markets.insert(std::map<int,std::string>::value_type(1, keeper));
+    }
 }
 
 void parsed_data::stream_clear(std::string option)
@@ -129,5 +156,9 @@ void parsed_data::bitstamp_data_writer(std::string &data)
         }
     }
 }
-
-
+void parsed_data::write_debug(const char * input)
+{
+    debug_log.open("debug_log", std::ios::app);
+    debug_log << input;
+    debug_log.close();
+}
