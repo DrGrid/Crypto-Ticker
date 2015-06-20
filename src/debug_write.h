@@ -6,8 +6,8 @@
 class debug
 {
 private:
-    static std::ofstream debug;
+    std::ofstream debug_log;
 public:
-    void write_debug();
-}
+    void write_debug(const char * input);
+};
 #endif
