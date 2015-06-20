@@ -8,6 +8,7 @@ class debug
 private:
     std::ofstream debug_log;
 public:
+    debug();
     void write_debug(const char * input);
 };
 #endif

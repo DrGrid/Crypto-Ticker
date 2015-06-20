@@ -6,10 +6,9 @@ debug::debug()
     debug_log.close();
 }
 
-
 void debug::write_debug(const char * input)
 {
     debug_log.open("debug.log", std::ios::app);
-    debug << input;
+    debug_log << input;
     debug_log.close();
 }
