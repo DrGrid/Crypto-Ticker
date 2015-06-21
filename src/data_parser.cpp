@@ -27,8 +27,8 @@ void parsed_data::read_config() //read the json config file and add the paramete
 
 void parsed_data::parse_config()
 {
-    do //as long as there are more market types, execute the loop
-    {
+    //do //as long as there are more market types, execute the loop
+    //{
         str.str("");
         str.clear();
         keeper.clear();
@@ -66,8 +66,8 @@ void parsed_data::parse_config()
                 }
             }
         }
-    }
-    while (conf_doc["json_config"].HasMember(cmember_number));
+    //}
+    //while (conf_doc["json_config"].HasMember(cmember_number));
 }
 
 void parsed_data::stream_clear(std::string option)
