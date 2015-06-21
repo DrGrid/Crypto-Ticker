@@ -1,0 +1,6 @@
+*.o
+Makefile
+ticker.pro.user
+build/*
+build
+src/ui_mainwindow.h
