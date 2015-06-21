@@ -10,7 +10,7 @@ void parsed_data::to_cstring(std::string& data)
     c_stringer = data.c_str();
 }
 
-void parsed_data::read_config()
+void parsed_data::read_config() //read the json config file and add the parameters.
 {
     if (conf_file.is_open())
     {
@@ -23,15 +23,51 @@ void parsed_data::read_config()
         debug_logger.write_debug("The file has been parsed \n");
         conf_doc.Parse(keeper.c_str());
     }
-    if (conf_doc["json_config"].HasMember("key1"))
+    do
     {
-        keeper = conf_doc["json_config"]["key1"].GetString();
-        markets.push_back(keeper);
+        str.str("");
+        str.clear();
+        keeper.clear();
+        c++;
+        str << c;
+        str >> keeper;
+        cmember_number = keeper.c_str();
+        if (conf_doc["json_config"].HasMember(cmember_number))
+        {
+            keeper = conf_doc["json_config"][cmember_number].GetString();
+            markets.push_back(keeper);
+            for (unsigned short i = 0; i <= 6; i++)
+            {
+                if (conf_doc["json_config"][cmember_number].HasMember(fields[i]))
+                {
+                    label_pairs.insert(std::pair<std::string, std::string>(fields[i], conf_doc["json_config"][cmember_number][fields[i]].GetString()));
+                    debug_logger.write_debug(label_pairs[fields[i]].c_str());
+                    debug_logger.write_debug("The presence of the member date was checked\n");
+                }
+            }
+            if (conf_doc["json_config"][cmember_number].HasMember("label"))
+            {
+                label_pairs.insert(std::pair<std::string, std::string>("label", conf_doc["json_config"][cmember_number]["label"].GetString()));
+                c_stringer = label_pairs["label"].c_str();
+                debug_logger.write_debug(c_stringer);
+                debug_logger.write_debug("Label abstraction reached!");
+                for (unsigned short i = 0; i <= 6; i++)
+                {
+                    if (conf_doc["json_config"][cmember_number][label_pairs["label].c_str()]
+            }
+        }
+
     }
+    while (conf_doc["json_config"].HasMember(cmember_number));
+    debug_logger.write_debug(cmember_number);
+    c = 0;
 }
 
 void parsed_data::stream_clear(std::string option)
 {
+    str.str("");
+    str.clear();
+    keeper.clear();
     str << keeper;
     if (option == "date")
       str >> time_number;
@@ -47,10 +83,7 @@ void parsed_data::stream_clear(std::string option)
       str >> sell;
     else if (option == "volume")
       str >> volume;
-    str.str("");
-    str.clear();
-    keeper.clear();
-}
+   }
 
 void parsed_data::okcoin_data_writer(std::string& data)
 {

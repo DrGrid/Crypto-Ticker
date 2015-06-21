@@ -16,10 +16,13 @@
 class parsed_data{
 private:
   std::vector<std::string> markets;
+  std::map<std::string,std::string> label_pairs;
 	std::stringstream str;
 	std::string keeper;
 	unsigned short c = 0;
+  const char * cmember_number;
   const char * c_stringer;
+  const char * const fields [7] =  {"date", "buy", "daily_high", "last", "daily_low", "sell", "volume"};
   rapidjson::Document document;
   rapidjson::Document conf_doc;
   std::ifstream conf_file {"config.json"};
