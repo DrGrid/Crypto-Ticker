@@ -17,7 +17,8 @@ class parsed_data{
 private:
   std::vector<std::string> markets;
   std::map<std::string,std::string> label_pairs;
-	std::stringstream str;
+	std::vector<unsigned short> dimensions;
+  std::stringstream str;
 	std::string keeper;
 	unsigned short c = 0;
   const char * cmember_number;
@@ -31,14 +32,15 @@ public:
     //use the public variables as a callable interface for the calling class
   parsed_data();
   int64_t time_number;
-	float buy;
+	double buy;
   double last;
-	float sell;
-	float daily_high;
-	float daily_low;
+	double sell;
+	double daily_high;
+	double daily_low;
   double volume;
   //write the data into a readable form, stores in the same object, for every call.
   void read_config();
+  void parse_config();
   void stream_clear(std::string input);
   void to_cstring(std::string& data);
   void okcoin_data_writer(std::string& data);
