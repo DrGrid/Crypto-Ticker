@@ -17,7 +17,7 @@ class parsed_data{
 private:
   std::vector<std::string> markets;
   std::map<std::string,std::string> label_pairs;
-	std::vector<unsigned short> dimensions;
+  std::vector<unsigned short> dimensions;
   std::stringstream str;
 	std::string keeper;
   bool increase_dimension;
@@ -32,6 +32,7 @@ private:
   debug debug_logger;
 public:
     //use the public variables as a callable interface for the calling class
+	std::vector<std::string> str_url;
   parsed_data();
   int64_t time_number;
 	double buy;

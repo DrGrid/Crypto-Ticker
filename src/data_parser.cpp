@@ -45,6 +45,10 @@ void parsed_data::parse_config()
             {
                 dimensions.push_back(conf_doc["json_config"][cmember_number]["dimensions"].GetInt());
             }
+            if (conf_doc["json_config"][cmember_number].HasMember("url"))
+            {
+                str_url.push_back(conf_doc["json_config"][cmember_number]["url"].GetString());
+            }
             for (unsigned short i = 0; i <= 6; i++)
             {
                 if (conf_doc["json_config"][cmember_number].HasMember(fields[i])) //extract fields and put them into the map.
