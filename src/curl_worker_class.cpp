@@ -5,26 +5,20 @@
 // --- PROCESS ---
 // Start processing data.
 
-curl_worker::curl_worker()
+curl_worker::curl_worker(const char * url)
     : QObject()
 {
-    okcoin_curling.settings("https://www.okcoin.cn/api/ticker.do");
-    btcchina_curling.settings("https://data.btcchina.com/data/ticker");
-    bitfinex_curling.settings("https://api.bitfinex.com/v1/pubticker/BTCUSD");
-    bitstamp_curling.settings("https://www.bitstamp.net/api/ticker/");
+    curling.settings(url);
 }
 
 void curl_worker::process()
 {
-    std::thread (&curl_worker::okcoin_process, this).detach();
-    std::thread (&curl_worker::btcchina_process, this).detach();
-    std::thread (&curl_worker::bitfinex_process, this).detach();
-    std::thread (&curl_worker::bitstamp_process, this).detach();
+    std::thread (&curl_worker::curling_process, this).detach();
 }
 
-void curl_worker::okcoin_process()
+void curl_worker::curling_process()
 {
-    unsigned short nrequests; //use this varible to control the number of requests the user is making, it has to be sub 40, otherwise he will be banned from the API.
+    unsigned short nrequests; //use this varible to control the number of requests the user is making, it has to be sub 40, otherwise he will be banned by some APIs.
     std::time_t unix_time = std::time(nullptr);
     long prevtime;
     while (true)
@@ -39,48 +33,11 @@ void curl_worker::okcoin_process()
         }
         else
           nrequests = 0;
-        okcoin_string = okcoin_curling.fetch();
-        okcoin_data = QString::fromStdString(okcoin_string);
-        okcoin_string.clear();
-        okcoin_curling.data_cleanup();
-        emit finished_okcoin(okcoin_data);
+        curling_string = curling.fetch();
+        curling_data = QString::fromStdString(curling_string);
+        curling_string.clear();
+        curling.data_cleanup();
+        emit finished_curling(curling_data);
     }
 }
-
-void curl_worker::btcchina_process()
-{
-    while(true)
-    {
-        btcchina_string = btcchina_curling.fetch();
-        btcchina_data = QString::fromStdString(btcchina_string);
-        btcchina_string.clear();
-        btcchina_curling.data_cleanup();
-        emit finished_btcchina(btcchina_data);
-    }
-}
-
-void curl_worker::bitfinex_process()
-{
-    while(true)
-    {
-        bitfinex_string = bitfinex_curling.fetch();
-        bitfinex_data = QString::fromStdString(bitfinex_string);
-        bitfinex_string.clear();
-        bitfinex_curling.data_cleanup();
-        emit finished_bitfinex(bitfinex_data);
-    }
-}
-
-void curl_worker::bitstamp_process()
-{
-    while (true)
-    {
-        bitstamp_string = bitstamp_curling.fetch();
-        bitstamp_data = QString::fromStdString(bitstamp_string);
-        bitstamp_string.clear();
-        bitstamp_curling.data_cleanup();
-        emit finished_bitstamp(bitstamp_data);
-    }
-}
-
 

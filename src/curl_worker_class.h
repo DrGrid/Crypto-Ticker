@@ -10,23 +10,16 @@ class curl_worker: public QObject
 {
     Q_OBJECT
 private:
-    CppCurl okcoin_curling, btcchina_curling, bitfinex_curling, bitstamp_curling;
-    std::string okcoin_string, btcchina_string, bitfinex_string, bitstamp_string;
-    QString okcoin_data, btcchina_data, bitfinex_data, bitstamp_data;
+    CppCurl curling;
+    std::string curling_string;
+    QString curling_data;
 public:
-    curl_worker();
-    void okcoin_process();
-    void btcchina_process();
-    void bitfinex_process();
-    void bitstamp_process();
-    void clear_data();
+    curl_worker(const char * url);
+    void curling_process();
 public slots:
     void process();
 signals:
-    void finished_okcoin (QString okcoin_data);
-    void finished_btcchina (QString btcchina_data);
-    void finished_bitfinex (QString bitfinex_data);
-    void finished_bitstamp (QString bitstamp_data);
+    void finished_curling (QString okcoin_data);
 };
 
 #endif
