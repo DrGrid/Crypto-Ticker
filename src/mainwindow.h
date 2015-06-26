@@ -8,15 +8,19 @@
 #include <QThread>
 #include <string>
 #include <thread>
+#include <mutex>
+#include <vector>
 
+#include "config_parser.h"
 #include "data_parser.h"
 #include "curl_wrapper_class.h"
 #include "curl_worker_class.h"
 #include "learner.h"
-
 namespace Ui {
 class MainWindow;
 }
+
+std::mutex *muting;
 
 class MainWindow : public QMainWindow
 {
@@ -75,10 +79,12 @@ private:
     QTimer *plot_timer, *learner_timer;
     QThread *curl_thread, *learner_thread;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
+    std::vector<curl_worker> curl_container;
     Learner learner;
     float upper_bound, lower_bound;
     std::string okcoin_string, bitfinex_string, btcchina_string, bitstamp_string; //passed to the curl object and returned, with the conentent of the tickers
-    parsed_data okcoin_parsing, btcchina_parsing, bitstamp_parsing, bitfinex_parsing; //shows the current data
+    config_data config;
+    parsed_data *data;//takes care of config parsing and reading the incoming JSON string.
     QVector<double> okcoin_history = QVector<double> (1001); //QVector initialized with C++11 copy-only member initialisers. The Vector holds the last price of the past 100 seconds.
     QVector<double> btcchina_history = QVector<double> (1001);
     QVector<double> bitfinex_history = QVector<double> (1001);

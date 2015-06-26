@@ -1,25 +1,24 @@
 #ifndef CURL_WORKER_CLASS_H
 #define CURL_WORKER_CLASS_H
 
-#include <QObject>
 #include "curl_wrapper_class.h"
 #include <string>
-#include <QString>
+#include <thread>
+#include <chrono>
+#include <ctime>
+#include <mutex>
 
-class curl_worker: public QObject
+class curl_worker
 {
-    Q_OBJECT
 private:
     CppCurl curling;
     std::string curling_string;
-    QString curling_data;
 public:
+    std::string curling_data;
     curl_worker(const char * url);
     void curling_process();
-public slots:
     void process();
-signals:
-    void finished_curling (QString okcoin_data);
+    unsigned short index;
 };
 
 #endif

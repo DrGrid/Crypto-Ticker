@@ -7,20 +7,19 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //call the ui function first, to allow interaction with the QObject
     ui->setupUi(this);
+    muting = new std::mutex [config.markets.size()];
+    for (unsigned short c = 0; c <= config.markets.size(); c++)
+    {
+        curl_container.push_back(new curl_worker(data.str_url[c], c));
+    }
+    data = new parsed_data() [config.markets.size()];
+    main_timer = new QTimer(this);
+    connect(main_timer, SIGNAL(timeout()), this, SLOT(set_data()));
+    main_timer->start(500);
     //set the data used by the plotter
     set_plot_data();
     //set the details of the mainwindow ui
     set_ui_details();
-    //span a worker thread and listen to its signals
-    worker = new curl_worker();
-    curl_thread = new QThread;
-    connect(curl_thread,SIGNAL(started()), worker,SLOT(process()));
-    connect(worker, SIGNAL(finished_okcoin(QString)),this,SLOT(set_okcoin_data(QString)));
-    connect(worker, SIGNAL(finished_btcchina(QString)),this,SLOT(set_btcchina_data(QString)));
-    connect(worker, SIGNAL(finished_bitfinex(QString)),this,SLOT(set_bitfinex_data(QString)));
-    connect(worker, SIGNAL(finished_bitstamp(QString)),this,SLOT(set_bitstamp_data(QString)));
-    worker->moveToThread(curl_thread);
-    curl_thread->start();
     //when the data is finished writing, check it against the alarm
     connect(this,SIGNAL (finished_all()), this, SLOT(check_alarm()));
     connect(this,SIGNAL (finished_all()), this, SLOT(set_cross_market()));
@@ -44,13 +43,21 @@ MainWindow::MainWindow(QWidget *parent) :
     learner_timer->start(5000);
 }
 
+void MainWindow::set_data()
+{
+    for (unsigned short c(0); c <= config.markets.size(); c++)
+    {
+        data[c].data_writer(curl_container[c].curling_data);
+    }
+}
+
 void MainWindow::set_ui_details() //called in the constructor
 {
     //add the different fields to the ui, that can't be declared in the form
-    ui->choose_market->addItem("OkCoin");
-    ui->choose_market->addItem("BTCChina");
-    ui->choose_market->addItem("Bitfinex");
-    ui->choose_market->addItem("Bitstamp");
+    for (unsigned short c(0); c <= config.markets.size(); c++)
+    {
+        ui->choose_market->addItem(config.markets[c].c_str())
+    }
     ui->choose_market->setCurrentIndex(0);
     //sets the title of the programm
     setWindowTitle("Crypto-Ticker");

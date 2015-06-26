@@ -5,9 +5,10 @@
 // --- PROCESS ---
 // Start processing data.
 
-curl_worker::curl_worker(const char * url)
+curl_worker::curl_worker(const char * url, unsigned short nmarkets)
     : QObject()
 {
+    index = nmarkets;
     curling.settings(url);
 }
 
@@ -33,11 +34,15 @@ void curl_worker::curling_process()
         }
         else
           nrequests = 0;
+        curling_data.clear();
         curling_string = curling.fetch();
-        curling_data = QString::fromStdString(curling_string);
+        //mute the string to ensure no race conditions
+        muting[index].lock();
+        curling_data = curling string;
+        muting[index].lock();
+        //end of mutex
         curling_string.clear();
         curling.data_cleanup();
-        emit finished_curling(curling_data);
-    }
+  }
 }
 
