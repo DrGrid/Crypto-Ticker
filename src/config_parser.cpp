@@ -1,15 +1,10 @@
 #include "config_parser.h"
 
-config_data::parsed_data()
+config_data::config_data()
 {
     increase_dimension = true;
     read_config();
     parse_config();
-}
-
-void config_data::to_cstring(std::string& data)
-{
-    c_stringer = data.c_str();
 }
 
 void config_data::read_config() //read the json config file and add the parameters.
@@ -27,12 +22,11 @@ void config_data::read_config() //read the json config file and add the paramete
 
 void config_data::parse_config()
 {
-    //do //as long as there are more market types, execute the loop
-    //{
+    do //as long as there are more market types, execute the loop
+    {
         str.str("");
         str.clear();
         keeper.clear();
-        c++;
         str << c;
         str >> keeper;
         cmember_number = keeper.c_str(); //assign markets by number
@@ -71,8 +65,10 @@ void config_data::parse_config()
                     }
                 }
             }
+            market_labels.push_back(label_pairs);
         }
-    //}
-    //while (conf_doc["json_config"].HasMember(cmember_number));
+        c++;
+    }
+    while (conf_doc["json_config"].HasMember(cmember_number));
 }
 

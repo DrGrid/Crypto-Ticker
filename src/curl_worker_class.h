@@ -15,7 +15,7 @@ private:
     std::string curling_string;
 public:
     std::string curling_data;
-    curl_worker(const char * url);
+    curl_worker(const char * url, unsigned short nmarkets);
     void curling_process();
     void process();
     unsigned short index;

@@ -1,12 +1,8 @@
 #include "curl_worker_class.h"
-#include <thread>
-#include <chrono>
-#include <ctime>
 // --- PROCESS ---
 // Start processing data.
 
 curl_worker::curl_worker(const char * url, unsigned short nmarkets)
-    : QObject()
 {
     index = nmarkets;
     curling.settings(url);
@@ -37,9 +33,9 @@ void curl_worker::curling_process()
         curling_data.clear();
         curling_string = curling.fetch();
         //mute the string to ensure no race conditions
-        muting[index].lock();
-        curling_data = curling string;
-        muting[index].lock();
+        //muting[index].lock();
+        curling_data = curling_string;
+        //muting[index].lock();
         //end of mutex
         curling_string.clear();
         curling.data_cleanup();

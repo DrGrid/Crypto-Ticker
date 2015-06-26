@@ -16,11 +16,10 @@
 #include "curl_wrapper_class.h"
 #include "curl_worker_class.h"
 #include "learner.h"
+
 namespace Ui {
 class MainWindow;
 }
-
-std::mutex *muting;
 
 class MainWindow : public QMainWindow
 {
@@ -33,7 +32,7 @@ public:
     void set_plot_data();
     void set_ui_details();
     //set the labels with the curerntly selected market
-    void set_labels(parsed_data &data);
+    void set_labels();
     //reset the alarm triggers
     void clear_alarm();
     //sound the alarm
@@ -50,7 +49,8 @@ signals:
 
 
 private slots:
-   //listens for user signals regarding plot parameters
+    void set_data();
+    //listens for user signals regarding plot parameters
     void set_price_range();
     void set_time_scale();
     //updates the plot after timeout every second and calls the public functions responsible for it
@@ -64,11 +64,6 @@ private slots:
     void set_down_input();
     //sets the cross market labels after finished_all, subject to said race condition!
     void set_cross_market();
-    //sets the data after it has been emited from the parallel thread
-    void set_okcoin_data(QString okcoin_data);
-    void set_btcchina_data(QString btcchina_data);
-    void set_bitfinex_data(QString bitfinex_data);
-    void set_bitstamp_data(QString bitstamp_data);
     //pushes a copy of the data over to the learner
     void data_pusher();
 
@@ -76,10 +71,10 @@ private slots:
 private:
     Ui::MainWindow *ui;
     curl_worker *worker;
-    QTimer *plot_timer, *learner_timer;
+    QTimer *plot_timer, *learner_timer, *main_timer;
     QThread *curl_thread, *learner_thread;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
-    std::vector<curl_worker> curl_container;
+    std::vector<curl_worker> *curl_container;
     Learner learner;
     float upper_bound, lower_bound;
     std::string okcoin_string, bitfinex_string, btcchina_string, bitstamp_string; //passed to the curl object and returned, with the conentent of the tickers
@@ -90,6 +85,8 @@ private:
     QVector<double> bitfinex_history = QVector<double> (1001);
     QVector<double> bitstamp_history = QVector<double> (1001);
     QVector<double>time = QVector<double>(1001); //This Vector holds the time, as in 100 seconds.
+    unsigned short nmarkets; //tracks the total number of markets
+    int index; //keeps track of where index of the drop down list is.
     int position; //position for the data, that is being appended to the plot
     double plot_time, plot_price; //hold the range of the plot time and plot  price ; holds the last price of the selecte market in the ui
     double diff; //calculates the difference between the two markets

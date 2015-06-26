@@ -1,5 +1,15 @@
 #include "data_parser.h"
 
+parsed_data::parsed_data(std::vector<std::map<std::string,std::string>> labels)
+{
+    market_labels = labels;
+}
+
+void parsed_data::to_cstring(std::string input)
+{
+    c_stringer = input.c_str();
+}
+
 void parsed_data::stream_clear(std::string option)
 {
     str.str("");
@@ -22,7 +32,7 @@ void parsed_data::stream_clear(std::string option)
     keeper.clear();
 }
 
-void parsed_data::data_writer(std::string& data)
+void parsed_data::data_writer(std::string &data, int &nmarkets)
 {
     str.str("");
     str.clear();
@@ -37,107 +47,27 @@ void parsed_data::data_writer(std::string& data)
             {
                 if (dimensions[0] >= 2 && increase_dimension)
                 {
-                    c_stringer = label_pairs["label"].c_str();
+                    c_stringer = market_labels[nmarkets]["label"].c_str();
                     for (int i = 0; i <= 6; i++)
                     {
-                        if (document[c_stringer].HasMember(label_pairs[str_fields[i]].c_str()))
+                        if (document[c_stringer].HasMember(market_labels[nmarkets][fields[i]].c_str()))
                         {
-                            debug_logger.write_debug(fields[i]);
                             keeper.clear();
-                            keeper = document[c_stringer][label_pairs[str_fields[i]].c_str()].GetString();
+                            keeper = document[c_stringer][market_labels[nmarkets][fields[i]].c_str()].GetString();
                             stream_clear(fields[i]);
                         }
                     }
                     increase_dimension = false;
-                    debug_logger.write_debug("\n");
-                    debug_logger.write_debug("\n");
                 }
-                if (document.HasMember(label_pairs[str_fields[c]].c_str()))
+                if (document.HasMember(market_labels[nmarkets][fields[c]].c_str()))
                 {
                     keeper.clear();
-                    keeper = document[label_pairs[str_fields[c]].c_str()].GetString();
+                    keeper = document[market_labels[nmarkets][fields[c]].c_str()].GetString();
                     stream_clear(fields[c]);
                 }
             }
         }
     }
     increase_dimension = true;
-    debug_logger.write_debug("\n");
 }
 
-void parsed_data::btcchina_data_writer(std::string &data)
-{
-    to_cstring(data);
-    if (!document.Parse(c_stringer).HasParseError())
-    {
-        document.Parse(c_stringer);
-        if (document.IsObject())
-        {
-            keeper = document["ticker"]["high"].GetString();
-            stream_clear("daily_high");
-            keeper = document["ticker"]["low"].GetString();
-            stream_clear("daily_low");
-            keeper = document["ticker"]["buy"].GetString();
-            stream_clear("buy");
-            keeper = document["ticker"]["sell"].GetString();
-            stream_clear("sell");
-            keeper = document["ticker"]["last"].GetString();
-            stream_clear("last");
-            keeper = document["ticker"]["vol"].GetString();
-            stream_clear("volume");
-            time_number = document["ticker"]["date"].GetInt64();
-        }
-    }
-}
-
-void parsed_data::bitfinex_data_writer(std::string &data)
-{
-    to_cstring(data);
-    if (!document.Parse(c_stringer).HasParseError())
-    {
-        document.Parse(c_stringer);
-        if (document.IsObject())
-        {
-            keeper = document["bid"].GetString();
-            stream_clear("buy");
-            keeper = document["ask"].GetString();
-            stream_clear("sell");
-            keeper = document["last_price"].GetString();
-            stream_clear("last");
-            keeper = document["low"].GetString();
-            stream_clear("daily_low");
-            keeper = document["high"].GetString();
-            stream_clear("daily_high");
-            keeper = document["volume"].GetString();
-            stream_clear("volume");
-            keeper = document["timestamp"].GetString();
-            stream_clear("date");
-        }
-    }
-}
-
-void parsed_data::bitstamp_data_writer(std::string &data)
-{
-    to_cstring(data);
-    if (!document.Parse(c_stringer).HasParseError())
-    {
-        document.Parse(c_stringer);
-        if (document.IsObject())
-        {
-            keeper = document["high"].GetString();
-            stream_clear("daily_high");
-            keeper = document["last"].GetString();
-            stream_clear("last");
-            keeper = document["timestamp"].GetString();
-            stream_clear("date");
-            keeper = document["bid"].GetString();
-            stream_clear("buy");
-            keeper = document["volume"].GetString();
-            stream_clear("volume");
-            keeper = document["low"].GetString();
-            stream_clear("daily_low");
-            keeper = document["ask"].GetString();
-            stream_clear("sell");
-        }
-    }
-}

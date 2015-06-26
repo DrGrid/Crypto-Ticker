@@ -15,7 +15,7 @@
 
 class parsed_data{
 private:
-  std::map<std::string,std::string> label_pairs;
+  std::vector<std::map<std::string,std::string>> market_labels;
   std::vector<unsigned short> dimensions;
   std::stringstream str;
 	std::string keeper;
@@ -26,12 +26,9 @@ private:
   const char * const fields [7] =  {"date", "buy", "daily_high", "last", "daily_low", "sell", "volume"};
   std::string str_fields [7] =  {"date", "buy", "daily_high", "last", "daily_low", "sell", "volume"};
   rapidjson::Document document;
-  rapidjson::Document conf_doc;
-  std::ifstream conf_file {"config.json"};
-  debug debug_logger;
 public:
-    //use the public variables as a callable interface for the calling class
-  parsed_data();
+  //use the public variables as a callable interface for the calling class
+  parsed_data(std::vector<std::map<std::string,std::string>> labels);
   int64_t time_number;
 	double buy;
   double last;
@@ -41,11 +38,8 @@ public:
   double volume;
   //write the data into a readable form, stores in the same object, for every call.
   void stream_clear(std::string input);
-  void to_cstring(std::string& data);
-  void data_writer(std::string& data);
-  void btcchina_data_writer(std::string& data);
-  void bitstamp_data_writer(std::string& data);
-  void bitfinex_data_writer(std::string& data);
+  void to_cstring(std::string data);
+  void data_writer(std::string& data, int &dimension);
 };
 
 
