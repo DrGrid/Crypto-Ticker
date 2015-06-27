@@ -11,7 +11,7 @@ private:
    void SetOptions()
    {
       //set the url
-      curl_easy_setopt(m_handle, CURLOPT_URL, m_url.c_str());
+      curl_easy_setopt(m_handle, CURLOPT_URL, m_url);
       //progress bar is not require
       curl_easy_setopt(m_handle, CURLOPT_NOPROGRESS, 1L);
       //set the callback function
@@ -38,12 +38,12 @@ private:
       return numOfBytes;
    }
    CURL *m_handle;
-   std::string m_url;
+   const char * m_url;
    std::string m_data;
 
 public:
    CppCurl();
-   void settings(std::string url);
+   void settings(const char *url);
    std::string fetch();
    void data_cleanup();
    ~CppCurl();

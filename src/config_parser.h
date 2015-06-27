@@ -16,7 +16,6 @@
 class config_data{
 private:
   std::map<std::string, std::string> label_pairs;
-  std::vector<unsigned short> dimensions;
   std::stringstream str;
 	std::string keeper;
   bool increase_dimension;
@@ -30,6 +29,7 @@ private:
   debug debug_logger;
 public:
   std::vector<std::map<std::string,std::string>> market_labels;
+  std::vector<unsigned short> dimensions;
   //use the public variables as a callable interface for the calling class
 	std::vector<std::string> markets;
   std::vector<const char *> str_url;

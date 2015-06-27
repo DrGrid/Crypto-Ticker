@@ -28,7 +28,7 @@ private:
   rapidjson::Document document;
 public:
   //use the public variables as a callable interface for the calling class
-  parsed_data(std::vector<std::map<std::string,std::string>> labels);
+  parsed_data(std::vector<std::map<std::string,std::string>> labels, std::vector<unsigned short> config_dimensions);
   int64_t time_number;
 	double buy;
   double last;

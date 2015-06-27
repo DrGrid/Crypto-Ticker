@@ -2,10 +2,10 @@
 // --- PROCESS ---
 // Start processing data.
 
-curl_worker::curl_worker(const char * url, unsigned short nmarkets)
+void curl_worker::settings(const char * url, unsigned short nmarket)
 {
-    index = nmarkets;
     curling.settings(url);
+    index = nmarket;
 }
 
 void curl_worker::process()
@@ -34,6 +34,7 @@ void curl_worker::curling_process()
         curling_string = curling.fetch();
         //mute the string to ensure no race conditions
         //muting[index].lock();
+        curling_data.clear();
         curling_data = curling_string;
         //muting[index].lock();
         //end of mutex

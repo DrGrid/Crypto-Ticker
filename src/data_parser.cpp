@@ -1,8 +1,9 @@
 #include "data_parser.h"
 
-parsed_data::parsed_data(std::vector<std::map<std::string,std::string>> labels)
+parsed_data::parsed_data(std::vector<std::map<std::string,std::string>> labels, std::vector<unsigned short> config_dimensions)
 {
     market_labels = labels;
+    dimensions = config_dimensions;
 }
 
 void parsed_data::to_cstring(std::string input)

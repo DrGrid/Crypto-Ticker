@@ -70,11 +70,11 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    curl_worker *worker;
+    curl_worker worker;
     QTimer *plot_timer, *learner_timer, *main_timer;
     QThread *curl_thread, *learner_thread;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
-    std::vector<curl_worker> *curl_container;
+    std::vector<curl_worker> curl_container;
     Learner learner;
     float upper_bound, lower_bound;
     std::string okcoin_string, bitfinex_string, btcchina_string, bitstamp_string; //passed to the curl object and returned, with the conentent of the tickers

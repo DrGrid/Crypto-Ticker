@@ -13,12 +13,12 @@ class curl_worker
 private:
     CppCurl curling;
     std::string curling_string;
+    unsigned short index;
 public:
     std::string curling_data;
-    curl_worker(const char * url, unsigned short nmarkets);
+    void settings(const char * url, unsigned short nmarket);
     void curling_process();
     void process();
-    unsigned short index;
 };
 
 #endif

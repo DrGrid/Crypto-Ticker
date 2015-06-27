@@ -9,13 +9,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     nmarkets = config.markets.size();
     //muting = new std::mutex [nmarkets];
-    data = new parsed_data(config.market_labels);
-    //for (unsigned short c = 0; c <= nmarkets; c++)
-    //{
-        worker = new curl_worker(config.str_url[0], 0);
-        //curl_container->push_back(worker);
-       // delete worker;
-    //}
+    data = new parsed_data(config.market_labels, config.dimensions);
+    for (unsigned short c = 0; c < nmarkets; c++)
+    {
+        curl_container.push_back(worker);
+        curl_container[c].settings(config.str_url[c], c);
+        curl_container[c].process();
+    }
     main_timer = new QTimer(this);
     connect(main_timer, SIGNAL(timeout()), this, SLOT(set_data()));
     main_timer->start(500);
@@ -48,9 +48,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::set_data()
 {
-    for (int c(0); c <= nmarkets; c++)
+    for (int c = 0; c < nmarkets; c++)
     {
-        data->data_writer(worker->curling_data, c);
+        data->data_writer(curl_container[c].curling_data, c);
     }
     set_labels();
 }
@@ -58,7 +58,7 @@ void MainWindow::set_data()
 void MainWindow::set_ui_details() //called in the constructor
 {
     //add the different fields to the ui, that can't be declared in the form
-    for (int c(0); c <= nmarkets; c++)
+    for (int c(0); c < nmarkets; c++)
     {
         ui->choose_market->addItem(config.markets[c].c_str());
     }
