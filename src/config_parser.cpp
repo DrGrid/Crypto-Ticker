@@ -22,6 +22,7 @@ void config_data::read_config() //read the json config file and add the paramete
 
 void config_data::parse_config()
 {
+    c = 1;
     do //as long as there are more market types, execute the loop
     {
         str.str("");
@@ -32,6 +33,7 @@ void config_data::parse_config()
         cmember_number = keeper.c_str(); //assign markets by number
         if (conf_doc["json_config"].HasMember(cmember_number))
         {
+            debug_logger.write_debug("\nThe parser was succesfully inititalised");
             keeper = conf_doc["json_config"][cmember_number].GetString();
             markets.push_back(keeper);
             keeper.clear();
@@ -67,8 +69,10 @@ void config_data::parse_config()
             }
             market_labels.push_back(label_pairs);
         }
+        label_pairs.clear();
         c++;
     }
     while (conf_doc["json_config"].HasMember(cmember_number));
+    debug_logger.write_debug("\nThe config was corectly parsed");
 }
 
