@@ -7,20 +7,27 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //call the ui function first, to allow interaction with the QObject
     ui->setupUi(this);
+    nmarkets = config.str_url.size();
+    //muting = new std::mutex [nmarkets];
+    data = new parsed_data(config.market_labels, config.dimensions);
+    worker = new curl_worker[nmarkets];
+    for (unsigned short c = 0; c < 4; c++)
+    {
+        //worker = new curl_worker;
+        worker[c].settings(config.str_url[c].c_str());
+        worker[c].process();
+        //curl_container.push_back(worker);
+        //curl_container[c]->settings(config.str_url[c].c_str());
+        //curl_container[c]->process();
+        //delete worker;
+    }
+    main_timer = new QTimer(this);
+    connect(main_timer, SIGNAL(timeout()), this, SLOT(set_data()));
+    main_timer->start(500);
     //set the data used by the plotter
     set_plot_data();
     //set the details of the mainwindow ui
     set_ui_details();
-    //span a worker thread and listen to its signals
-    worker = new curl_worker();
-    curl_thread = new QThread;
-    connect(curl_thread,SIGNAL(started()), worker,SLOT(process()));
-    connect(worker, SIGNAL(finished_okcoin(QString)),this,SLOT(set_okcoin_data(QString)));
-    connect(worker, SIGNAL(finished_btcchina(QString)),this,SLOT(set_btcchina_data(QString)));
-    connect(worker, SIGNAL(finished_bitfinex(QString)),this,SLOT(set_bitfinex_data(QString)));
-    connect(worker, SIGNAL(finished_bitstamp(QString)),this,SLOT(set_bitstamp_data(QString)));
-    worker->moveToThread(curl_thread);
-    curl_thread->start();
     //when the data is finished writing, check it against the alarm
     connect(this,SIGNAL (finished_all()), this, SLOT(check_alarm()));
     connect(this,SIGNAL (finished_all()), this, SLOT(set_cross_market()));
@@ -44,16 +51,25 @@ MainWindow::MainWindow(QWidget *parent) :
     learner_timer->start(5000);
 }
 
+void MainWindow::set_data()
+{
+    for (int c = 0; c < nmarkets; c++)
+    {
+        data->data_writer(worker[c].curling_data, c);
+    }
+    debugger.write_debug(worker[1].curling_data.c_str());
+    set_labels();
+}
+
 void MainWindow::set_ui_details() //called in the constructor
 {
     //add the different fields to the ui, that can't be declared in the form
-    ui->choose_market->addItem("OkCoin");
-    ui->choose_market->addItem("BTCChina");
-    ui->choose_market->addItem("Bitfinex");
-    ui->choose_market->addItem("Bitstamp");
+    for (int c(0); c < nmarkets; c++)
+    {
+        ui->choose_market->addItem(config.markets[c].c_str());
+    }
     ui->choose_market->setCurrentIndex(0);
     //sets the title of the programm
-    setWindowTitle("Crypto-Ticker");
 }
 
 void MainWindow::set_plot_data() //called  in the constructor
@@ -81,7 +97,7 @@ void MainWindow::set_plot_data() //called  in the constructor
 void MainWindow::check_alarm()
 {
     //set the logic to call the alarm function, detach the called thread, to allow the program to run further in the background
-    if ((upper_bound<okcoin_parsing.sell) | (lower_bound>okcoin_parsing.buy))
+    if ((upper_bound < data->main_field[0].sell) | (lower_bound > data->main_field[0].buy))
     {
       clear_alarm();
       std::thread(&MainWindow::alarm, this).detach();
@@ -145,39 +161,18 @@ void MainWindow::plotter()
     // if not defined by user, set the range
     ui->customPlot->xAxis->setRange(0,plot_time);
     //initialise customPlot graphs
-    if (ui->choose_market->currentIndex() == 0)
+    for (int c = 0; c < nmarkets; c++)
     {
-        ui->customPlot->yAxis->setRange(okcoin_parsing.last-plot_price, okcoin_parsing.last+plot_price);
-        ui->customPlot->graph(0)->setData(time, okcoin_history);
-        //Remove the current title and set to this
-        ui->customPlot->plotLayout()->removeAt(0);
-        ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, "OkCoin Price"));
+        if (ui->choose_market->currentIndex() == c)
+        {
+            ui->customPlot->yAxis->setRange(data->main_field[c].last-plot_price, data->main_field[c].last+plot_price);
+            ui->customPlot->graph(0)->setData(time, okcoin_history);
+            //Remove the current title and set to this
+            ui->customPlot->plotLayout()->removeAt(0);
+            ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, config.markets[c].c_str()));
+        }
     }
-    else if (ui->choose_market->currentIndex() == 1)
-    {
-        ui->customPlot->yAxis->setRange(btcchina_parsing.last-plot_price, btcchina_parsing.last+plot_price);
-        ui->customPlot->graph(0)->setData(time, btcchina_history);
-        //Remove the current title and set to this
-        ui->customPlot->plotLayout()->removeAt(0);
-        ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, "BTCChina Price"));
-    }
-    else if (ui->choose_market->currentIndex() == 2)
-    {
-        ui->customPlot->yAxis->setRange(bitfinex_parsing.last-plot_price, bitfinex_parsing.last+plot_price);
-        ui->customPlot->graph(0)->setData(time, bitfinex_history);
-        //"Remove the current title and set to this"
-        ui->customPlot->plotLayout()->removeAt(0);
-        ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, "Bitfinex Price"));
-    }
-    else
-    {
-        ui->customPlot->yAxis->setRange(bitstamp_parsing.last-plot_price, bitstamp_parsing.last+plot_price);
-        ui->customPlot->graph(0)->setData(time, bitstamp_history);
-        //Remove the current title and set to this
-        ui->customPlot->plotLayout()->removeAt(0);
-        ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, "Bitstamp Price"));
-    }
-    // replot every time the function is called to show the changes
+   // replot every time the function is called to show the changes
     ui->customPlot->replot();
 }
 
@@ -185,17 +180,17 @@ void MainWindow::plot_memory_stepping()
 {
     if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
     {
-        okcoin_history[position] = okcoin_parsing.last;
-        btcchina_history[position] = btcchina_parsing.last;
-        bitfinex_history[position] = bitfinex_parsing.last;
-        bitstamp_history[position] = bitstamp_parsing.last;
+        okcoin_history[position] = data->main_field[0].last;
+        btcchina_history[position] = data->main_field[1].last;
+        bitfinex_history[position] = data->main_field[2].last;
+        bitstamp_history[position] = data->main_field[3].last;
     }
     else
     {
-        okcoin_history[plot_time] = okcoin_parsing.last;
-        btcchina_history[plot_time] = btcchina_parsing.last;
-        bitfinex_history[plot_time] = bitfinex_parsing.last;
-        bitstamp_history[plot_time] = bitstamp_parsing.last;
+        okcoin_history[plot_time] = data->main_field[0].last;
+        btcchina_history[plot_time] = data->main_field[1].last;
+        bitfinex_history[plot_time] = data->main_field[2].last;
+        bitstamp_history[plot_time] = data->main_field[3].last;
         for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
         {
             okcoin_history[c] = okcoin_history[c+1];
@@ -223,63 +218,23 @@ void MainWindow::set_price_range()
     ranges.clear();
 }
 
-//Parse the string  returned from the different curl threads and read them into the correct places
-void MainWindow::set_okcoin_data(QString okcoin_data)
+void MainWindow::set_labels()
 {
-    okcoin_string = okcoin_data.toStdString();
-    okcoin_parsing.okcoin_data_writer(okcoin_string);
-    if (ui->choose_market->currentIndex() == 0)
-    {
-        set_labels(okcoin_parsing);
-    }
-}
-
-void MainWindow::set_btcchina_data(QString btcchina_data)
-{
-    btcchina_string = btcchina_data.toStdString();
-    btcchina_parsing.btcchina_data_writer(btcchina_string);
-    if (ui->choose_market->currentIndex() == 1)
-    {
-        set_labels(btcchina_parsing);
-    }
-}
-
-void MainWindow::set_bitfinex_data(QString bitfinex_data)
-{
-    bitfinex_string = bitfinex_data.toStdString();
-    bitfinex_parsing.bitfinex_data_writer(bitfinex_string);
-    if (ui->choose_market->currentIndex() == 2)
-    {
-        set_labels(bitfinex_parsing);
-    }
-}
-
-void MainWindow::set_bitstamp_data(QString bitstamp_data)
-{
-    bitstamp_string = bitstamp_data.toStdString();
-    bitstamp_parsing.bitstamp_data_writer(bitstamp_string);
-    if (ui->choose_market->currentIndex() == 3)
-    {
-        set_labels(bitstamp_parsing);
-    }
-}
-
-void MainWindow::set_labels(parsed_data &data)
-{
+    index = ui->choose_market->currentIndex();
     //print the data to the screen with text labels, clear the label text every time to allow reuse.
-    ui->label->setText(label_text.setNum(data.last));
+    ui->label->setText(label_text.setNum(data->main_field[index].last));
     label_text.clear();
-    ui->label_2->setText(label_text.setNum(data.daily_high));
+    ui->label_2->setText(label_text.setNum(data->main_field[index].daily_high));
     label_text.clear();
-    ui->label_3->setText(label_text.setNum(data.daily_low));
+    ui->label_3->setText(label_text.setNum(data->main_field[index].daily_low));
     label_text.clear();
-    ui->label_4->setText(label_text.setNum(data.sell));
+    ui->label_4->setText(label_text.setNum(data->main_field[index].sell));
     label_text.clear();
-    ui->label_5->setText(label_text.setNum(data.buy));
+    ui->label_5->setText(label_text.setNum(data->main_field[index].buy));
     label_text.clear();
-    ui->label_6->setText(label_text.setNum(data.sell-data.buy));
+    ui->label_6->setText(label_text.setNum(data->main_field[index].sell-data->main_field[index].buy));
     label_text.clear();
-    ui->label_7->setText(label_text.setNum(data.volume));
+    ui->label_7->setText(label_text.setNum(data->main_field[index].volume));
     label_text.clear();
     emit finished_all();
 }
@@ -287,20 +242,20 @@ void MainWindow::set_labels(parsed_data &data)
 //triggered on finished_all signal
 void MainWindow::set_cross_market()
 {
-    ui->label_8->setText(label_text.setNum(okcoin_parsing.last-btcchina_parsing.last));
+    ui->label_8->setText(label_text.setNum(data->main_field[0].last-data->main_field[1].last));
     label_text.clear();
-    ui->label_9->setText(label_text.setNum(bitfinex_parsing.last-bitstamp_parsing.last));
+    ui->label_9->setText(label_text.setNum(data->main_field[2].last-data->main_field[3].last));
     label_text.clear();
-    ui->virtual_exchange_rate->setText(label_text.setNum(((okcoin_parsing.last+btcchina_parsing.last) / 2) / ((bitfinex_parsing.last+bitstamp_parsing.last) / 2)));
+    ui->virtual_exchange_rate->setText(label_text.setNum(((data->main_field[0].last+data->main_field[1].last) / 2) / ((data->main_field[2].last+data->main_field[3].last) / 2)));
     label_text.clear();
 }
 
 void MainWindow::data_pusher()
 {
-    china1_current = okcoin_parsing.last;
-    china2_current = btcchina_parsing.last;
-    usd1_current = bitfinex_parsing.last;
-    usd2_current = bitstamp_parsing.last;
+    china1_current = data->main_field[0].last;
+    china2_current = data->main_field[1].last;
+    usd1_current = data->main_field[2].last;
+    usd2_current = data->main_field[3].last;
     learner.data_feeder(china1_current, china2_current, usd1_current, usd2_current);
     ui->label_11->setText(label_text.setNum(learner.score_china1));
     ui->label_12->setText(label_text.setNum(learner.score_china2));

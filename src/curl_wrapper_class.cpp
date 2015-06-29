@@ -7,7 +7,7 @@ CppCurl::CppCurl()
     m_handle = curl_easy_init();
 }
 
-void CppCurl::settings(std::string url)
+void CppCurl::settings(const char * url)
 {
     m_url=url;
     SetOptions();
