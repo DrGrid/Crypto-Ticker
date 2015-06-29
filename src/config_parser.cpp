@@ -23,47 +23,41 @@ void config_data::read_config() //read the json config file and add the paramete
 void config_data::parse_config()
 {
     c = 1;
-    do //as long as there are more market types, execute the loop
+    cmember_number = "1";
+    keeper.clear();
+    while (conf_doc.HasMember(cmember_number))
     {
-        str.str("");
-        str.clear();
-        keeper.clear();
-        str << c;
-        str >> keeper;
-        cmember_number = keeper.c_str(); //assign markets by number
-        if (conf_doc["json_config"].HasMember(cmember_number))
+        if (conf_doc.HasMember(cmember_number))
         {
-            debug_logger.write_debug("\nThe parser was succesfully inititalised");
-            keeper = conf_doc["json_config"][cmember_number].GetString();
+            keeper = conf_doc[cmember_number].GetString();
             markets.push_back(keeper);
+            cmember_name = keeper.c_str();
             keeper.clear();
-            if (conf_doc["json_config"][cmember_number].HasMember("dimensions"))
+            if (conf_doc[cmember_name].HasMember("dimensions"))
             {
-                dimensions.push_back(conf_doc["json_config"][cmember_number]["dimensions"].GetInt());
+                dimensions.push_back(conf_doc[cmember_name]["dimensions"].GetInt());
             }
-            if (conf_doc["json_config"][cmember_number].HasMember("url"))
+            if (conf_doc[cmember_name].HasMember("url"))
             {
-                keeper = conf_doc["json_config"][cmember_number]["url"].GetString();
-                str_url.push_back(keeper.c_str());
-                keeper.clear();
+                str_url.push_back(conf_doc[cmember_name]["url"].GetString());
             }
             for (unsigned short i = 0; i <= 6; i++)
             {
-                if (conf_doc["json_config"][cmember_number].HasMember(fields[i])) //extract fields and put them into the map.
+                if (conf_doc[cmember_name].HasMember(fields[i])) //extract fields and put them into the map.
                 {
-                    label_pairs.insert(std::pair<std::string, std::string>(fields[i], conf_doc["json_config"][cmember_number][fields[i]].GetString()));
+                    label_pairs.insert(std::pair<std::string, std::string>(fields[i], conf_doc[cmember_name][fields[i]].GetString()));
                 }
             }
-            if (conf_doc["json_config"][cmember_number].HasMember("label"))
+            if (conf_doc[cmember_name].HasMember("label"))
             {
                 //Use value to read number of Container/DOM dimensions
-                label_pairs.insert(std::pair<std::string, std::string>("label", conf_doc["json_config"][cmember_number]["label"].GetString()));
+                label_pairs.insert(std::pair<std::string, std::string>("label", conf_doc[cmember_name]["label"].GetString()));
                 c_stringer = label_pairs["label"].c_str();
                 for (unsigned short j = 0; j <= 6; j++)
                 {
-                    if (conf_doc["json_config"][cmember_number][c_stringer].HasMember(fields[j]))
+                    if (conf_doc[cmember_name][c_stringer].HasMember(fields[j]))
                     {
-                        label_pairs.insert(std::pair<std::string, std::string>(fields[j], conf_doc["json_config"][cmember_number][c_stringer][fields[j]].GetString()));
+                        label_pairs.insert(std::pair<std::string, std::string>(fields[j], conf_doc[cmember_name][c_stringer][fields[j]].GetString()));
                     }
                 }
             }
@@ -71,8 +65,14 @@ void config_data::parse_config()
         }
         label_pairs.clear();
         c++;
+        str.str("");
+        str.clear();
+        keeper.clear();
+        str << c;
+        str >> keeper;
+        cmember_number = keeper.c_str();
+        debug_logger.write_debug(cmember_number);
     }
-    while (conf_doc["json_config"].HasMember(cmember_number));
-    debug_logger.write_debug("\nThe config was corectly parsed");
+    debug_logger.write_debug("The config was corectly parsed");
 }
 

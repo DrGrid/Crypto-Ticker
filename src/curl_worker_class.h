@@ -2,6 +2,7 @@
 #define CURL_WORKER_CLASS_H
 
 #include "curl_wrapper_class.h"
+#include "debug_write.h"
 #include <string>
 #include <thread>
 #include <chrono>
@@ -13,10 +14,12 @@ class curl_worker
 private:
     CppCurl curling;
     std::string curling_string;
-    unsigned short index;
+    unsigned short nrequests;
+    std::time_t unix_time, prevtime;
+    debug debugger;
 public:
     std::string curling_data;
-    void settings(const char * url, unsigned short nmarket);
+    void settings(const char * url);
     void curling_process();
     void process();
 };

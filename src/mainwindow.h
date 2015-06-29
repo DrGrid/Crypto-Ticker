@@ -8,6 +8,7 @@
 #include <QThread>
 #include <string>
 #include <thread>
+#include <chrono>
 #include <mutex>
 #include <vector>
 
@@ -16,6 +17,7 @@
 #include "curl_wrapper_class.h"
 #include "curl_worker_class.h"
 #include "learner.h"
+#include "debug_write.h"
 
 namespace Ui {
 class MainWindow;
@@ -70,11 +72,12 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    curl_worker worker;
+    debug debugger;
+    curl_worker *worker;
     QTimer *plot_timer, *learner_timer, *main_timer;
     QThread *curl_thread, *learner_thread;
     QString label_text, up_bound, down_bound, alarm_path, ranges;
-    std::vector<curl_worker> curl_container;
+    std::vector<curl_worker*> curl_container;
     Learner learner;
     float upper_bound, lower_bound;
     std::string okcoin_string, bitfinex_string, btcchina_string, bitstamp_string; //passed to the curl object and returned, with the conentent of the tickers
@@ -85,7 +88,7 @@ private:
     QVector<double> bitfinex_history = QVector<double> (1001);
     QVector<double> bitstamp_history = QVector<double> (1001);
     QVector<double>time = QVector<double>(1001); //This Vector holds the time, as in 100 seconds.
-    unsigned short nmarkets; //tracks the total number of markets
+    int nmarkets; //tracks the total number of markets
     int index; //keeps track of where index of the drop down list is.
     int position; //position for the data, that is being appended to the plot
     double plot_time, plot_price; //hold the range of the plot time and plot  price ; holds the last price of the selecte market in the ui

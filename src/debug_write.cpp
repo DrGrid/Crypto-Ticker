@@ -10,5 +10,7 @@ void debug::write_debug(const char * input)
 {
     debug_log.open("debug.log", std::ios::app);
     debug_log << input;
+    input = "\n";
+    debug_log << input;
     debug_log.close();
 }

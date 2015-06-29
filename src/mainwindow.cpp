@@ -7,15 +7,24 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //call the ui function first, to allow interaction with the QObject
     ui->setupUi(this);
-    nmarkets = config.markets.size();
+    debugger.write_debug("I am in the main constructor");
+    nmarkets = config.str_url.size();
     //muting = new std::mutex [nmarkets];
+    debugger.write_debug("\n A NEW DAWN \n");
     data = new parsed_data(config.market_labels, config.dimensions);
-    for (unsigned short c = 0; c < nmarkets; c++)
+    worker = new curl_worker[nmarkets];
+    for (unsigned short c = 0; c < 4; c++)
     {
-        curl_container.push_back(worker);
-        curl_container[c].settings(config.str_url[c], c);
-        curl_container[c].process();
+        //worker = new curl_worker;
+        worker[c].settings(config.str_url[c].c_str());
+        worker[c].process();
+        //curl_container.push_back(worker);
+        //curl_container[c]->settings(config.str_url[c].c_str());
+        //curl_container[c]->process();
+        //delete worker;
     }
+    debugger.write_debug("\nI launch the process curectly");
+    debugger.write_debug("I made it through the constructor");
     main_timer = new QTimer(this);
     connect(main_timer, SIGNAL(timeout()), this, SLOT(set_data()));
     main_timer->start(500);
@@ -50,8 +59,10 @@ void MainWindow::set_data()
 {
     for (int c = 0; c < nmarkets; c++)
     {
-        data->data_writer(curl_container[c].curling_data, c);
+        debugger.write_debug(worker[c].curling_data.c_str());
+        data->data_writer(worker[c].curling_data, c);
     }
+    debugger.write_debug("I passed the data");
     set_labels();
 }
 
@@ -64,7 +75,6 @@ void MainWindow::set_ui_details() //called in the constructor
     }
     ui->choose_market->setCurrentIndex(0);
     //sets the title of the programm
-    setWindowTitle("Crypto-Ticker");
 }
 
 void MainWindow::set_plot_data() //called  in the constructor
@@ -92,7 +102,7 @@ void MainWindow::set_plot_data() //called  in the constructor
 void MainWindow::check_alarm()
 {
     //set the logic to call the alarm function, detach the called thread, to allow the program to run further in the background
-    if ((upper_bound<data[0].sell) | (lower_bound>data[0].buy))
+    if ((upper_bound < data->main_field[0].sell) | (lower_bound > data->main_field[0].buy))
     {
       clear_alarm();
       std::thread(&MainWindow::alarm, this).detach();
@@ -160,7 +170,7 @@ void MainWindow::plotter()
     {
         if (ui->choose_market->currentIndex() == c)
         {
-            ui->customPlot->yAxis->setRange(data->last-plot_price, data->last+plot_price);
+            ui->customPlot->yAxis->setRange(data->main_field[c].last-plot_price, data->main_field[c].last+plot_price);
             ui->customPlot->graph(0)->setData(time, okcoin_history);
             //Remove the current title and set to this
             ui->customPlot->plotLayout()->removeAt(0);
@@ -175,17 +185,17 @@ void MainWindow::plot_memory_stepping()
 {
     if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
     {
-        okcoin_history[position] = data->last;
-        btcchina_history[position] = data->last;
-        bitfinex_history[position] = data->last;
-        bitstamp_history[position] = data->last;
+        okcoin_history[position] = data->main_field[0].last;
+        btcchina_history[position] = data->main_field[1].last;
+        bitfinex_history[position] = data->main_field[2].last;
+        bitstamp_history[position] = data->main_field[3].last;
     }
     else
     {
-        okcoin_history[plot_time] = data->last;
-        btcchina_history[plot_time] = data->last;
-        bitfinex_history[plot_time] = data->last;
-        bitstamp_history[plot_time] = data->last;
+        okcoin_history[plot_time] = data->main_field[0].last;
+        btcchina_history[plot_time] = data->main_field[1].last;
+        bitfinex_history[plot_time] = data->main_field[2].last;
+        bitstamp_history[plot_time] = data->main_field[3].last;
         for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
         {
             okcoin_history[c] = okcoin_history[c+1];
@@ -217,19 +227,19 @@ void MainWindow::set_labels()
 {
     index = ui->choose_market->currentIndex();
     //print the data to the screen with text labels, clear the label text every time to allow reuse.
-    ui->label->setText(label_text.setNum(data->last));
+    ui->label->setText(label_text.setNum(data->main_field[index].last));
     label_text.clear();
-    ui->label_2->setText(label_text.setNum(data->daily_high));
+    ui->label_2->setText(label_text.setNum(data->main_field[index].daily_high));
     label_text.clear();
-    ui->label_3->setText(label_text.setNum(data->daily_low));
+    ui->label_3->setText(label_text.setNum(data->main_field[index].daily_low));
     label_text.clear();
-    ui->label_4->setText(label_text.setNum(data->sell));
+    ui->label_4->setText(label_text.setNum(data->main_field[index].sell));
     label_text.clear();
-    ui->label_5->setText(label_text.setNum(data->buy));
+    ui->label_5->setText(label_text.setNum(data->main_field[index].buy));
     label_text.clear();
-    ui->label_6->setText(label_text.setNum(data->sell-data->buy));
+    ui->label_6->setText(label_text.setNum(data->main_field[index].sell-data->main_field[index].buy));
     label_text.clear();
-    ui->label_7->setText(label_text.setNum(data->volume));
+    ui->label_7->setText(label_text.setNum(data->main_field[index].volume));
     label_text.clear();
     emit finished_all();
 }
@@ -237,20 +247,20 @@ void MainWindow::set_labels()
 //triggered on finished_all signal
 void MainWindow::set_cross_market()
 {
-    ui->label_8->setText(label_text.setNum(data->last-data->last));
+    ui->label_8->setText(label_text.setNum(data->main_field[0].last-data->main_field[1].last));
     label_text.clear();
-    ui->label_9->setText(label_text.setNum(data->last-data->last));
+    ui->label_9->setText(label_text.setNum(data->main_field[2].last-data->main_field[3].last));
     label_text.clear();
-    ui->virtual_exchange_rate->setText(label_text.setNum(((data->last+data->last) / 2) / ((data->last+data->last) / 2)));
+    ui->virtual_exchange_rate->setText(label_text.setNum(((data->main_field[0].last+data->main_field[1].last) / 2) / ((data->main_field[2].last+data->main_field[3].last) / 2)));
     label_text.clear();
 }
 
 void MainWindow::data_pusher()
 {
-    china1_current = data->last;
-    china2_current = data->last;
-    usd1_current = data->last;
-    usd2_current = data->last;
+    china1_current = data->main_field[0].last;
+    china2_current = data->main_field[1].last;
+    usd1_current = data->main_field[2].last;
+    usd2_current = data->main_field[3].last;
     learner.data_feeder(china1_current, china2_current, usd1_current, usd2_current);
     ui->label_11->setText(label_text.setNum(learner.score_china1));
     ui->label_12->setText(label_text.setNum(learner.score_china2));

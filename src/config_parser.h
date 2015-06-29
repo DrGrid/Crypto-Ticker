@@ -21,6 +21,7 @@ private:
   bool increase_dimension;
 	unsigned short c = 0;
   const char * cmember_number;
+  const char * cmember_name;
   const char * c_stringer;
   const char * const fields [7] =  {"date", "buy", "daily_high", "last", "daily_low", "sell", "volume"};
   std::string str_fields [7] =  {"date", "buy", "daily_high", "last", "daily_low", "sell", "volume"};
@@ -32,7 +33,7 @@ public:
   std::vector<unsigned short> dimensions;
   //use the public variables as a callable interface for the calling class
 	std::vector<std::string> markets;
-  std::vector<const char *> str_url;
+  std::vector<std::string> str_url;
   config_data();
   //write the data into a readable form, stores in the same object, for every call.
   void read_config();
