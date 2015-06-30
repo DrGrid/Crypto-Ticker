@@ -29,6 +29,7 @@ private:
   std::vector<unsigned short> dimensions;
   std::stringstream str;
 	std::string keeper;
+  std::string slabel;
   long number_keeper;
   int current_market;
   bool increase_dimension;

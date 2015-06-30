@@ -20,8 +20,9 @@ private:
 	std::string keeper;
   bool increase_dimension;
 	unsigned short c = 0;
-  const char * cmember_number;
-  const char * cmember_name;
+  std::string smember_number;
+  std::string cmember_name;
+  std::string smarket;
   const char * c_stringer;
   const char * const fields [7] =  {"date", "buy", "daily_high", "last", "daily_low", "sell", "volume"};
   std::string str_fields [7] =  {"date", "buy", "daily_high", "last", "daily_low", "sell", "volume"};

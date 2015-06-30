@@ -5,25 +5,24 @@
 void curl_worker::settings(const char * url)
 {
     curling.settings(url);
-    debugger.write_debug("I have accepted the settings and am ready to spawn a process");
 }
 
 void curl_worker::process()
 {
     debugger.write_debug("You are now in the process function, the thread is on its way");
     //std::thread (&curl_worker::curling_process, this).detach();
-    curling_process();
+    std::thread (&curl_worker::curling_process, this).detach();
     debugger.write_debug("The thread has been detatched, wish it good luck");
 }
 
 void curl_worker::curling_process()
 {
-    nrequests = 0; //use this varible to control the number of requests the user is making, it has to be sub 40, otherwise he will be banned by some APIs.
-    unix_time = std::time(nullptr);
+    //nrequests = 0; //use this varible to control the number of requests the user is making, it has to be sub 40, otherwise he will be banned by some APIs.
+    //unix_time = std::time(nullptr);
     //while (true)
     //{
-        prevtime = unix_time;
-        unix_time = std::time(nullptr);
+        //prevtime = unix_time;
+        //unix_time = std::time(nullptr);
         /*if (prevtime == unix_time)
         {
           nrequests++;
@@ -42,6 +41,6 @@ void curl_worker::curling_process()
         //end of mutex
         curling_string.clear();
         curling.data_cleanup();
-  //}
+    //}
 }
 

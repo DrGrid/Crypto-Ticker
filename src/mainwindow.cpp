@@ -7,10 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //call the ui function first, to allow interaction with the QObject
     ui->setupUi(this);
-    debugger.write_debug("I am in the main constructor");
     nmarkets = config.str_url.size();
     //muting = new std::mutex [nmarkets];
-    debugger.write_debug("\n A NEW DAWN \n");
     data = new parsed_data(config.market_labels, config.dimensions);
     worker = new curl_worker[nmarkets];
     for (unsigned short c = 0; c < 4; c++)
@@ -23,8 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
         //curl_container[c]->process();
         //delete worker;
     }
-    debugger.write_debug("\nI launch the process curectly");
-    debugger.write_debug("I made it through the constructor");
     main_timer = new QTimer(this);
     connect(main_timer, SIGNAL(timeout()), this, SLOT(set_data()));
     main_timer->start(500);
@@ -59,10 +55,9 @@ void MainWindow::set_data()
 {
     for (int c = 0; c < nmarkets; c++)
     {
-        debugger.write_debug(worker[c].curling_data.c_str());
         data->data_writer(worker[c].curling_data, c);
     }
-    debugger.write_debug("I passed the data");
+    debugger.write_debug(worker[1].curling_data.c_str());
     set_labels();
 }
 
@@ -174,7 +169,7 @@ void MainWindow::plotter()
             ui->customPlot->graph(0)->setData(time, okcoin_history);
             //Remove the current title and set to this
             ui->customPlot->plotLayout()->removeAt(0);
-            ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, "Meh"));
+            ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, config.markets[c].c_str()));
         }
     }
    // replot every time the function is called to show the changes

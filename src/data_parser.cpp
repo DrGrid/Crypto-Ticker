@@ -41,31 +41,30 @@ void parsed_data::data_writer(std::string &data, int &nmarkets)
     str.clear();
     keeper.clear();
     to_cstring(data);
-    if (!document.Parse(c_stringer).HasParseError())
+    if (!document.Parse(data.c_str()).HasParseError())
     {
-        document.Parse(c_stringer);
+        document.Parse(data.c_str());
         if (document.IsObject())
         {
             for (int c = 0; c <= 6; c++)
             {
-                if (dimensions[0] >= 2 && increase_dimension)
+                if (dimensions[current_market] >= 2 && increase_dimension)
                 {
-                    c_stringer = market_labels[nmarkets]["label"].c_str();
-                    debugger.write_debug(c_stringer);
+                    slabel.clear();
+                    slabel = market_labels[current_market]["label"]; //check the vector of maps for the appropriate market name.
                     for (int i = 0; i <= 6; i++)
                     {
-                        if (document[c_stringer].HasMember(market_labels[nmarkets][fields[i]].c_str()))
+                        if (document[slabel.c_str()].HasMember(market_labels[nmarkets][fields[i]].c_str()))
                         {
-                            if (document[c_stringer][market_labels[nmarkets][fields[i]].c_str()].IsString())
+                            if (document[slabel.c_str()][market_labels[nmarkets][fields[i]].c_str()].IsString())
                             {
                                 keeper.clear();
-                                keeper = document[c_stringer][market_labels[nmarkets][fields[i]].c_str()].GetString();
-                                debugger.write_debug(keeper.c_str());
+                                keeper = document[slabel.c_str()][market_labels[nmarkets][fields[i]].c_str()].GetString();
                                 stream_clear(fields[i]);
                             }
                             else
                             {
-                                number_keeper = document[c_stringer][market_labels[nmarkets][fields[c]].c_str()].GetInt();
+                                number_keeper = document[slabel.c_str()][market_labels[nmarkets][fields[c]].c_str()].GetInt();
                             }
 
                         }
@@ -78,7 +77,6 @@ void parsed_data::data_writer(std::string &data, int &nmarkets)
                     {
                         keeper.clear();
                         keeper = document[market_labels[nmarkets][fields[c]].c_str()].GetString();
-                        debugger.write_debug(keeper.c_str());
                         stream_clear(fields[c]);
                     }
                     else

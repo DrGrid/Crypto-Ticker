@@ -23,41 +23,40 @@ void config_data::read_config() //read the json config file and add the paramete
 void config_data::parse_config()
 {
     c = 1;
-    cmember_number = "1";
-    keeper.clear();
-    while (conf_doc.HasMember(cmember_number))
+    smember_number = "1";
+    while (conf_doc.HasMember(smember_number.c_str()))
     {
-        if (conf_doc.HasMember(cmember_number))
+        if (conf_doc.HasMember(smember_number.c_str()))
         {
-            keeper = conf_doc[cmember_number].GetString();
-            markets.push_back(keeper);
-            cmember_name = keeper.c_str();
-            keeper.clear();
-            if (conf_doc[cmember_name].HasMember("dimensions"))
+            cmember_name.clear();
+            cmember_name = conf_doc[smember_number.c_str()].GetString();
+            markets.push_back(cmember_name);
+            if (conf_doc[cmember_name.c_str()].HasMember("dimensions"))
             {
-                dimensions.push_back(conf_doc[cmember_name]["dimensions"].GetInt());
+                dimensions.push_back(conf_doc[cmember_name.c_str()]["dimensions"].GetInt());
             }
-            if (conf_doc[cmember_name].HasMember("url"))
+            if (conf_doc[cmember_name.c_str()].HasMember("url"))
             {
-                str_url.push_back(conf_doc[cmember_name]["url"].GetString());
+                str_url.push_back(conf_doc[cmember_name.c_str()]["url"].GetString());
             }
             for (unsigned short i = 0; i <= 6; i++)
             {
-                if (conf_doc[cmember_name].HasMember(fields[i])) //extract fields and put them into the map.
+                if (conf_doc[cmember_name.c_str()].HasMember(fields[i])) //extract fields and put them into the map.
                 {
-                    label_pairs.insert(std::pair<std::string, std::string>(fields[i], conf_doc[cmember_name][fields[i]].GetString()));
+                    label_pairs.insert(std::pair<std::string, std::string>(fields[i], conf_doc[cmember_name.c_str()][fields[i]].GetString()));
                 }
             }
-            if (conf_doc[cmember_name].HasMember("label"))
+            if (conf_doc[cmember_name.c_str()].HasMember("label"))
             {
                 //Use value to read number of Container/DOM dimensions
-                label_pairs.insert(std::pair<std::string, std::string>("label", conf_doc[cmember_name]["label"].GetString()));
-                c_stringer = label_pairs["label"].c_str();
+                label_pairs.insert(std::pair<std::string, std::string>("label", conf_doc[cmember_name.c_str()]["label"].GetString()));
+                smarket.clear();
+                smarket = label_pairs["label"].c_str();
                 for (unsigned short j = 0; j <= 6; j++)
                 {
-                    if (conf_doc[cmember_name][c_stringer].HasMember(fields[j]))
+                    if (conf_doc[cmember_name.c_str()][smarket.c_str()].HasMember(fields[j]))
                     {
-                        label_pairs.insert(std::pair<std::string, std::string>(fields[j], conf_doc[cmember_name][c_stringer][fields[j]].GetString()));
+                        label_pairs.insert(std::pair<std::string, std::string>(fields[j], conf_doc[cmember_name.c_str()][smarket.c_str()][fields[j]].GetString()));
                     }
                 }
             }
@@ -67,12 +66,9 @@ void config_data::parse_config()
         c++;
         str.str("");
         str.clear();
-        keeper.clear();
+        smember_number.clear();
         str << c;
-        str >> keeper;
-        cmember_number = keeper.c_str();
-        debug_logger.write_debug(cmember_number);
+        str >> smember_number;
     }
-    debug_logger.write_debug("The config was corectly parsed");
 }
 
