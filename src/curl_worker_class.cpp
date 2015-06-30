@@ -19,11 +19,12 @@ void curl_worker::curling_process()
 {
     //nrequests = 0; //use this varible to control the number of requests the user is making, it has to be sub 40, otherwise he will be banned by some APIs.
     //unix_time = std::time(nullptr);
-    //while (true)
-    //{
-        //prevtime = unix_time;
-        //unix_time = std::time(nullptr);
-        /*if (prevtime == unix_time)
+    //std::this_thread::sleep_for(std::chrono::seconds(1));
+    while (true)
+    {
+        /*prevtime = unix_time;
+        unix_time = std::time(nullptr);
+        if (prevtime == unix_time)
         {
           nrequests++;
           if (nrequests == 20)
@@ -31,6 +32,7 @@ void curl_worker::curling_process()
         }
         else
           nrequests = 0;*/
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         curling_data.clear();
         curling_string = curling.fetch();
         //mute the string to ensure no race conditions
@@ -41,6 +43,6 @@ void curl_worker::curling_process()
         //end of mutex
         curling_string.clear();
         curling.data_cleanup();
-    //}
+    }
 }
 
