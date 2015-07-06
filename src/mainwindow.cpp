@@ -13,13 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     worker = new curl_worker[nmarkets];
     for (unsigned short c = 0; c < 4; c++)
     {
-        //worker = new curl_worker;
         worker[c].settings(config.str_url[c].c_str());
         worker[c].process();
-        //curl_container.push_back(worker);
-        //curl_container[c]->settings(config.str_url[c].c_str());
-        //curl_container[c]->process();
-        //delete worker;
     }
     main_timer = new QTimer(this);
     connect(main_timer, SIGNAL(timeout()), this, SLOT(set_data()));
@@ -166,7 +161,7 @@ void MainWindow::plotter()
         if (ui->choose_market->currentIndex() == c)
         {
             ui->customPlot->yAxis->setRange(data->main_field[c].last-plot_price, data->main_field[c].last+plot_price);
-            ui->customPlot->graph(0)->setData(time, okcoin_history);
+            ui->customPlot->graph(0)->setData(time, market_history[c]);
             //Remove the current title and set to this
             ui->customPlot->plotLayout()->removeAt(0);
             ui->customPlot->plotLayout()->addElement(0, 0, new QCPPlotTitle(ui->customPlot, config.markets[c].c_str()));
@@ -180,23 +175,23 @@ void MainWindow::plot_memory_stepping()
 {
     if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
     {
-        okcoin_history[position] = data->main_field[0].last;
-        btcchina_history[position] = data->main_field[1].last;
-        bitfinex_history[position] = data->main_field[2].last;
-        bitstamp_history[position] = data->main_field[3].last;
+        for (int c = 0; c < nmarkets; c++)
+        {
+            market_history[c][position] = data->main_field[c].last;
+        }
     }
     else
     {
-        okcoin_history[plot_time] = data->main_field[0].last;
-        btcchina_history[plot_time] = data->main_field[1].last;
-        bitfinex_history[plot_time] = data->main_field[2].last;
-        bitstamp_history[plot_time] = data->main_field[3].last;
-        for (unsigned short c(0); c < plot_time; c++ ) //step through the past hundred seconds and update them to their nearest cell.
+        for (int c = 0; c < nmarkets; c++)
         {
-            okcoin_history[c] = okcoin_history[c+1];
-            btcchina_history[c] = btcchina_history[c+1];
-            bitfinex_history[c] = bitfinex_history[c+1];
-            bitstamp_history[c] = bitstamp_history[c+1];
+            market_history[c][plot_time] = data->main_field[c].last;
+        }
+        for (int c = 0; c < nmarkets; c++)
+        {
+            for (unsigned short i(0); i < plot_time; i++ ) //step through the past hundred seconds and update them to their nearest cell.
+            {
+                market_history[c][i] = market_history[c][i+1];
+            }
         }
     }
     position++;
@@ -266,5 +261,10 @@ void MainWindow::data_pusher()
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete data;
+    delete plot_timer;
+    delete learner_timer;
+    delete main_timer;
+    delete worker;
 }
 

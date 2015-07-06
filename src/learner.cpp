@@ -202,7 +202,10 @@ bool Learner::read_json()
         score.Parse(json_string.c_str());
     }
     else
-      write_debug("There is no file");
+    {
+        write_debug("There is no file");
+        return false;
+    }
     if (score.IsObject())
     {
         score_china1 = score["arbi-score"]["okcoin"].GetDouble();
