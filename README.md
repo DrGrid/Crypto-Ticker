@@ -1,8 +1,8 @@
 # Crypto-Ticker
 A price ticker for crypto-currencies.
 The ticker is a simple Linux desktop widget with built in alarm that triggers at a set threshold. It also has basic price plotting and potentially supports any cryptocurrency exchange with a public ticker api.     
-The curl wrapper class is intended to be reused for other purposes.   
-The ticker still requires a relatively stable internet line, since it queries the exchange APIs as often as it can and therefore performs best with a stable internet connection.   
+Any market with a public JSON api can be added into the JSON config file.
+
 
 ___
 
