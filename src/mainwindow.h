@@ -82,7 +82,7 @@ private:
     config_data config;
     parsed_data *data;//takes care of config parsing and reading the incoming JSON string.
     QVector<QVector<double>> market_history{10, QVector<double>(100)}; //QVector QVector initialized with C++11 copy-only member initialisers. The Vector holds the last price of the past 100 seconds.
-    QVector<double>time {1001}; //This Vector holds the time, as in 100 seconds.
+    QVector<double>time = QVector <double> (1001); //This Vector holds the time, as in 100 seconds.
     int nmarkets; //tracks the total number of markets
     int index; //keeps track of where index of the drop down list is.
     int position; //position for the data, that is being appended to the plot

@@ -6,7 +6,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     //call the ui function first, to allow interaction with the QObject
-    ui->setupUi(this);
     nmarkets = config.str_url.size();
     //muting = new std::mutex [nmarkets];
     data = new parsed_data(config.market_labels, config.dimensions);
@@ -16,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
         worker[c].settings(config.str_url[c].c_str());
         worker[c].process();
     }
+    ui->setupUi(this);
     main_timer = new QTimer(this);
     connect(main_timer, SIGNAL(timeout()), this, SLOT(set_data()));
     main_timer->start(500);
@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     learner_timer = new QTimer(this);
     connect(learner_timer, SIGNAL(timeout()), this,SLOT(data_pusher()));
     learner_timer->start(5000);
+    debugger.write_debug("Finished the constructor");
 }
 
 void MainWindow::set_data()
@@ -54,6 +55,7 @@ void MainWindow::set_data()
     }
     debugger.write_debug(worker[1].curling_data.c_str());
     set_labels();
+    debugger.write_debug("Set the labels");
 }
 
 void MainWindow::set_ui_details() //called in the constructor
@@ -70,7 +72,7 @@ void MainWindow::set_ui_details() //called in the constructor
 void MainWindow::set_plot_data() //called  in the constructor
 {
     //set the data of the time vector, every step is called once every second.
-    for(unsigned short c(0); c < 1001; c++)
+    for(unsigned short c = 0; c < 1001; c++)
     {
         time[c] = c;
     }
@@ -173,6 +175,7 @@ void MainWindow::plotter()
 
 void MainWindow::plot_memory_stepping()
 {
+    debugger.write_debug("I am stuck here");
     if (position < plot_time) //populates the vector for the first hundred time steps (default case would be price every second)
     {
         for (int c = 0; c < nmarkets; c++)
