@@ -25,7 +25,9 @@ void curl_worker::curling_process()
         //mute the string to ensure no race conditions
         //muting[index].lock();
         curling_data.clear();
+        wrap_mute.lock();
         curling_data = curling_string;
+        wrap_mute.unlock();
         //muting[index].lock();
         //end of mutex
         curling_string.clear();

@@ -18,6 +18,7 @@ private:
     std::time_t unix_time, prevtime;
     debug debugger;
 public:
+    std::mutex wrap_mute;
     std::string curling_data;
     void settings(const char * url);
     void curling_process();
