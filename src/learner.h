@@ -46,13 +46,16 @@ private:
     void set_score();
     void write_json();
     bool read_json();
+    bool dom_exists;
     std::ofstream debug;
     std::ifstream file {"json_output.json"};
+    std::vector<std::string> learner_names;
     std::string json_string;
     const char * json_file;
     void write_debug(const char * input);
 public:
     Learner();
+    void learn_data_names(std::string name);
     void data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current);
     double score_china1, score_china2, score_usd1, score_usd2;
 };

@@ -56,6 +56,10 @@ void MainWindow::set_data()
     debugger.write_debug(worker[1].curling_data.c_str());
     set_labels();
     debugger.write_debug("Set the labels");
+    for (int c = 0; c < nmarkets; c++)
+    {
+        learner.learn_data_names(config.markets[c].c_str());
+    }
 }
 
 void MainWindow::set_ui_details() //called in the constructor

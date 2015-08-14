@@ -14,37 +14,39 @@ Learner::Learner()
     score.SetObject();
     if (read_json())
     {
-        write_debug("File exists, writing object!");
+        write_debug("File exists, writing object");
     }
     else
     {
-        score.SetObject();
         rapidjson::Document::AllocatorType &alloc = score.GetAllocator();
         score.AddMember("arbi-score", newValue, alloc);
         score.AddMember("ticker", tickValue, alloc);
         score["arbi-score"].SetObject();
         score["ticker"].SetObject();
-        score["arbi-score"].AddMember("okcoin", 0, alloc);
-        score["arbi-score"].AddMember("btcchina", 0, alloc);
-        score["arbi-score"].AddMember("bitfinex", 0, alloc);
-        score["arbi-score"].AddMember("bitstamp", 0, alloc);
-        score["ticker"].AddMember("okcoin", 0, alloc);
-        score["ticker"].AddMember("btcchina", 0, alloc);
-        score["ticker"].AddMember("bitfinex", 0, alloc);
-        score["ticker"].AddMember("bitstamp", 0, alloc);
-        write_json();
     }
+}
+
+
+void Learner::learn_data_names(std::string name)
+{
+    if (!dom_exists)
+    {
+        rapidjson::Document::AllocatorType &alloc = score.GetAllocator();
+        score["arbi-score"].AddMember(rapidjson::StringRef(name.c_str()), 0, alloc);
+        score["ticker"].AddMember(rapidjson::StringRef(name.c_str()), 0, alloc);
+    }
+    learner_names.push_back(name);
 }
 
 //constant data feed timed in ~seconds.
 void Learner::data_feeder(double china1_current, double china2_current, double usd1_current, double usd2_current)
 {
     write_debug("I reach the Learner function\n");
-    score["ticker"]["okcoin"] = china1_current;
+    score["ticker"][learner_names[0].c_str()] = china1_current;
     write_debug("The ticker object seems to be intact\n");
-    score["ticker"]["btcchina"] = china2_current;
-    score["ticker"]["bitfinex"] = usd1_current;
-    score["ticker"]["bitstamp"] = usd2_current;
+    score["ticker"][learner_names[1].c_str()] = china2_current;
+    score["ticker"][learner_names[2].c_str()]= usd1_current;
+    score["ticker"][learner_names[3].c_str()] = usd2_current;
     //check if the there is a significant discrimination between the markets.
     if (!china_move)
     {
@@ -213,6 +215,7 @@ bool Learner::read_json()
         score_usd1 = score["arbi-score"]["bitfinex"].GetDouble();
         score_usd2 = score["arbi-score"]["bitstamp"].GetDouble();
         write_debug("The json_file parsed!");
+        dom_exists = true;
         return true;
     }
     else
