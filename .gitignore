@@ -4,3 +4,4 @@ ticker.pro.user
 build/*
 build
 src/ui_mainwindow.h
+json_output.json
