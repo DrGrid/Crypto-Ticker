@@ -72,6 +72,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QGraphicsView *view;
+    QGridLayout *grid_layout;
     debug debugger;
     curl_worker *worker;
     QTimer *plot_timer, *learner_timer, *main_timer;

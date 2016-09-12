@@ -5,11 +5,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    grid_layout = new QGridLayout;
     //call the ui function first, to allow interaction with the QObject
     nmarkets = config.str_url.size();
     //muting = new std::mutex [nmarkets];
     data = new parsed_data(config.market_labels, config.dimensions);
     worker = new curl_worker[nmarkets];
+    view = new QGraphicsView (this);
     for (unsigned short c = 0; c < 4; c++)
     {
         worker[c].settings(config.str_url[c].c_str());
